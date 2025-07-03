@@ -1,0 +1,42 @@
+/* Common style */
+
+/* ----------------------------------------------
+    Buttons 
+------------------------------------------------- */
+.btn_main_dark {
+    border: 2px solid #10207A !important;
+    font-weight: 600 !important;
+    background-color: #10207A !important;
+    color: white !important;
+    transition: background-color 0.3s !important;
+}
+
+.btn_main_dark:hover {
+    border: 2px solid #1a3bf5 !important;
+    background-color: #1a3bf5 !important;
+}
+
+.btn_main_light_outline {
+    border: 2px solid #10207A !important;
+    font-weight: 600 !important;
+    color: #10207A !important;
+    transition: background-color 0.3s !important;
+}
+
+.btn_main_light_outline:hover {
+    border: 2px solid #51A6F5 !important;
+    font-weight: 600 !important;
+    background-color: #51A6F5 !important;
+    color: white !important;
+}
+
+.btn_style {
+    font-weight: 600 !important;
+}
+
+/* ----------------------------------------------
+    Background Colors 
+------------------------------------------------- */
+.bg_light {
+    background-color: #f2f9ff !important;
+}

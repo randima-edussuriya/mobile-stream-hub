@@ -1,0 +1,99 @@
+import React from 'react'
+import { useState } from 'react'
+import { Container, Form, Button } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
+import SignupValidation from '../validations/SignupValidation'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+
+function Signup() {
+    const [data, setData] = useState({
+        firstName: '',
+        lastName: '',
+        phoneNo: '',
+        address: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    })
+
+    const [errors, setErrors] = useState({});
+
+    const handleInput = (e) => {
+        setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const validationErrors = SignupValidation(data);
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+            try {
+                const res = await axios.post('http://localhost:5000/api/auth/signup', data)
+                if (res.data.success) {
+                    toast.success(res.data.message, { position: "top-center" })
+                    navigate('/login');
+                } else {
+                    toast.error(res.data.message, { position: "top-center" });
+                }
+            } catch (err) {
+                console.error(err);
+                toast.error('An error occurred', { position: "top-center" });
+            }
+        }
+    }
+    return (
+        <Container fluid className='d-flex justify-content-center align-items-center bg_light mt-5 py-3'>
+            <Container className='col-10 col-sm-6 p-3 bg-white rounded-2'>
+                <h3 className='text-center'>Sign Up</h3>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="formGroupFirstName">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control type="text" placeholder="Enter first name" name='firstName' onInput={handleInput} />
+                        {errors.firstName && <span className='text-danger'>{errors.firstName}</span>}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupLastName">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control type="text" placeholder="Enter last name" name='lastName' onInput={handleInput} />
+                        {errors.lastName && <span className='text-danger'>{errors.lastName}</span>}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupPhoneNo">
+                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Control type="text" placeholder="Enter phone number" name='phoneNo' onInput={handleInput} />
+                        {errors.phoneNo && <span className='text-danger'>{errors.phoneNo}</span>}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupAddress">
+                        <Form.Label>Address</Form.Label>
+                        <Form.Control type="text" placeholder="Enter address" name='address' onInput={handleInput} />
+                        {errors.address && <span className='text-danger'>{errors.address}</span>}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupEmail">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="text" placeholder="Enter email" name='email' onInput={handleInput} />
+                        {errors.email && <span className='text-danger'>{errors.email}</span>}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" placeholder="Enter password" name='password' onInput={handleInput} />
+                        {errors.password && <span className='text-danger'>{errors.password}</span>}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupConfirmPassword">
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control type="password" placeholder="Enter password" name='confirmPassword' onInput={handleInput} />
+                        {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword}</span>}
+                    </Form.Group>
+
+                    <div className='mb-3'>
+                        <Button className='btn_main_dark me-3' type='submit'>Sign Up</Button>
+                        <Button variant='outline-danger' className='btn_style me-3 border-2' type='reset'>Reset</Button>
+                        <Link to={'/login'} className='btn btn_main_light_outline'>Log In</Link>
+                    </div>
+                </Form>
+            </Container>
+        </Container>
+    )
+}
+
+export default Signup

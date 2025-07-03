@@ -1,0 +1,16 @@
+.footer_main {
+    background-color: #10207A !important;
+    color: white !important;
+}
+
+.social_icon {
+    font-size: 20px !important;
+}
+
+.social_icon:hover {
+    color: #51A6F5 !important;
+}
+
+.quick_link:hover {
+    color: #51A6F5 !important;
+}
