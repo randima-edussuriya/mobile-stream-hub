@@ -5,12 +5,16 @@
 
 .social_icon {
     font-size: 20px !important;
+    transition: all 0.3s ease !important;
 }
 
 .social_icon:hover {
     color: #51A6F5 !important;
 }
 
+.quick_link {
+    transition: all 0.3s ease !important;
+}
 .quick_link:hover {
     color: #51A6F5 !important;
 }

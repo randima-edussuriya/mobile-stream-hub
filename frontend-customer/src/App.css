@@ -8,7 +8,7 @@
     font-weight: 600 !important;
     background-color: #10207A !important;
     color: white !important;
-    transition: background-color 0.3s !important;
+    transition: all 0.3s ease !important;
 }
 
 .btn_main_dark:hover {
@@ -20,7 +20,7 @@
     border: 2px solid #10207A !important;
     font-weight: 600 !important;
     color: #10207A !important;
-    transition: background-color 0.3s !important;
+    transition: all 0.3s ease !important;
 }
 
 .btn_main_light_outline:hover {
