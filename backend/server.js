@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import authRoutes from './routes/customer/auth.js';
+import customerAuthRoutes from './routes/customer/auth.js';
 import cookieParser from 'cookie-parser';
-import 'dotenv/config'
+import dotenv from 'dotenv'
 
 const app = express();
 app.use(cors({
@@ -13,7 +13,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 //customer routes
-app.use('/api/auth', authRoutes);
+app.use('/api/customer/auth', customerAuthRoutes);
+
+dotenv.config();
 
 const server = app.listen(process.env.PORT, process.env.SERVER_HOST, () => {
     console.log('Server is listning to port ' + server.address().port);
