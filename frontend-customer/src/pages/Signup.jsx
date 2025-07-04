@@ -7,7 +7,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 function Signup() {
-    const [data, setData] = useState({
+    const [formData, setData] = useState({
         firstName: '',
         lastName: '',
         phoneNo: '',
@@ -19,7 +19,7 @@ function Signup() {
 
     const [errors, setErrors] = useState({});
 
-    const handleInput = (e) => {
+    const handleChange = (e) => {
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
@@ -27,11 +27,11 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = SignupValidation(data);
+        const validationErrors = SignupValidation(formData);
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
             try {
-                const res = await axios.post('http://localhost:5000/api/auth/signup', data)
+                const res = await axios.post('http://localhost:5000/api/customer/auth/signup', formData)
                 if (res.data.success) {
                     toast.success(res.data.message, { position: "top-center" })
                     navigate('/login');
@@ -51,37 +51,37 @@ function Signup() {
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formGroupFirstName">
                         <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter first name" name='firstName' onInput={handleInput} />
+                        <Form.Control type="text" placeholder="Enter first name" name='firstName' onChange={handleChange} />
                         {errors.firstName && <span className='text-danger'>{errors.firstName}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupLastName">
                         <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter last name" name='lastName' onInput={handleInput} />
+                        <Form.Control type="text" placeholder="Enter last name" name='lastName' onChange={handleChange} />
                         {errors.lastName && <span className='text-danger'>{errors.lastName}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupPhoneNo">
                         <Form.Label>Phone Number</Form.Label>
-                        <Form.Control type="text" placeholder="Enter phone number" name='phoneNo' onInput={handleInput} />
+                        <Form.Control type="text" placeholder="Enter phone number" name='phoneNo' onChange={handleChange} />
                         {errors.phoneNo && <span className='text-danger'>{errors.phoneNo}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupAddress">
                         <Form.Label>Address</Form.Label>
-                        <Form.Control type="text" placeholder="Enter address" name='address' onInput={handleInput} />
+                        <Form.Control type="text" placeholder="Enter address" name='address' onChange={handleChange} />
                         {errors.address && <span className='text-danger'>{errors.address}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupEmail">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="text" placeholder="Enter email" name='email' onInput={handleInput} />
+                        <Form.Control type="text" placeholder="Enter email" name='email' onChange={handleChange} />
                         {errors.email && <span className='text-danger'>{errors.email}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Enter password" name='password' onInput={handleInput} />
+                        <Form.Control type="password" placeholder="Enter password" name='password' onChange={handleChange} />
                         {errors.password && <span className='text-danger'>{errors.password}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupConfirmPassword">
                         <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control type="password" placeholder="Enter password" name='confirmPassword' onInput={handleInput} />
+                        <Form.Control type="password" placeholder="Enter password" name='confirmPassword' onChange={handleChange} />
                         {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword}</span>}
                     </Form.Group>
 

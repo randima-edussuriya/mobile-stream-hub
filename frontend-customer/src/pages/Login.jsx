@@ -3,18 +3,17 @@ import { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import LoginValidation from '../validations/LoginValidation';
-import axios from 'axios';
 import { toast } from 'react-toastify'
 import { AuthContext } from '../context/authContext';
 
 function Login() {
-    const [data, setData] = useState({
+    const [formData, setData] = useState({
         email: '',
         password: '',
     })
     const [errors, setErrors] = useState({});
 
-    const handleInput = (e) => {
+    const handleChange = (e) => {
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
@@ -24,11 +23,11 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = LoginValidation(data);
+        const validationErrors = LoginValidation(formData);
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
             try {
-                const res = await login(data)
+                const res = await login(formData)
                 if (res.data.success) {
                     toast.success(res.data.message, { position: "top-center" })
                     navigate('/');
@@ -49,12 +48,12 @@ function Login() {
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formGroupEmail">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="text" placeholder="Enter email" name='email' onInput={handleInput} />
+                        <Form.Control type="text" placeholder="Enter email" name='email' onChange={handleChange} />
                         {errors.email && <span className='text-danger'>{errors.email}</span>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Enter password" name='password' onInput={handleInput} />
+                        <Form.Control type="password" placeholder="Enter password" name='password' onChange={handleChange} />
                         {errors.password && <span className='text-danger'>{errors.password}</span>}
                     </Form.Group>
 
