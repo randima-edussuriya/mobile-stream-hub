@@ -55,7 +55,7 @@ export const login = async (req, res) => {
             return res.json({ success: false, message: 'User does not exist' })
         }
 
-        //check hasd password
+        //check hash password
         const isPasswordCorrect = await bcrypt.compare(password, result[0].password);
 
         if (!isPasswordCorrect) return res.json({ success: false, message: 'Incorrect password' })
