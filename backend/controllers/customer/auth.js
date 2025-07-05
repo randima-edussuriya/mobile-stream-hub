@@ -1,10 +1,11 @@
 import db from '../../db.js'
 import bcrypt from 'bcryptjs';
+import { secureHeapUsed } from 'crypto';
 import jwt from 'jsonwebtoken';
 
 export const test = (req, res) => {
-    res.json('Tesing');
-    console.log(req.cookies.access_token)
+    res.json('Testing');
+    console.log(process.env.NODE_ENV)
 }
 
 export const signup = async (req, res) => {
@@ -64,6 +65,8 @@ export const login = async (req, res) => {
         const userLogged = { id: result[0].customer_id, name: result[0].first_name };
         res.cookie('access_token', token, {
             httpOnly: true,
+            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
         })
         res.json({ success: true, message: 'Logged in successfully', data: userLogged });
     } catch (err) {
@@ -72,6 +75,10 @@ export const login = async (req, res) => {
     }
 }
 
-export const logout = async (req, res) => {
-
+export const logout = (req, res) => {
+    res.clearCookie('access_token', {
+        sameSite: 'none',
+        secure: process.env.NODE_ENV === 'production',
+    })
+    res.json({ success: true, message: 'Successfully logout' })
 }

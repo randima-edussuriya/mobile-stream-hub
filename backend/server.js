@@ -11,11 +11,12 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+dotenv.config();
+
 
 //customer routes
 app.use('/api/customer/auth', customerAuthRoutes);
 
-dotenv.config();
 
 const server = app.listen(process.env.PORT, process.env.SERVER_HOST, () => {
     console.log('Server is listning to port ' + server.address().port);

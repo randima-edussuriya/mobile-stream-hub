@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
 
 function Header() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext);
 
   return (
     <>
@@ -58,7 +58,7 @@ function Header() {
                 <Dropdown.Menu className='dropdown-menu-end'>
                   <Dropdown.Item>My Profle</Dropdown.Item>
                   <Dropdown.Item>Setting</Dropdown.Item>
-                  <Dropdown.Item>Log Out</Dropdown.Item>
+                  <Dropdown.Item onClick={logout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
