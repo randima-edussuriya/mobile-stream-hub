@@ -4,9 +4,9 @@ import Chart1 from '../components/Chart1'
 function Home() {
     return (
         <div>
-            <div className='container-fluid'>
-                <div className='row g-3 my-2'>
-                    <div className='col-12 col-sm-6 col-md-4 col-lg-3  p-1'>
+            <div className='container-fluid mt-3'>
+                <div className='row g-3'>
+                    <div className='col-12 col-sm-6 col-md-4 col-lg-3'>
                         <div className='p-3 bg-success-subtle shadow-sm d-flex justify-content-around align-items-center rounded'>
                             <div>
                                 <h3 className='fs-3'>0</h3>
@@ -15,7 +15,7 @@ function Home() {
                             <i className="bi bi-people p-3 fs-1"></i>
                         </div>
                     </div>
-                    <div className='col-12 col-sm-6 col-md-4 col-lg-3  p-1'>
+                    <div className='col-12 col-sm-6 col-md-4 col-lg-3'>
                         <div className='p-3 bg-danger-subtle shadow-sm d-flex justify-content-around align-items-center rounded'>
                             <div>
                                 <h3 className='fs-3'>0</h3>
@@ -24,7 +24,7 @@ function Home() {
                             <i className="bi bi-diagram-3 p-3 fs-1"></i>
                         </div>
                     </div>
-                    <div className='col-12 col-sm-6 col-md-4 col-lg-3  p-1'>
+                    <div className='col-12 col-sm-6 col-md-4 col-lg-3'>
                         <div className='p-3 bg-info-subtle shadow-sm d-flex justify-content-around align-items-center rounded'>
                             <div>
                                 <h3 className='fs-3'>0</h3>
@@ -33,7 +33,7 @@ function Home() {
                             <i className="bi bi-bookmarks p-3 fs-1"></i>
                         </div>
                     </div>
-                    <div className='col-12 col-sm-6 col-md-4 col-lg-3  p-1'>
+                    <div className='col-12 col-sm-6 col-md-4 col-lg-3'>
                         <div className='p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded'>
                             <div>
                                 <h3 className='fs-3'>0</h3>
@@ -44,7 +44,7 @@ function Home() {
                     </div>
                 </div>
 
-                <div>
+                <div className='bg-body-tertiary rounded mt-4'>
                     <Chart1 />
                 </div>
             </div>

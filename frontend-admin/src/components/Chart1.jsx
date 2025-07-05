@@ -2,7 +2,7 @@ import React from 'react'
 
 function Chart1() {
     return (
-        <div className='bg-body-tertiary rounded'>Chart1</div>
+        <div className=''>Chart1</div>
     )
 }
 

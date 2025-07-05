@@ -34,7 +34,7 @@ function App() {
     {
       path: '/',
       element: <Login />,
-      errorElement:<div>Not Found: Invalid URL</div>,
+      errorElement: <div>Not Found: Invalid URL</div>,
     },
     {
       path: '/',
