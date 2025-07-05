@@ -33,23 +33,25 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
+      element: <Login />,
+      errorElement:<div>Not Found: Invalid URL</div>,
+    },
+    {
+      path: '/',
       element: <Layout />,
       errorElement: <div>Not Found: Invalid URL</div>,
       children: [
         {
-          path: '/',
+          path: '/home',
           element: <Home />
         },
         {
-          path:'/register',
-          element:<Register/>
+          path: '/register',
+          element: <Register />
         }
       ]
     },
-    {
-      path:'/login',
-      element:<Login/>
-    }
+
   ])
 
   return (
