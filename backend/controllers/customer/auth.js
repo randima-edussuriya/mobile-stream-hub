@@ -1,12 +1,6 @@
 import db from '../../db.js'
 import bcrypt from 'bcryptjs';
-import { secureHeapUsed } from 'crypto';
 import jwt from 'jsonwebtoken';
-
-export const test = (req, res) => {
-    res.json('Testing');
-    console.log(process.env.NODE_ENV)
-}
 
 export const signup = async (req, res) => {
     try {
