@@ -1,10 +1,16 @@
-
 .list-group a {
-    background-color: #a4d2fe;
-    color: black;
+    background-color: #a4d2fe !important;
+    color: black !important;
+    transition: all 0.3s ease !important;
 }
+
 .list-group a:hover {
-    background-color: #10207A;
-    color: white;
-    cursor: pointer;
+    background-color: #10207A !important;
+    color: white !important;
+    cursor: pointer !important;
+}
+
+.list-group .active_link{
+    background-color: #10207A !important;
+    color: white !important;
 }
