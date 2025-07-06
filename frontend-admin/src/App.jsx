@@ -6,9 +6,10 @@ import Home from './pages/Home'
 import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
-import Register from './pages/Register'
+import StaffManagement from './pages/StaffManagement'
 import { createContext } from 'react'
-import PrivateRoue from './router/privateRoute'
+import { PrivateRoute, RoleRoute } from './routes/authRoutes'
+import CustomerManagement from './pages/CustomerManagement'
 
 function App() {
   const [toggle, setToggle] = useState(true);
@@ -38,24 +39,39 @@ function App() {
     {
       path: '/',
       element: <Login />,
-      errorElement: <div>Not Found: Invalid URL</div>,
+      errorElement: <div className='text-danger'>Not Found: Invalid URL</div>,
     },
     {
       path: '/',
       element: (
-        <PrivateRoue>
+        <PrivateRoute>
           <Layout />
-        </PrivateRoue>
+        </PrivateRoute>
       ),
-      errorElement: <div>Not Found: Invalid URL</div>,
       children: [
         {
           path: '/home',
           element: <Home />
         },
         {
-          path: '/register',
-          element: <Register />
+          path: '/staff-management',
+          element: (
+            <RoleRoute allowedRoles={['admin']}>
+              <StaffManagement />
+            </RoleRoute>
+          )
+        },
+        {
+          path: '/customer-management',
+          element: (
+            <RoleRoute allowedRoles={['admin']}>
+              <CustomerManagement />
+            </RoleRoute>
+          )
+        },
+        {
+          path: '/unathorized',
+          element: <div className='text-bg-danger ps-1'>Access Denied !</div>
         }
       ]
     },
