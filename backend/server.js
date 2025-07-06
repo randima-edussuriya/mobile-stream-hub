@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import customerAuthRoutes from './routes/customer/auth.js';
 import adminAuthRoutes from './routes/admin/auth.js';
+import adminCustomerRoutes from './routes/admin/customer.js'
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv'
 
@@ -20,6 +21,7 @@ app.use('/api/customer/auth', customerAuthRoutes);
 
 //Admin routs
 app.use('/api/admin/auth', adminAuthRoutes);
+app.use('/api/admin/customer', adminCustomerRoutes);
 
 //for test
 import bcrypt, { hash } from 'bcryptjs';
