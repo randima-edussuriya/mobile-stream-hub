@@ -1,6 +1,9 @@
 import React from 'react'
+import { useContext } from 'react'
+import { AuthContext } from '../context/authContext'
 
 function Navbar({ Toggle }) {
+    const { logout } = useContext(AuthContext);
     return (
         <>
             <nav className="navbar navbar-expand navbar-dark px-3">
@@ -17,7 +20,7 @@ function Navbar({ Toggle }) {
                             <ul className="dropdown-menu dropdown-menu-end">
                                 <li><a className="dropdown-item" href="#">Profile</a></li>
                                 <li><a className="dropdown-item" href="#">Setting</a></li>
-                                <li><a className="dropdown-item" href="#">Logout</a></li>
+                                <li><a className="dropdown-item" onClick={logout}>Logout</a></li>
                             </ul>
                         </li>
                     </ul>

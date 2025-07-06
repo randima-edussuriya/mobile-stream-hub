@@ -7,12 +7,16 @@ import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import { createContext } from 'react'
+import PrivateRoue from './router/privateRoute'
 
 function App() {
   const [toggle, setToggle] = useState(true);
   const Toggle = () => {
     setToggle(pre => !pre)
   }
+
+  const { currentUser } = createContext(AudioContext);
 
   const Layout = () => {
     return (
@@ -38,7 +42,11 @@ function App() {
     },
     {
       path: '/',
-      element: <Layout />,
+      element: (
+        <PrivateRoue>
+          <Layout />
+        </PrivateRoue>
+      ),
       errorElement: <div>Not Found: Invalid URL</div>,
       children: [
         {

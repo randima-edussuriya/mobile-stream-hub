@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import { Container, Form, Button } from 'react-bootstrap'
 import logo from '../assets/icons/logo.png'
 import loginValidation from '../validations/loginValidation'
+import { useContext } from 'react'
+import { AuthContext } from '../context/authContext'
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -15,11 +19,26 @@ function Login() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e) => {
+  const { login } = useContext(AuthContext)
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = loginValidation(formData);
     setError(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
+      try {
+        const res = await login(formData)
+        if (res.data.success) {
+          toast.success(res.data.message, { position: "top-center" });
+          navigate('/home')
+        } else {
+          toast.error(res.data.message, { position: "top-center" })
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error('An error occured', { position: 'top-center' })
+      }
     }
   }
 
