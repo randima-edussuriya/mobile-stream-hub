@@ -1,10 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import customerAuthRoutes from './routes/customer/auth.js';
-import adminAuthRoutes from './routes/admin/auth.js';
-import adminCustomerRoutes from './routes/admin/customer.js'
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv'
+import adminAuthRoutes from './routes/auth/adminAuth.js'
+import customerAuthRoutes from './routes/auth/customerAuth.js'
 
 const app = express();
 app.use(cors({
@@ -15,13 +14,12 @@ app.use(express.json());
 app.use(cookieParser());
 dotenv.config();
 
-
-//customer routes
-app.use('/api/customer/auth', customerAuthRoutes);
-
 //Admin routs
-app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin/customer', adminCustomerRoutes);
+
+//auth routes
+app.use('/api/auth/admin', adminAuthRoutes);
+app.use('/api/auth/customer', customerAuthRoutes);
 
 //for test
 import bcrypt, { hash } from 'bcryptjs';
