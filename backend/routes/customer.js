@@ -1,7 +1,7 @@
 import express from 'express'
-import { deactivateCustomer, getCustomer, getCustomers } from '../../controllers/admin/customer.js';
+import { deactivateCustomer, getCustomer, getCustomers } from '../controllers/customer.js';
 
-import db from '../../db.js';
+import db from '../db.js';
 
 const router = express.Router();
 
