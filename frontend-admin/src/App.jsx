@@ -12,7 +12,7 @@ import { PrivateRoute, RoleRoute } from './routes/authRoutes'
 import CustomerManagement from './pages/CustomerManagement'
 
 function App() {
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
   const Toggle = () => {
     setToggle(pre => !pre)
   }
@@ -23,10 +23,10 @@ function App() {
     return (
       <div className='container-fluid bg-dark min-vh-100'>
         <div className='row'>
-          {toggle && <div className='col-4 col-md-3 col-lg-2 bg-primary-subtle'>
+          {!toggle && <div className='col-4 col-md-3 col-lg-2 bg-primary-subtle'>
             <Sidebar />
           </div>}
-          <div className='col'>
+          <div className={toggle ? 'col' : 'col-8 col-md-9 col-lg-10'}>
             <Navbar Toggle={Toggle} />
             <Outlet />
           </div>
