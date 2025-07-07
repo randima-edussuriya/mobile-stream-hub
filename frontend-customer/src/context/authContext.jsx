@@ -9,7 +9,7 @@ export const AuthContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
 
     const login = async formData => {
-        const res = await axios.post('http://localhost:5000/api/customer/auth/login', formData)
+        const res = await axios.post('http://localhost:5000/api/auth/customer/login', formData)
         if (res.data.success) {
             setCurrentUser(res.data.data)
         }
@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
     }
 
     const logout = async () => {
-        await axios.post('http://localhost:5000/api/customer/auth/logout')
+        await axios.post('http://localhost:5000/api/auth/customer/logout')
         setCurrentUser(null)
     }
 

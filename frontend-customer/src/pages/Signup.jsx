@@ -31,7 +31,7 @@ function Signup() {
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
             try {
-                const res = await axios.post('http://localhost:5000/api/customer/auth/signup', formData)
+                const res = await axios.post('http://localhost:5000/api/auth/customer/signup', formData)
                 if (res.data.success) {
                     toast.success(res.data.message, { position: "top-center" })
                     navigate('/login');
