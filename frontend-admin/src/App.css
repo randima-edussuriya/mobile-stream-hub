@@ -33,3 +33,10 @@
 .btn_style {
     font-weight: 600 !important;
 }
+
+/* ----------------------------------------------
+    Shadow 
+------------------------------------------------- */
+.shadow_white {
+    box-shadow: 0 0.5rem 1rem #51a6f583 !important;
+}
