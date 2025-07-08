@@ -60,7 +60,7 @@ function Sidebar() {
                         to={'/order-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
-                        }z
+                        }
                     >
                         <i className="bi bi-border-all fs-5 me-3"></i>
                         <span>Order Management</span>
