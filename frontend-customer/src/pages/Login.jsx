@@ -7,14 +7,14 @@ import { toast } from 'react-toastify'
 import { AuthContext } from '../context/authContext';
 
 function Login() {
-    const [formData, setData] = useState({
+    const [formData, setFormData] = useState({
         email: '',
         password: '',
     })
     const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
-        setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ function Login() {
 
     return (
         <Container fluid className='d-flex justify-content-center align-items-center mt-5 py-3'>
-            <Container className='col-10 col-sm-6 p-3 bg_light rounded-2 shadow'>
+            <Container className='col-10 col-sm-4 p-3 bg_light rounded-2 shadow'>
                 <h3 className='text-center'>Log In</h3>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formGroupEmail">
