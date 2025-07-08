@@ -6,7 +6,7 @@ import Home from './pages/Home'
 import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
-import StaffManagement from './pages/StaffManagement'
+import StaffManagement from './pages/StaffManagement/StaffManagement'
 import { createContext } from 'react'
 import { PrivateRoute, RoleRoute } from './routes/authRoutes'
 import CustomerManagement from './pages/CustomerManagement'
@@ -20,6 +20,8 @@ import LoyaltyProgramManagement from './pages/LoyaltyProgramManagement'
 import FeedbackRatingManagement from './pages/FeedbackRatingManagement'
 import CustomerSupportManagement from './pages/CustomerSupportManagement'
 import ReportsManagement from './pages/ReportsManagement'
+import StaffRegister from './pages/StaffManagement/StaffRegister'
+import RepairManagement from './pages/RepairManagement'
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -60,19 +62,28 @@ function App() {
       ),
       children: [
         {
-          path: '/home',
+          path: 'home',
           element: <Home />
         },
         {
-          path: '/staff-management',
+          path: 'staff-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <StaffManagement />
             </RoleRoute>
           )
+
         },
         {
-          path: '/customer-management',
+          path: 'staff-register',
+          element: (
+            <RoleRoute allowedRoles={['admin']}>
+              <StaffRegister />
+            </RoleRoute>
+          )
+        },
+        {
+          path: 'customer-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <CustomerManagement />
@@ -80,7 +91,7 @@ function App() {
           )
         },
         {
-          path: '/category-management',
+          path: 'category-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <CategoryManagement />
@@ -88,7 +99,7 @@ function App() {
           )
         },
         {
-          path: '/item-management',
+          path: 'item-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <ItemManagement />
@@ -96,7 +107,7 @@ function App() {
           )
         },
         {
-          path: '/order-management',
+          path: 'order-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <OrderManagement />
@@ -104,7 +115,7 @@ function App() {
           )
         },
         {
-          path: '/delivery-management',
+          path: 'delivery-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <DeliveryManagement />
@@ -112,7 +123,15 @@ function App() {
           )
         },
         {
-          path: '/repair-management',
+          path: 'repair-management',
+          element: (
+            <RoleRoute allowedRoles={['admin']}>
+              <RepairManagement />
+            </RoleRoute>
+          )
+        },
+        {
+          path: 'reorder-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <ReorderManagement />
@@ -120,15 +139,7 @@ function App() {
           )
         },
         {
-          path: '/reorder-management',
-          element: (
-            <RoleRoute allowedRoles={['admin']}>
-              <ReorderManagement />
-            </RoleRoute>
-          )
-        },
-        {
-          path: '/day-off-management',
+          path: 'day-off-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <DayOffManagement />
@@ -136,7 +147,7 @@ function App() {
           )
         },
         {
-          path: '/loyalty-program-management',
+          path: 'loyalty-program-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <LoyaltyProgramManagement />
@@ -144,7 +155,7 @@ function App() {
           )
         },
         {
-          path: '/feedback-rating-management',
+          path: 'feedback-rating-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <FeedbackRatingManagement />
@@ -152,7 +163,7 @@ function App() {
           )
         },
         {
-          path: '/customer-support-management',
+          path: 'customer-support-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <CustomerSupportManagement />
@@ -160,7 +171,7 @@ function App() {
           )
         },
         {
-          path: '/reports-management',
+          path: 'reports-management',
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <ReportsManagement />
@@ -168,7 +179,7 @@ function App() {
           )
         },
         {
-          path: '/unathorized',
+          path: '/unauthorized',
           element: <div className='text-bg-danger ps-1'>Access Denied !</div>
         }
       ]
