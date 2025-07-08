@@ -45,8 +45,8 @@ function Signup() {
         }
     }
     return (
-        <Container fluid className='d-flex justify-content-center align-items-center bg_light mt-5 py-3'>
-            <Container className='col-10 col-sm-6 p-3 bg-white rounded-2'>
+        <Container fluid className='d-flex justify-content-center align-items-center  mt-5 py-3'>
+            <Container className='col-10 col-sm-5 p-3 bg_light rounded-2 shadow'>
                 <h3 className='text-center'>Sign Up</h3>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formGroupFirstName">
@@ -86,9 +86,9 @@ function Signup() {
                     </Form.Group>
 
                     <div className='mb-3'>
-                        <Button className='btn_main_dark me-3' type='submit'>Sign Up</Button>
-                        <Button variant='outline-danger' className='btn_style me-3 border-2' type='reset'>Reset</Button>
-                        <Link to={'/login'} className='btn btn_main_light_outline'>Log In</Link>
+                        <Button className='btn_main_dark me-3 shadow' type='submit'>Sign Up</Button>
+                        <Button variant='outline-danger' className='btn_style me-3 border-2 shadow' type='reset'>Reset</Button>
+                        <Link to={'/login'} className='btn btn_main_light_outline shadow'>Log In</Link>
                     </div>
                 </Form>
             </Container>
