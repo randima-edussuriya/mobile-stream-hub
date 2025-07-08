@@ -9,5 +9,5 @@ export const PrivateRoute = ({ children }) => {
 
 export const RoleRoute = ({ children, allowedRoles }) => {
     const { currentUser } = useContext(AuthContext);
-    return allowedRoles.includes(currentUser.role) ? children : <Navigate to={'/unathorized'} replace />
+    return allowedRoles.includes(currentUser.role) ? children : <Navigate to={'/unauthorized'} replace />
 }
