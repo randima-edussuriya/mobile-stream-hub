@@ -1,5 +1,5 @@
 import express from 'express'
-import { deactivateCustomer, getCustomer, getCustomers } from '../controllers/customer.js';
+import { updateStatus, getCustomer, getCustomers } from '../controllers/customer.js';
 
 import db from '../db.js';
 
@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.get('/', getCustomers);
 router.get('/:id', getCustomer);
-router.put('/:id', deactivateCustomer);
+router.put('/status/:id', updateStatus);
 
 export default router;
