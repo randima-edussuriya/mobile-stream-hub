@@ -1,18 +1,22 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Table, Badge, Spinner } from 'react-bootstrap'
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2'
 
 function CustomerManagement() {
     const [Loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [customers, setCustomers] = useState([]);
+    const [isToogleCustomerStatus, setIsToogleCustomerStatus] = useState(false)
 
     useEffect(() => {
         const fetchCustomers = async () => {
             setLoading(true);
             setError('');
             setCustomers([]);
+            setIsToogleCustomerStatus(false);
             try {
                 const res = await axios.get('http://localhost:5000/api/customer');
                 if (res.data.success) {
@@ -28,7 +32,42 @@ function CustomerManagement() {
             }
         }
         fetchCustomers();
-    }, [])
+    }, [isToogleCustomerStatus])
+
+    const handleStatusChange = async (customerId, newStatus) => {
+        const actionText = newStatus ? 'activate' : 'deactivate';
+
+        const confim = await Swal.fire({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger",
+                title:"h5",
+            },
+            title: `Are you sure to  ${actionText} this customer`,
+            showCancelButton: true,
+            confirmButtonColor: "#10207A",
+            cancelButtonColor: "#d33",
+            confirmButtonText: `Yes, ${actionText}`,
+            width:'17em'
+        })
+
+        if (!confim.isConfirmed) return;
+
+        try {
+            const res = await axios.put(`http://localhost:5000/api/customer/status/${customerId}`,
+                { newStatus: newStatus }
+            );
+            if (res.data.success) {
+                setIsToogleCustomerStatus(true);
+                toast.success(res.data.message, { position: 'top-center' })
+            } else {
+                toast.error(res.data.message, { position: 'top-center' })
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('An error occurred. Please try again.', { position: 'top-center' })
+        }
+    }
 
     const renderTableBody = () => {
         if (Loading) {
@@ -60,36 +99,31 @@ function CustomerManagement() {
         }
 
         return (
-            customers.map(customer => {
-                const localDate = new Date(customer.created_at);
-                return (
-                    <tr key={customer.customer_id}>
-                        <td>{customer.customer_id}</td>
-                        <td>{customer.first_name}</td>
-                        <td>{customer.last_name}</td>
-                        <td>{customer.email}</td>
-                        <td>{customer.phone_number}</td>
-                        <td>{customer.address}</td>
-                        <td>{format(localDate, 'yyyy-MM-dd HH:mm:ss')}</td>
-                        {customer.is_active === 1 ? (
-                            <>
-                                <td><Badge bg="success">Active</Badge></td>
-                                <td>
-                                    <Button variant='outline-danger' size='sm'>Deactivate</Button>
-                                </td>
-                            </>
-                        ) : (
-                            <>
-                                <td><Badge bg="danger">Deactive</Badge></td>
-                                <td>
-                                    <Button variant='outline-success' size='sm'>Active</Button>
-                                </td>
-                            </>
-                        )}
-
-                    </tr>
-                )
-            })
+            customers.map(customer => (
+                <tr key={customer.customer_id}>
+                    <td>{customer.customer_id}</td>
+                    <td>{customer.first_name}</td>
+                    <td>{customer.last_name}</td>
+                    <td>{customer.email}</td>
+                    <td>{customer.phone_number}</td>
+                    <td>{customer.address}</td>
+                    <td>{dayjs(customer.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>
+                    <td>
+                        <Badge bg={customer.is_active ? 'success' : 'danger'}>
+                            {customer.is_active ? 'Active' : 'Deactive'}
+                        </Badge>
+                    </td>
+                    <td>
+                        <Button
+                            variant={customer.is_active ? 'outline-danger' : 'outline-success'}
+                            size='sm'
+                            onClick={() => handleStatusChange(customer.customer_id, customer.is_active ? 0 : 1)}
+                        >
+                            {customer.is_active ? 'Deactivate' : 'Active'}
+                        </Button>
+                    </td>
+                </tr>
+            ))
         )
     }
 
@@ -115,30 +149,6 @@ function CustomerManagement() {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* <tr>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td><Badge bg="success">Active</Badge></td>
-                                <td>
-                                    <Button variant='outline-danger' size='sm'>Deactivate</Button>
-                                </td>
-                            </tr> */}
-                            {/*                             
-                            <tr>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                <td>Sample data</td>
-                                
-                            </tr> */}
                             {renderTableBody()}
                         </tbody>
                     </Table>
