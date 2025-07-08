@@ -11,7 +11,7 @@ export const signup = async (req, res) => {
         const email = req.body.email?.trim();
         const confirmPassword = req.body.confirmPassword?.trim();
 
-        if (!firstName || !lastName || !phoneNo || !phoneNo || !address || !email || !confirmPassword)
+        if (!firstName || !lastName || !phoneNo || !address || !email || !confirmPassword)
             return res.json({ success: false, message: 'Fileds are required' });
 
         //check existing user
