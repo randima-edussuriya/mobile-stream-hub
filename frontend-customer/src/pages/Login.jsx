@@ -42,8 +42,8 @@ function Login() {
     }
 
     return (
-        <Container fluid className='d-flex justify-content-center align-items-center bg_light mt-5 py-3'>
-            <Container className='col-10 col-sm-6 p-3 bg-white rounded-2'>
+        <Container fluid className='d-flex justify-content-center align-items-center mt-5 py-3'>
+            <Container className='col-10 col-sm-6 p-3 bg_light rounded-2 shadow'>
                 <h3 className='text-center'>Log In</h3>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formGroupEmail">
@@ -58,8 +58,8 @@ function Login() {
                     </Form.Group>
 
                     <div className='mb-3'>
-                        <Button variant='none' className='btn_main_dark me-3' type='submit'>Log In</Button>
-                        <Link to={'/signup'} className='btn btn_main_light_outline'>Sign Up</Link>
+                        <Button variant='none' className='btn_main_dark me-3 shadow' type='submit'>Log In</Button>
+                        <Link to={'/signup'} className='btn btn_main_light_outline shadow'>Sign Up</Link>
                     </div>
                 </Form>
             </Container>
