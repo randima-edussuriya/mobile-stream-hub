@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button, Container, Table, Badge, Spinner } from 'react-bootstrap'
+import { format } from 'date-fns';
 
 function CustomerManagement() {
     const [Loading, setLoading] = useState(true);
@@ -59,33 +60,36 @@ function CustomerManagement() {
         }
 
         return (
-            customers.map(customer => (
-                <tr key={customer.customer_id}>
-                    <td>{customer.customer_id}</td>
-                    <td>{customer.first_name}</td>
-                    <td>{customer.first_name}</td>
-                    <td>{customer.email}</td>
-                    <td>{customer.phone_number}</td>
-                    <td>{customer.address}</td>
-                    <td>{customer.created_at}</td>
-                    {customer.is_active === 1 ? (
-                        <>
-                            <td><Badge bg="success">Active</Badge></td>
-                            <td>
-                                <Button variant='outline-danger' size='sm'>Deactivate</Button>
-                            </td>
-                        </>
-                    ) : (
-                        <>
-                            <td><Badge bg="danger">Deactive</Badge></td>
-                            <td>
-                                <Button variant='outline-success' size='sm'>Active</Button>
-                            </td>
-                        </>
-                    )}
+            customers.map(customer => {
+                const localDate = new Date(customer.created_at);
+                return (
+                    <tr key={customer.customer_id}>
+                        <td>{customer.customer_id}</td>
+                        <td>{customer.first_name}</td>
+                        <td>{customer.last_name}</td>
+                        <td>{customer.email}</td>
+                        <td>{customer.phone_number}</td>
+                        <td>{customer.address}</td>
+                        <td>{format(localDate, 'yyyy-MM-dd HH:mm:ss')}</td>
+                        {customer.is_active === 1 ? (
+                            <>
+                                <td><Badge bg="success">Active</Badge></td>
+                                <td>
+                                    <Button variant='outline-danger' size='sm'>Deactivate</Button>
+                                </td>
+                            </>
+                        ) : (
+                            <>
+                                <td><Badge bg="danger">Deactive</Badge></td>
+                                <td>
+                                    <Button variant='outline-success' size='sm'>Active</Button>
+                                </td>
+                            </>
+                        )}
 
-                </tr>
-            ))
+                    </tr>
+                )
+            })
         )
     }
 
