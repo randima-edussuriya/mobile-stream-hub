@@ -6,7 +6,7 @@ import './Footer.css'
 function Footer() {
   return (
     <>
-      <footer className='text-center footer_main'>
+      <footer className='text-center footer_main mt-5'>
         <Container className='text-start mt-5 pt-1'>
           <Row className='mt-3'>
             <Col className='mx-auto mb-4'>

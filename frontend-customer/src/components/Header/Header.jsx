@@ -71,8 +71,8 @@ function Header() {
           </div>
         </Container>
       </Navbar>
-      <Container fluid className='p-3 search_container' >
-        <Form className='col-10 col-sm-6 mx-auto'>
+      <Container fluid className='p-3 search_container d-flex justify-content-center' >
+        <Form className='col-10 col-sm-6 '>
           <InputGroup className='p-1 rounded-3 search_input_group'>
             <Form.Control
               placeholder="Search here"
