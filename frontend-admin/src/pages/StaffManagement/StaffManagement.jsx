@@ -118,6 +118,7 @@ function StaffManagement() {
           </td>
           <td>
             <Button
+              className='fw-bold'
               variant={customer.is_active ? 'outline-danger' : 'outline-success'}
               size='sm'
               onClick={() => handleStatusChange(customer.customer_id, customer.is_active ? 0 : 1)}
@@ -125,14 +126,14 @@ function StaffManagement() {
               {customer.is_active ? 'Deactivate' : 'Active'}
             </Button>
           </td>
-        </tr>
+        </tr >
       ))
     )
   }
 
   return (
     <>
-      <Container className='bg-body-tertiary rounded shadow_white py-3'>
+      <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3'>
         <Container className='d-flex justify-content-between mb-3'>
           <h4>Customers</h4>
           <Button onClick={() => navigate('/staff-register')} className='btn_main_dark shadow'>

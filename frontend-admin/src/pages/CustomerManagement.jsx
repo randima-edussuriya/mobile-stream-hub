@@ -129,7 +129,7 @@ function CustomerManagement() {
 
     return (
         <>
-            <Container className='bg-body-tertiary rounded shadow_white py-3'>
+            <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3'>
                 <Container>
                     <h4>Customers</h4>
                 </Container>
