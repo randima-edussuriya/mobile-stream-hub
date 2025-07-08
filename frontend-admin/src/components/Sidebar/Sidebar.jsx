@@ -39,7 +39,7 @@ function Sidebar() {
                         <span>Customer Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/category-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -48,7 +48,7 @@ function Sidebar() {
                         <span>Category Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/item-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -57,16 +57,16 @@ function Sidebar() {
                         <span>Item Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/order-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
-                        }
+                        }z
                     >
                         <i className="bi bi-border-all fs-5 me-3"></i>
                         <span>Order Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/delivery-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -75,7 +75,7 @@ function Sidebar() {
                         <span>Delivery Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/repair-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -84,7 +84,7 @@ function Sidebar() {
                         <span>Repair Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/reorder-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -93,7 +93,7 @@ function Sidebar() {
                         <span>Reorder Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/day-off-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -102,7 +102,7 @@ function Sidebar() {
                         <span>Day off Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/loyalty-program-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -111,7 +111,7 @@ function Sidebar() {
                         <span>Loyalty Program Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/feedback-rating-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -120,7 +120,7 @@ function Sidebar() {
                         <span>Feedback and rating Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/customer-support-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
@@ -129,13 +129,13 @@ function Sidebar() {
                         <span>Customer Support Management</span>
                     </NavLink>
                     <NavLink
-                        to={'/home'}
+                        to={'/reports-management'}
                         className={({ isActive }) =>
                             'list-group-item py-2' + (isActive ? ' active_link' : '')
                         }
                     >
                         <i className="bi bi-flag fs-5 me-3"></i>
-                        <span>Reports</span>
+                        <span>Reports Management</span>
                     </NavLink>
                 </div>
             </div>

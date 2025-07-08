@@ -44,7 +44,7 @@ function Home() {
                     </div>
                 </div>
 
-                <div className='bg-body-tertiary rounded mt-4'>
+                <div className='bg-body-tertiary rounded mt-4 shadow_white'>
                     <Chart1 />
                 </div>
             </div>
