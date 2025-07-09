@@ -124,6 +124,7 @@ function CustomerManagement() {
                     </td>
                     <td>
                         <Button
+                            className='fw-bold'
                             variant={customer.is_active ? 'outline-danger' : 'outline-success'}
                             size='sm'
                             onClick={() => handleStatusChange(customer.customer_id, customer.is_active ? 0 : 1)}
