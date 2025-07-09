@@ -144,7 +144,7 @@ function CustomerManagement() {
                     <h4>Customers</h4>
                 </Container>
                 <Container>
-                    <Table responsive hover striped className='rounded overflow-hidden shadow'>
+                    <Table responsive hover striped size='sm' className='rounded overflow-hidden shadow'>
                         <thead>
                             <tr className='fw-bold'>
                                 <th>ID</th>
