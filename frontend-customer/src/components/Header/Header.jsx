@@ -1,10 +1,11 @@
 import React from 'react'
 import logo from '../../assets/icons/logo.png'
-import { Container, Nav, Navbar, NavDropdown, Dropdown, Badge, Form, InputGroup, Button, Col, Row } from 'react-bootstrap';
+import { Container, Nav, Navbar, NavDropdown, Dropdown, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './Header.css'
 import { useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
+import SearchBar from './SearchBar';
 
 function Header() {
   const { currentUser, logout } = useContext(AuthContext);
@@ -14,6 +15,9 @@ function Header() {
       <Navbar expand="lg" className="bg_light sticky-top">
         <Container fluid>
           <Navbar.Toggle aria-controls="basic-navbar-nav" className='fs-6' />
+          {/* -------------------------------------------------------------------
+                logo section
+          ----------------------------------------------------------------------- */}
           <Navbar.Brand >
             <Link to={'/'}>
               <img
@@ -25,6 +29,9 @@ function Header() {
             </Link>
           </Navbar.Brand>
           <Navbar.Collapse id="basic-navbar-nav">
+            {/* -------------------------------------------------------------------
+                  Navbar left items section
+            ----------------------------------------------------------------------- */}
             <Nav className="me-auto">
               <NavDropdown className='navbar_link' title="Phones" id="basic-nav-dropdown">
                 <NavDropdown.Item >Samsung</NavDropdown.Item>
@@ -44,6 +51,9 @@ function Header() {
             </Nav>
           </Navbar.Collapse>
 
+          {/* -------------------------------------------------------------------
+                Navbar right items section
+          ----------------------------------------------------------------------- */}
           <div className='ms-auto d-flex align-items-center gap-3'>
             <Link to={'/cart'} className='text-reset position-relative me-3'>
               <i className="bi bi-cart3 navbar_icon"></i>
@@ -71,17 +81,11 @@ function Header() {
           </div>
         </Container>
       </Navbar>
+      {/* -------------------------------------------------------------------
+            Search bar section
+      ----------------------------------------------------------------------- */}
       <Container fluid className='p-3 search_container d-flex justify-content-center' >
-        <Form className='col-10 col-sm-6 '>
-          <InputGroup className='p-1 rounded-3 search_input_group'>
-            <Form.Control
-              placeholder="Search here"
-            />
-            <Button variant="dark" className='btn_main_dark'>
-              <i className="bi bi-search"></i>
-            </Button>
-          </InputGroup>
-        </Form>
+        <SearchBar />
       </Container>
     </>
   )

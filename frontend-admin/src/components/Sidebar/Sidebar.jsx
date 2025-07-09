@@ -8,6 +8,9 @@ function Sidebar() {
     return (
         <>
             <div className='p-2'>
+                {/* ----------------------------------------------------
+                            logo section
+                -------------------------------------------------------- */}
                 <div className='m-2'>
                     <Link to={'/home'}>
                         <img
@@ -19,6 +22,9 @@ function Sidebar() {
                 </div>
                 <hr className='text-dark' />
 
+                {/* ----------------------------------------------------
+                            Menu items section
+                -------------------------------------------------------- */}
                 <div className='list-group list-group-flush rounded'>
                     <NavLink
                         to={'/staff-management'}

@@ -1,21 +1,28 @@
 import React from 'react'
 
-function SignupValidation(values) {
+const signupValidation = (formData) => {
     const errors = {};
 
     //Trimming
-    const firstName = values.firstName.trim();
-    const lastName = values.lastName.trim();
-    const phoneNo = values.phoneNo.trim();
-    const address = values.address.trim();
-    const email = values.email.trim();
-    const password = values.password.trim();
-    const confirmPassword = values.confirmPassword.trim();
+    const firstName = formData.firstName.trim();
+    const lastName = formData.lastName.trim();
+    const phoneNo = formData.phoneNo.trim();
+    const address = formData.address.trim();
+    const email = formData.email.trim();
+    const password = formData.password.trim();
+    const confirmPassword = formData.confirmPassword.trim();
 
+    //check emppty
     if (!firstName) errors.firstName = 'First name is required';
     if (!lastName) errors.lastName = 'Last name is required';
-    if (!phoneNo) errors.phoneNo = 'Phone number is required';
     if (!address) errors.address = 'Address is required';
+
+    //phoneNo validation
+    if (!phoneNo) {
+        errors.phoneNo = 'Phone number is required';
+    } else if (!/^(0)\d{9}$/.test(phoneNo)) {
+        errors.phoneNo = 'Invalid phone number'
+    }
 
     //email validation
     if (!email) {
@@ -48,4 +55,4 @@ function SignupValidation(values) {
     return errors;
 }
 
-export default SignupValidation
+export default signupValidation

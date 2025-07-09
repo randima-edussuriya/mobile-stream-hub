@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-import LoginValidation from '../validations/LoginValidation';
+import loginValidation from '../validations/loginValidation';
 import { toast } from 'react-toastify'
 import { AuthContext } from '../context/authContext';
 
@@ -13,17 +13,23 @@ function Login() {
     })
     const [errors, setErrors] = useState({});
 
-    const handleChange = (e) => {
-        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    }
-
     const navigate = useNavigate();
 
     const { login } = useContext(AuthContext)
 
+    /* ----------------------------------------------------------------------
+                Handle form input changes
+    ------------------------------------------------------------------------- */
+    const handleChange = (e) => {
+        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    /* ----------------------------------------------------------------------
+                Handle form submit
+    ------------------------------------------------------------------------- */
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = LoginValidation(formData);
+        const validationErrors = loginValidation(formData);
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
             try {
@@ -56,7 +62,9 @@ function Login() {
                         <Form.Control type="password" placeholder="Enter password" name='password' onChange={handleChange} />
                         {errors.password && <span className='text-danger'>{errors.password}</span>}
                     </Form.Group>
-
+                    {/* --------------------------------------------------------------
+                                buttons section
+                    ------------------------------------------------------------------- */}
                     <div className='mb-3'>
                         <Button variant='none' className='btn_main_dark me-3 shadow' type='submit'>Log In</Button>
                         <Link to={'/signup'} className='btn btn_main_light_outline shadow'>Sign Up</Link>

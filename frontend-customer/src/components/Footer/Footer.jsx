@@ -9,6 +9,9 @@ function Footer() {
       <footer className='text-center footer_main mt-5'>
         <Container className='text-start mt-5 pt-1'>
           <Row className='mt-3'>
+            {/* ----------------------------------------------------------------
+                  Brand name, about, social icons links section
+            -------------------------------------------------------------------- */}
             <Col className='mx-auto mb-4'>
               <h6 className='text-uppercase fw-bold mb-4'>Mobile Stream Hub</h6>
               <p>
@@ -20,6 +23,9 @@ function Footer() {
                 <a href={'https://wa.me/071-2178596'} target='_blank' className='text-reset me-4 social_icon'><i className="bi bi-whatsapp"></i></a>
               </p>
             </Col>
+            {/* ----------------------------------------------------------------
+                  Quick links section
+            -------------------------------------------------------------------- */}
             <Col className='mx-auto mb-4'>
               <h6 className='text-uppercase fw-bold mb-4'>Qucik Links</h6>
               <p>
@@ -33,6 +39,9 @@ function Footer() {
               </p>
 
             </Col>
+            {/* ----------------------------------------------------------------
+                  Contact details section
+            -------------------------------------------------------------------- */}
             <Col className='mx-auto mb-4'>
               <h6 className='text-uppercase fw-bold mb-4'>Contact</h6>
               <p>
@@ -52,6 +61,9 @@ function Footer() {
           </Row>
           {/* Copyright */}
         </Container>
+        {/* ----------------------------------------------------------------
+                  footer bottom section
+            -------------------------------------------------------------------- */}
         <div className="p-4 footer_copyright text-bg-dark">
           © 2025 Copyright: Mobile Stream Hub
         </div>

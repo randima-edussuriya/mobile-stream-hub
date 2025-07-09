@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { Container, Form, Button } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
-import SignupValidation from '../validations/SignupValidation'
+import signupValidation from '../validations/signupValidation'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
@@ -19,15 +19,21 @@ function Signup() {
 
     const [errors, setErrors] = useState({});
 
+    const navigate = useNavigate();
+
+    /* ----------------------------------------------------------------------
+                Handle form input changes
+    ------------------------------------------------------------------------- */
     const handleChange = (e) => {
         setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
-    const navigate = useNavigate();
-
+    /* ----------------------------------------------------------------------
+                Handle form submit
+    ------------------------------------------------------------------------- */
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const validationErrors = SignupValidation(formData);
+        const validationErrors = signupValidation(formData);
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
             try {
@@ -85,6 +91,9 @@ function Signup() {
                         {errors.confirmPassword && <span className='text-danger'>{errors.confirmPassword}</span>}
                     </Form.Group>
 
+                    {/* --------------------------------------------------------------
+                                buttons section
+                    ------------------------------------------------------------------- */}
                     <div className='mb-3'>
                         <Button className='btn_main_dark me-3 shadow' type='submit'>Sign Up</Button>
                         <Button variant='outline-danger' className='btn_style me-3 border-2 shadow' type='reset'>Reset</Button>

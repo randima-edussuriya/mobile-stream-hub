@@ -3,6 +3,9 @@
     color: white !important;
 }
 
+/* ------------------------------------------------
+            Soical icon
+---------------------------------------------------*/
 .social_icon {
     font-size: 20px !important;
     transition: all 0.3s ease !important;
@@ -12,6 +15,9 @@
     color: #51A6F5 !important;
 }
 
+/* ------------------------------------------------
+            Quick links
+---------------------------------------------------*/
 .quick_link {
     transition: all 0.3s ease !important;
 }
