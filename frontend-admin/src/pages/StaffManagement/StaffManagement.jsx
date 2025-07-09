@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router-dom';
 function StaffManagement() {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [customers, setCustomers] = useState([]);
-  const [isToogleCustomerStatus, setIsToogleCustomerStatus] = useState(false)
+  const [staffUsers, setStaffUsers] = useState([]);
+  const [isToogleStaffUserStatus, setIsToogleStaffUserStatus] = useState(false)
 
   const navigate = useNavigate();
 
@@ -18,32 +18,32 @@ function StaffManagement() {
         Fetch Staff users from API
   --------------------------------------------------------------------*/
   useEffect(() => {
-    const fetchCustomers = async () => {
+    const fetchStaffUsers = async () => {
       setLoading(true);
       setError('');
-      setCustomers([]);
-      setIsToogleCustomerStatus(false);
+      setStaffUsers([]);
+      setIsToogleStaffUserStatus(false);
       try {
-        const res = await axios.get('http://localhost:5000/api/customer');
+        const res = await axios.get('http://localhost:5000/api/staff_user');
         if (res.data.success) {
-          setCustomers(res.data.data);
+          setStaffUsers(res.data.data);
         } else {
           setError(res.data.message);
         }
       } catch (error) {
         console.error(error);
-        setError('Failed to loading customers. Please try again.');
+        setError('Failed to loading staff users. Please try again.');
       } finally {
         setLoading(false)
       }
     }
-    fetchCustomers();
-  }, [isToogleCustomerStatus])
+    fetchStaffUsers();
+  }, [isToogleStaffUserStatus])
 
   /* -----------------------------------------------------------------
         Handle staff user status change
   --------------------------------------------------------------------*/
-  const handleStatusChange = async (customerId, newStatus) => {
+  const handleStatusChange = async (staffUserId, newStatus) => {
     const actionText = newStatus ? 'activate' : 'deactivate';
 
     const confim = await Swal.fire({
@@ -52,7 +52,7 @@ function StaffManagement() {
         cancelButton: "btn btn-danger",
         title: "h5",
       },
-      title: `Are you sure to  ${actionText} this customer`,
+      title: `Are you sure to  ${actionText} this staff user`,
       showCancelButton: true,
       confirmButtonColor: "#10207A",
       cancelButtonColor: "#d33",
@@ -63,11 +63,11 @@ function StaffManagement() {
     if (!confim.isConfirmed) return;
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/customer/status/${customerId}`,
+      const res = await axios.put(`http://localhost:5000/api/customer/status/${staffUserId}`,
         { newStatus: newStatus }
       );
       if (res.data.success) {
-        setIsToogleCustomerStatus(true);
+        setIsToogleStaffUserStatus(true);
         toast.success(res.data.message, { position: 'top-center' })
       } else {
         toast.error(res.data.message, { position: 'top-center' })
@@ -102,37 +102,39 @@ function StaffManagement() {
       )
     }
 
-    if (customers.length === 0) {
+    if (staffUsers.length === 0) {
       return (
         <tr>
-          <td colSpan={9} className='text-danger text-center'>No Customers found</td>
+          <td colSpan={9} className='text-danger text-center'>No staff users found</td>
         </tr>
       )
     }
 
     return (
-      customers.map(customer => (
-        <tr key={customer.customer_id}>
-          <td>{customer.customer_id}</td>
-          <td>{customer.first_name}</td>
-          <td>{customer.last_name}</td>
-          <td>{customer.email}</td>
-          <td>{customer.phone_number}</td>
-          <td>{customer.address}</td>
-          <td>{dayjs(customer.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>
+      staffUsers.map(staffUser => (
+        <tr key={staffUser.staff_id}>
+          <td>{staffUser.staff_id}</td>
+          <td>{staffUser.first_name}</td>
+          <td>{staffUser.last_name}</td>
+          <td>{staffUser.staff_type_name}</td>
+          <td>{staffUser.email}</td>
+          <td>{staffUser.phone_number}</td>
+          <td>{staffUser.nic_number}</td>
+          <td>{staffUser.address}</td>
+          <td>{dayjs(staffUser.hire_date).format('YYYY-MM-DD HH:mm:ss')}</td>
           <td>
-            <Badge bg={customer.is_active ? 'success' : 'danger'}>
-              {customer.is_active ? 'Active' : 'Deactive'}
+            <Badge bg={staffUser.is_active ? 'success' : 'danger'}>
+              {staffUser.is_active ? 'Active' : 'Deactive'}
             </Badge>
           </td>
           <td>
             <Button
               className='fw-bold'
-              variant={customer.is_active ? 'outline-danger' : 'outline-success'}
+              variant={staffUser.is_active ? 'outline-danger' : 'outline-success'}
               size='sm'
-              onClick={() => handleStatusChange(customer.customer_id, customer.is_active ? 0 : 1)}
+              onClick={() => handleStatusChange(staffUser.customer_id, staffUser.is_active ? 0 : 1)}
             >
-              {customer.is_active ? 'Deactivate' : 'Active'}
+              {staffUser.is_active ? 'Deactivate' : 'Active'}
             </Button>
           </td>
         </tr >
@@ -144,23 +146,25 @@ function StaffManagement() {
     <>
       <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3'>
         <Container className='d-flex justify-content-between mb-3'>
-          <h4>Customers</h4>
+          <h4>Staff Users</h4>
           <Button onClick={() => navigate('/staff-register')} className='btn_main_dark shadow'>
             <i className="bi bi-plus-circle me-2 fs-6"></i>
             Add New
           </Button>
         </Container>
         <Container>
-          <Table responsive hover striped className='rounded overflow-hidden shadow'>
+          <Table responsive hover striped size='sm' className='rounded overflow-hidden shadow'>
             <thead>
               <tr className='fw-bold'>
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>User Role</th>
                 <th>E-mail</th>
                 <th>Phone No</th>
+                <th>NIC No</th>
                 <th>Address</th>
-                <th>Created At</th>
+                <th>Hired Date</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
