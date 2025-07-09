@@ -21,7 +21,7 @@ const staffRegisterValidation = (formData) => {
     //phoneNo validation
     if (!phoneNo) {
         errors.phoneNo = 'Phone number is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(phoneNo)) {
+    } else if (!/^(?:0|\+94)[1-9][0-9]{8}$/.test(phoneNo)) {
         errors.phoneNo = 'Invalid phone number'
     }
 
