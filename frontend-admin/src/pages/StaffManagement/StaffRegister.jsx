@@ -74,7 +74,7 @@ function StaffRegister() {
     }
   }
   return (
-    <Container fluid className='d-flex justify-content-center align-items-center  mt-3 py-0 rounded'>
+    <Container fluid className='d-flex justify-content-center align-items-center  mt-3 mb-5 py-0 rounded'>
       <Container className='col-10 col-sm-6 p-3  rounded bg-secondary-subtle shadow_white'>
         <h3 className='text-center mb-3'>Staff User Register</h3>
         <Form onSubmit={handleSubmit}>
