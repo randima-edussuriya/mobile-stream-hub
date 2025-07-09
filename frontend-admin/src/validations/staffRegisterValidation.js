@@ -7,6 +7,7 @@ const staffRegisterValidation = (formData) => {
     const phoneNo = formData.phoneNo.trim();
     const nicNo = formData.nicNo.trim();
     const address = formData.address.trim();
+    const staffType = formData.staffType;
     const email = formData.email.trim();
     const password = formData.password.trim();
     const confirmPassword = formData.confirmPassword.trim();
@@ -15,6 +16,7 @@ const staffRegisterValidation = (formData) => {
     if (!firstName) errors.firstName = 'First name is required';
     if (!lastName) errors.lastName = 'Last name is required';
     if (!address) errors.address = 'Address is required';
+    if (!staffType) errors.staffType = 'Staff Type is required';
 
     //phoneNo validation
     if (!phoneNo) {
