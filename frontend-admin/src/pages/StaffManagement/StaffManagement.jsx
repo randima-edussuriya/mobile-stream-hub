@@ -63,7 +63,7 @@ function StaffManagement() {
     if (!confim.isConfirmed) return;
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/customer/status/${staffUserId}`,
+      const res = await axios.put(`http://localhost:5000/api/staff_user/status/${staffUserId}`,
         { newStatus: newStatus }
       );
       if (res.data.success) {
@@ -132,7 +132,7 @@ function StaffManagement() {
               className='fw-bold'
               variant={staffUser.is_active ? 'outline-danger' : 'outline-success'}
               size='sm'
-              onClick={() => handleStatusChange(staffUser.customer_id, staffUser.is_active ? 0 : 1)}
+              onClick={() => handleStatusChange(staffUser.staff_id, staffUser.is_active ? 0 : 1)}
             >
               {staffUser.is_active ? 'Deactivate' : 'Active'}
             </Button>
