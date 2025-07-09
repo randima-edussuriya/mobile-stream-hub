@@ -11,6 +11,9 @@ function CustomerManagement() {
     const [customers, setCustomers] = useState([]);
     const [isToogleCustomerStatus, setIsToogleCustomerStatus] = useState(false)
 
+    /* -----------------------------------------------------------------
+        Fetch customers from API
+    --------------------------------------------------------------------*/
     useEffect(() => {
         const fetchCustomers = async () => {
             setLoading(true);
@@ -34,6 +37,9 @@ function CustomerManagement() {
         fetchCustomers();
     }, [isToogleCustomerStatus])
 
+    /* -----------------------------------------------------------------
+        Handle customer status change
+    --------------------------------------------------------------------*/
     const handleStatusChange = async (customerId, newStatus) => {
         const actionText = newStatus ? 'activate' : 'deactivate';
 
@@ -41,14 +47,14 @@ function CustomerManagement() {
             customClass: {
                 confirmButton: "btn btn-success",
                 cancelButton: "btn btn-danger",
-                title:"h5",
+                title: "h5",
             },
             title: `Are you sure to  ${actionText} this customer`,
             showCancelButton: true,
             confirmButtonColor: "#10207A",
             cancelButtonColor: "#d33",
             confirmButtonText: `Yes, ${actionText}`,
-            width:'17em'
+            width: '17em'
         })
 
         if (!confim.isConfirmed) return;
@@ -69,6 +75,9 @@ function CustomerManagement() {
         }
     }
 
+    /* -----------------------------------------------------------------
+        Render customer data into table
+    --------------------------------------------------------------------*/
     const renderTableBody = () => {
         if (Loading) {
             return (

@@ -110,7 +110,7 @@ function StaffRegister() {
               <option value=''>Select staff type</option>
               {
                 /* -----------------------------------------------------------------
-                      Fetch staff types to UI
+                      Render staff types to UI
                 --------------------------------------------------------------------*/
                 stafTypes.length === 0 ? (
                   <option value='' className='text-danger'>Not available staff types</option>

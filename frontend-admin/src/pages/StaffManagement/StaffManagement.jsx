@@ -14,6 +14,9 @@ function StaffManagement() {
 
   const navigate = useNavigate();
 
+  /* -----------------------------------------------------------------
+        Fetch Staff users from API
+  --------------------------------------------------------------------*/
   useEffect(() => {
     const fetchCustomers = async () => {
       setLoading(true);
@@ -37,6 +40,9 @@ function StaffManagement() {
     fetchCustomers();
   }, [isToogleCustomerStatus])
 
+  /* -----------------------------------------------------------------
+        Handle staff user status change
+  --------------------------------------------------------------------*/
   const handleStatusChange = async (customerId, newStatus) => {
     const actionText = newStatus ? 'activate' : 'deactivate';
 
@@ -72,6 +78,9 @@ function StaffManagement() {
     }
   }
 
+  /* -----------------------------------------------------------------
+        Render staff user data into table
+  --------------------------------------------------------------------*/
   const renderTableBody = () => {
     if (Loading) {
       return (
