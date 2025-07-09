@@ -9,10 +9,11 @@ export const register = async (req, res) => {
         const phoneNo = req.body.phoneNo?.trim();
         const nicNo = req.body.nicNo?.trim();
         const address = req.body.address?.trim();
+        const staffType = req.body.staffType;
         const email = req.body.email?.trim();
         const confirmPassword = req.body.confirmPassword?.trim();
 
-        if (!firstName || !lastName || !phoneNo || !nicNo || !address || !email || !confirmPassword)
+        if (!firstName || !lastName || !phoneNo || !nicNo || !address || !staffType || !email || !confirmPassword)
             return res.json({ success: false, message: 'Fileds are required' });
 
         //check existing user
@@ -30,12 +31,12 @@ export const register = async (req, res) => {
         //insert user
         const sqlInsert = `INSERT INTO staff (first_name, last_name, password, email, phone_number, nic_number, address, staff_type_id)
                             VALUES (?,?,?,?,?,?,?,?)`;
-        const values = [firstName, lastName, hashedPassword, email, phoneNo, address]
-        await db.query(sqlInsert, values);
+        const values = [firstName, lastName, hashedPassword, email, phoneNo, nicNo, address, staffType]
+        // await db.query(sqlInsert, values);
         return res.json({ success: true, message: 'signup successfully' });
     } catch (err) {
         console.error(err);
-        return res.json({ success: false, message: 'Server error' });
+        return res.json({ success: false, message: 'Failed to register. Please try again.' });
     }
 }
 
@@ -83,7 +84,7 @@ export const login = async (req, res) => {
         res.json({ success: true, message: 'Logged in successfully', data: userLogged })
     } catch (error) {
         console.error(error);
-        res.json({ success: false, message: 'Failed to login' })
+        res.json({ success: false, message: 'Failed to login. Please try again.' })
     }
 }
 

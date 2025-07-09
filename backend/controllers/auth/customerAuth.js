@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
         return res.json({ success: true, message: 'signup successfully' });
     } catch (err) {
         console.error(err);
-        return res.json({ success: false, message: 'Server error' });
+        return res.json({ success: false, message: 'Failed to signup. Please try again.' });
     }
 }
 
@@ -69,7 +69,7 @@ export const login = async (req, res) => {
         res.json({ success: true, message: 'Logged in successfully', data: userLogged });
     } catch (err) {
         console.error(err);
-        return res.json({ success: false, message: 'Failed to login' })
+        return res.json({ success: false, message: 'Failed to login. Please try again.' })
     }
 }
 

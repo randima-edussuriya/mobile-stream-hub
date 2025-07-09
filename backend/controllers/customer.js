@@ -6,7 +6,7 @@ export const getCustomers = async (req, res) => {
         const result = await db.query(sql)
         res.json({ success: true, data: result })
     } catch (error) {
-        res.json({ success: false, message: 'Failed to fetch customers' })
+        res.json({ success: false, message: 'Failed to fetch customers. Please try again.' })
     }
 }
 
