@@ -19,10 +19,14 @@ function StaffRegister() {
     password: '',
     confirmPassword: '',
   })
-
   const [errors, setErrors] = useState({});
   const [stafTypes, setStafTypes] = useState([]);
 
+  const navigate = useNavigate();
+
+  /* -----------------------------------------------------------------
+        Fetch Staff Types from API
+  --------------------------------------------------------------------*/
   useEffect(() => {
     const getStaffTypes = async () => {
       setStafTypes([])
@@ -40,12 +44,16 @@ function StaffRegister() {
     getStaffTypes();
   }, [])
 
+  /* -----------------------------------------------------------------
+        Handle form input changes 
+  --------------------------------------------------------------------*/
   const handleChange = (e) => {
     setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  const navigate = useNavigate();
-
+  /* -----------------------------------------------------------------
+         Handle form submit
+   --------------------------------------------------------------------*/
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = staffRegisterValidation(formData);
@@ -100,15 +108,20 @@ function StaffRegister() {
             <Form.Label>Staff Type</Form.Label>
             <Form.Select value={formData.staffType} name='staffType' onChange={handleChange}>
               <option value=''>Select staff type</option>
-              {stafTypes.length === 0 ? (
-                <option value='' className='text-danger'>Not available staff types</option>
-              ) : (
-                stafTypes.map(row => (
-                  <option value={row.staff_type_id} key={row.staff_type_id}>
-                    {row.staff_type_name}
-                  </option>
-                ))
-              )}
+              {
+                /* -----------------------------------------------------------------
+                      Fetch staff types to UI
+                --------------------------------------------------------------------*/
+                stafTypes.length === 0 ? (
+                  <option value='' className='text-danger'>Not available staff types</option>
+                ) : (
+                  stafTypes.map(row => (
+                    <option value={row.staff_type_id} key={row.staff_type_id}>
+                      {row.staff_type_name}
+                    </option>
+                  ))
+                )
+              }
             </Form.Select>
             {errors.staffType && <span className='text-danger'>{errors.staffType}</span>}
           </Form.Group>
