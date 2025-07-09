@@ -11,10 +11,17 @@ const staffRegisterValidation = (formData) => {
     const password = formData.password.trim();
     const confirmPassword = formData.confirmPassword.trim();
 
+    //check empty
     if (!firstName) errors.firstName = 'First name is required';
     if (!lastName) errors.lastName = 'Last name is required';
-    if (!phoneNo) errors.phoneNo = 'Phone number is required';
     if (!address) errors.address = 'Address is required';
+
+    //phoneNo validation
+    if (!phoneNo) {
+        errors.phoneNo = 'Phone number is required';
+    } else if (!/^(0)\d{9}$/.test(phoneNo)) {
+        errors.phoneNo = 'Invalid phone number'
+    }
 
     //nic No validation
     const isNicValid = (nicNo) => {
