@@ -6,6 +6,7 @@ import adminAuthRoutes from './routes/auth/adminAuth.js'
 import customerAuthRoutes from './routes/auth/customerAuth.js'
 import customerRoutes from './routes/customer.js'
 import staffTypeRoutes from './routes/staffType.js'
+import staffUserRoutes from './routes/staffUser.js'
 
 const app = express();
 app.use(cors({
@@ -22,6 +23,7 @@ app.use('/api/auth/customer', customerAuthRoutes);
 
 app.use('/api/customer', customerRoutes);
 app.use('/api/staff_type', staffTypeRoutes);
+app.use('/api/staff_user', staffUserRoutes);
 
 //for test
 import bcrypt, { hash } from 'bcryptjs';
