@@ -32,7 +32,7 @@ function StaffManagement() {
         }
       } catch (error) {
         console.error(error);
-        setError('Failed to loading customers');
+        setError('Failed to loading customers. Please try again.');
       } finally {
         setLoading(false)
       }
