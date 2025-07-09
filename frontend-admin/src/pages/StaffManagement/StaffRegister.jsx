@@ -59,19 +59,18 @@ function StaffRegister() {
     const validationErrors = staffRegisterValidation(formData);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      alert('No errors')
-      // try {
-      //   const res = await axios.post('http://localhost:5000/api/auth/customer/signup', formData)
-      //   if (res.data.success) {
-      //     toast.success(res.data.message, { position: "top-center" })
-      //     navigate('/login');
-      //   } else {
-      //     toast.error(res.data.message, { position: "top-center" });
-      //   }
-      // } catch (err) {
-      //   console.error(err);
-      //   toast.error('An error occurred', { position: "top-center" });
-      // }
+      try {
+        const res = await axios.post('http://localhost:5000/api/auth/admin/regiser', formData)
+        if (res.data.success) {
+          toast.success(res.data.message, { position: "top-center" })
+          navigate('/staff-management');
+        } else {
+          toast.error(res.data.message, { position: "top-center" });
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error('An error occurred. Please try again.', { position: "top-center" });
+      }
     }
   }
   return (

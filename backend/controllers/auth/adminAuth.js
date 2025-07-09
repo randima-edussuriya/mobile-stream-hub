@@ -32,7 +32,7 @@ export const register = async (req, res) => {
         const sqlInsert = `INSERT INTO staff (first_name, last_name, password, email, phone_number, nic_number, address, staff_type_id)
                             VALUES (?,?,?,?,?,?,?,?)`;
         const values = [firstName, lastName, hashedPassword, email, phoneNo, nicNo, address, staffType]
-        // await db.query(sqlInsert, values);
+        await db.query(sqlInsert, values);
         return res.json({ success: true, message: 'signup successfully' });
     } catch (err) {
         console.error(err);
