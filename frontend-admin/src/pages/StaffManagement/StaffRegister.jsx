@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import staffRegisterValidation from '../../validations/staffRegisterValidation'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useEffect } from 'react'
 
 function StaffRegister() {
   const [formData, setData] = useState({
@@ -13,12 +14,31 @@ function StaffRegister() {
     phoneNo: '',
     nicNo: '',
     address: '',
+    staffType: '',
     email: '',
     password: '',
     confirmPassword: '',
   })
 
   const [errors, setErrors] = useState({});
+  const [stafTypes, setStafTypes] = useState([]);
+
+  useEffect(() => {
+    const getStaffTypes = async () => {
+      setStafTypes([])
+      try {
+        const res = await axios.get('http://localhost:5000/api/staff_type');
+        if (res.data.success) {
+          setStafTypes(res.data.data);
+        } else {
+          console.error(res.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getStaffTypes();
+  }, [])
 
   const handleChange = (e) => {
     setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -75,6 +95,22 @@ function StaffRegister() {
             <Form.Label>Address</Form.Label>
             <Form.Control type="text" placeholder="Enter address" name='address' onChange={handleChange} />
             {errors.address && <span className='text-danger'>{errors.address}</span>}
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formGroupStaffType">
+            <Form.Label>Staff Type</Form.Label>
+            <Form.Select value={formData.staffType} name='staffType' onChange={handleChange}>
+              <option value=''>Select staff type</option>
+              {stafTypes.length === 0 ? (
+                <option value='' className='text-danger'>Not available staff types</option>
+              ) : (
+                stafTypes.map(row => (
+                  <option value={row.staff_type_id} key={row.staff_type_id}>
+                    {row.staff_type_name}
+                  </option>
+                ))
+              )}
+            </Form.Select>
+            {errors.staffType && <span className='text-danger'>{errors.staffType}</span>}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupEmail">
             <Form.Label>Email</Form.Label>
