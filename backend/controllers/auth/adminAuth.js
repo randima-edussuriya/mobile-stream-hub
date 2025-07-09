@@ -2,6 +2,43 @@ import db from '../../db.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+export const register = async (req, res) => {
+    try {
+        const firstName = req.body.firstName?.trim();
+        const lastName = req.body.lastName?.trim();
+        const phoneNo = req.body.phoneNo?.trim();
+        const nicNo = req.body.nicNo?.trim();
+        const address = req.body.address?.trim();
+        const email = req.body.email?.trim();
+        const confirmPassword = req.body.confirmPassword?.trim();
+
+        if (!firstName || !lastName || !phoneNo || !nicNo || !address || !email || !confirmPassword)
+            return res.json({ success: false, message: 'Fileds are required' });
+
+        //check existing user
+        const sqlUserExist = 'SELECT * FROM staff WHERE email = ? LIMIT 1';
+        const existingUser = await db.query(sqlUserExist, [email]);
+
+        if (existingUser.length > 0) {
+            return res.json({ success: false, message: 'Email already exist' })
+        }
+
+        //hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+
+        //insert user
+        const sqlInsert = `INSERT INTO staff (first_name, last_name, password, email, phone_number, nic_number, address, staff_type_id)
+                            VALUES (?,?,?,?,?,?,?,?)`;
+        const values = [firstName, lastName, hashedPassword, email, phoneNo, address]
+        await db.query(sqlInsert, values);
+        return res.json({ success: true, message: 'signup successfully' });
+    } catch (err) {
+        console.error(err);
+        return res.json({ success: false, message: 'Server error' });
+    }
+}
+
 export const login = async (req, res) => {
     try {
         //Trimming
