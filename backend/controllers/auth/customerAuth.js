@@ -50,6 +50,10 @@ export const login = async (req, res) => {
             return res.json({ success: false, message: 'User does not exist' })
         }
 
+        //check user is deactive
+        if (result[0].is_active === 0)
+            return res.json({ success: false, message: 'User is Deactivated' })
+
         //check hash password
         const isPasswordCorrect = await bcrypt.compare(password, result[0].password);
 
