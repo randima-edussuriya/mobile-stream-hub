@@ -2,12 +2,12 @@ const categoryValidation = (formData) => {
     const errors = {};
 
     //Trimming
-    const name = formData.name.trim();
-    const type = formData.type.trim();
+    const categoryName = formData.categoryName.trim();
+    const categoryType = formData.categoryType.trim();
 
     //check empty
-    if (!name) errors.name = 'Category name is required';
-    if (!type) errors.type = 'Category type is required';
+    if (!categoryName) errors.categoryName = 'Category name is required';
+    if (!categoryType) errors.categoryType = 'Category type is required';
 
     return errors;
 }
