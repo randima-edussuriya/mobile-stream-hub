@@ -34,6 +34,6 @@ export const updateStatus = async (req, res) => {
         return res.json({ success: true, message: `Customer is ${newStatus ? 'activated' : 'deactivated'} successfully` })
     } catch (error) {
         console.error(error);
-        return res.json({ success: false, message: 'Failed to update customer status. Please try again.' })
+        return res.json({ success: false, message: 'Failed to update customer status. Please try again.....' })
     }
 }
