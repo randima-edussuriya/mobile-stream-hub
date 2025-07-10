@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { Container, Form, Button } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import staffRegisterValidation from '../../validations/staffRegisterValidation'
 import axios from 'axios'
 import { toast } from 'react-toastify'
