@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 
 function StaffRegister() {
-  const [formData, setData] = useState({
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     phoneNo: '',
@@ -48,7 +48,7 @@ function StaffRegister() {
         Handle form input changes 
   --------------------------------------------------------------------*/
   const handleChange = (e) => {
-    setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   /* -----------------------------------------------------------------
