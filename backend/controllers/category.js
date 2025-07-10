@@ -19,7 +19,7 @@ export const addCategory = async (req, res) => {
     }
 }
 
-export const getCategories = async () => {
+export const getCategories = async (req, res) => {
     try {
         const sql = 'SELECT * FROM category';
         const result = await db.query(sql)
