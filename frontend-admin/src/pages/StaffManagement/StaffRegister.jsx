@@ -52,6 +52,23 @@ function StaffRegister() {
   }
 
   /* -----------------------------------------------------------------
+        Handle form reset
+  --------------------------------------------------------------------*/
+  const handleReset = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      phoneNo: '',
+      nicNo: '',
+      address: '',
+      staffType: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    })
+  }
+
+  /* -----------------------------------------------------------------
          Handle form submit
    --------------------------------------------------------------------*/
   const handleSubmit = async (e) => {
@@ -142,7 +159,14 @@ function StaffRegister() {
 
           <div className='mb-3'>
             <Button className='btn_main_dark me-3 shadow' type='submit'>Register</Button>
-            <Button variant='outline-danger' className='btn_style me-3 border-2 shadow' type='reset'>Reset</Button>
+            <Button
+              variant='outline-danger'
+              className='btn_style me-3 border-2 shadow'
+              type='reset'
+              onClick={handleReset}
+            >
+              Reset
+            </Button>
           </div>
         </Form>
       </Container>
