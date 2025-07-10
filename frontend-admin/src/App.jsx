@@ -10,7 +10,6 @@ import StaffManagement from './pages/StaffManagement/StaffManagement'
 import { createContext } from 'react'
 import { PrivateRoute, RoleRoute } from './routes/authRoutes'
 import CustomerManagement from './pages/CustomerManagement'
-import CategoryManagement from './pages/CategoryManagement'
 import ItemManagement from './pages/ItemManagement'
 import OrderManagement from './pages/OrderManagement'
 import DeliveryManagement from './pages/DeliveryManagement'
@@ -22,6 +21,8 @@ import CustomerSupportManagement from './pages/CustomerSupportManagement'
 import ReportsManagement from './pages/ReportsManagement'
 import StaffRegister from './pages/StaffManagement/StaffRegister'
 import RepairManagement from './pages/RepairManagement'
+import CategoryAdd from './pages/CategoryManagement/CategoryAdd'
+import CategoryManagement from './pages/CategoryManagement/CategoryManagement'
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -95,6 +96,14 @@ function App() {
           element: (
             <RoleRoute allowedRoles={['admin']}>
               <CategoryManagement />
+            </RoleRoute>
+          )
+        },
+        {
+          path: 'category-add',
+          element: (
+            <RoleRoute allowedRoles={['admin']}>
+              <CategoryAdd />
             </RoleRoute>
           )
         },
