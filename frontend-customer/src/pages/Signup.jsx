@@ -7,7 +7,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 function Signup() {
-    const [formData, setData] = useState({
+    const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         phoneNo: '',
@@ -25,7 +25,22 @@ function Signup() {
                 Handle form input changes
     ------------------------------------------------------------------------- */
     const handleChange = (e) => {
-        setData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    }
+
+    /* ----------------------------------------------------------------------
+                Handle form reset
+    ------------------------------------------------------------------------- */
+    const handleReset = () => {
+        setFormData({
+            firstName: '',
+            lastName: '',
+            phoneNo: '',
+            address: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+        })
     }
 
     /* ----------------------------------------------------------------------
@@ -36,18 +51,20 @@ function Signup() {
         const validationErrors = signupValidation(formData);
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
-            try {
-                const res = await axios.post('http://localhost:5000/api/auth/customer/signup', formData)
-                if (res.data.success) {
-                    toast.success(res.data.message, { position: "top-center" })
-                    navigate('/login');
-                } else {
-                    toast.error(res.data.message, { position: "top-center" });
-                }
-            } catch (err) {
-                console.error(err);
-                toast.error('An error occurred', { position: "top-center" });
-            }
+                    toast.success('can submit', { position: "top-center" })
+
+            // try {
+            //     const res = await axios.post('http://localhost:5000/api/auth/customer/signup', formData)
+            //     if (res.data.success) {
+            //         toast.success(res.data.message, { position: "top-center" })
+            //         navigate('/login');
+            //     } else {
+            //         toast.error(res.data.message, { position: "top-center" });
+            //     }
+            // } catch (err) {
+            //     console.error(err);
+            //     toast.error('An error occurred', { position: "top-center" });
+            // }
         }
     }
     return (
@@ -96,7 +113,14 @@ function Signup() {
                     ------------------------------------------------------------------- */}
                     <div className='mb-3'>
                         <Button className='btn_main_dark me-3 shadow' type='submit'>Sign Up</Button>
-                        <Button variant='outline-danger' className='btn_style me-3 border-2 shadow' type='reset'>Reset</Button>
+                        <Button
+                            variant='outline-danger'
+                            className='btn_style me-3 border-2 shadow'
+                            type='reset'
+                            onClick={handleReset}
+                        >
+                            Reset
+                        </Button>
                         <Link to={'/login'} className='btn btn_main_light_outline shadow'>Log In</Link>
                     </div>
                 </Form>
