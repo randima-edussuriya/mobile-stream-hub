@@ -23,6 +23,16 @@ function CategoryAdd() {
     }
 
     /* -----------------------------------------------------------------
+          Handle form reset 
+    --------------------------------------------------------------------*/
+    const handleReset = () => {
+        setFormData({
+            categoryName: '',
+            categoryType: '',
+        })
+    }
+
+    /* -----------------------------------------------------------------
            Handle form submit
      --------------------------------------------------------------------*/
     const handleSubmit = async (e) => {
@@ -67,7 +77,14 @@ function CategoryAdd() {
 
                     <div className='mb-3'>
                         <Button className='btn_main_dark me-3 shadow' type='submit'>Add</Button>
-                        <Button variant='outline-danger' className='btn_style me-3 border-2 shadow' type='reset'>Reset</Button>
+                        <Button
+                            variant='outline-danger'
+                            className='btn_style me-3 border-2 shadow'
+                            onClick={handleReset}
+                            type='reset'
+                        >
+                            Reset
+                        </Button>
                     </div>
                 </Form>
             </Container>
