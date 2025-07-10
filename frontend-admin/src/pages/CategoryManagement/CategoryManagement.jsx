@@ -132,7 +132,7 @@ function CategoryManagement() {
       <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3'>
         <Container className='d-flex justify-content-between mb-3'>
           <h4>Categories</h4>
-          <Button onClick={() => navigate('/staff-register')} className='btn_main_dark shadow'>
+          <Button onClick={() => navigate('/category-add')} className='btn_main_dark shadow'>
             <i className="bi bi-plus-circle me-2 fs-6"></i>
             Add New
           </Button>
