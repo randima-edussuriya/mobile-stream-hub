@@ -113,13 +113,8 @@ function CategoryManagement() {
           <td>{category.category_name}</td>
           <td>{category.category_type}</td>
           <td>
-            <Button
-              className='fw-bold'
-              variant={'outline-danger'}
-              size='sm'
-              onClick={() => handleCategoryDelete(category.category_id)}
-            >
-              Delete
+            <Button variant='outline-danger' size='sm' className='py-0 px-1 border-0' title='Delete'>
+              <i className="bi bi-trash fs-6"></i>
             </Button>
           </td>
         </tr >
@@ -129,7 +124,7 @@ function CategoryManagement() {
 
   return (
     <>
-      <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3'>
+      <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3 col-lg-9 col-xl-8'>
         <Container className='d-flex justify-content-between mb-3'>
           <h4>Categories</h4>
           <Button onClick={() => navigate('/category-add')} className='btn_main_dark shadow'>
