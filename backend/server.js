@@ -28,15 +28,10 @@ app.use('/api/staff_user', staffUserRoutes);
 app.use('/api/category', categoryRoutes);
 
 //for test
-import bcrypt, { hash } from 'bcryptjs';
 app.get('/test', async (req, res) => {
     res.json('Testin happening')
-    const pwd = 'aA1@adre'
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(pwd, salt);
-    console.log(hashedPassword);
-    const isPasswordCorrect = await bcrypt.compare(pwd, '$2b$10$dCTRu3vlb5HpnSDq5MQMneG/8sfjO63cTzNKPwiftmuxY9U7wvlQ6')
-    if (isPasswordCorrect) console.log('Password correct')
+    const secure = process.env.NODE_ENV === 'development';
+    console.log(secure);
 })
 
 
