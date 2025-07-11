@@ -50,11 +50,11 @@ function CategoryManagement() {
         cancelButton: "btn btn-danger",
         title: "h5",
       },
-      title: `Are you sure to  delete this category`,
+      title: "Are you sure to  delete this category",
       showCancelButton: true,
       confirmButtonColor: "#10207A",
       cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${actionText}`,
+      confirmButtonText: "Yes",
       width: '17em'
     })
 
@@ -113,7 +113,13 @@ function CategoryManagement() {
           <td>{category.category_name}</td>
           <td>{category.category_type}</td>
           <td>
-            <Button variant='outline-danger' size='sm' className='py-0 px-1 border-0' title='Delete'>
+            <Button
+              variant='outline-danger'
+              size='sm'
+              className='py-0 px-1 border-0'
+              title='Delete'
+              onClick={() => handleCategoryDelete(category.category_id)}
+            >
               <i className="bi bi-trash fs-6"></i>
             </Button>
           </td>
