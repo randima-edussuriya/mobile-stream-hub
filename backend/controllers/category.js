@@ -30,6 +30,20 @@ export const getCategories = async (req, res) => {
     }
 }
 
-export const deleteCategory = () => {
+export const deleteCategory = async (req, res) => {
+    try {
+        //validate category ID
+        const categoryId = req.params.id?.trim();
+        if (!categoryId || isNaN(categoryId))
+            return res.json({ success: false, message: 'Missing or invalid category ID' })
 
+        const sql = 'DELETE FROM category WHERE category_id=?';
+
+        //delete category from db
+        await db.query(sql, [categoryId]);
+        return res.json({ success: true, message: 'Category is deleted successfully.' })
+    } catch (error) {
+        console.error(error);
+        return res.json({ success: false, message: 'Failed to delete category. Please try again' })
+    }
 }
