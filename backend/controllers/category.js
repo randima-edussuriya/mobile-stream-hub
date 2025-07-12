@@ -30,6 +30,17 @@ export const getCategories = async (req, res) => {
     }
 }
 
+export const getcategoriesPhone = async (req, res) => {
+    try {
+        const sql = "SELECT * FROM category WHERE category_type = 'phone'";
+        const result = await db.query(sql);
+        res.json({ success: true, date: result })
+    } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: 'Failed to get categories in phone' })
+    }
+}
+
 export const deleteCategory = async (req, res) => {
     try {
         //validate category ID
