@@ -34,7 +34,7 @@ export const getcategoriesPhone = async (req, res) => {
     try {
         const sql = "SELECT * FROM category WHERE category_type = 'phone'";
         const result = await db.query(sql);
-        res.json({ success: true, date: result })
+        res.json({ success: true, data: result })
     } catch (error) {
         console.error(error);
         res.json({ success: false, message: 'Failed to get categories in phone' })
