@@ -1,14 +1,38 @@
 import React from 'react'
 import logo from '../../assets/icons/logo.png'
 import { Container, Nav, Navbar, NavDropdown, Dropdown, Badge } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './Header.css'
 import { useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
 import SearchBar from './SearchBar';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 function Header() {
   const { currentUser, logout } = useContext(AuthContext);
+  const [categoriesPhone, setCategoriesPhone] = useState([]);
+
+  /* ------------------------------------------------------------
+        Fetch categories-phone from API
+  --------------------------------------------------------------- */
+  useEffect(() => {
+    const getCategoriesPhone = async () => {
+      setCategoriesPhone([])
+      try {
+        const res = await axios.get('http://localhost:5000/api/category/phone');
+        if (res.data.success) {
+          setCategoriesPhone(res.data.data);
+        } else {
+          console.error(res.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getCategoriesPhone();
+  }, [])
 
   return (
     <>
@@ -34,9 +58,18 @@ function Header() {
             ----------------------------------------------------------------------- */}
             <Nav className="me-auto">
               <NavDropdown className='navbar_link' title="Phones" id="basic-nav-dropdown">
-                <NavDropdown.Item >Samsung</NavDropdown.Item>
-                <NavDropdown.Item>Vivo</NavDropdown.Item>
-                <NavDropdown.Item>Apple</NavDropdown.Item>
+                {/* ------------------------------------------------
+                      render categoris-phone into dropdown
+                ---------------------------------------------------- */}
+                {categoriesPhone.length === 0 ? (
+                  <NavDropdown.Item>Not Available</NavDropdown.Item>
+                ) : (
+                  categoriesPhone.map(row => (
+                    <NavDropdown.Item as={Link} to={`/products/?category=${row.category_name}`} key={row.category_id} >
+                      {row.category_name}
+                    </NavDropdown.Item>
+                  ))
+                )}
               </NavDropdown>
               <NavDropdown className='navbar_link' title="Accessories" id="basic-nav-dropdown">
                 <NavDropdown.Item>Action</NavDropdown.Item>
@@ -44,7 +77,7 @@ function Header() {
                 <NavDropdown.Item>Action</NavDropdown.Item>
               </NavDropdown>
 
-              <Nav.Link as={Link} to={'/coming_soon'} className='navbar_link'>Products</Nav.Link>
+              <Nav.Link as={NavLink} to={'/products'} className='navbar_link'>Products</Nav.Link>
               <Nav.Link as={Link} to={'/coming_soon'} className='navbar_link'>Repairs</Nav.Link>
               <Nav.Link as={Link} to={'/coming_soon'} className='navbar_link'>About Us</Nav.Link>
               <Nav.Link as={Link} to={'/coming_soon'} className='navbar_link'>Contact Us</Nav.Link>
