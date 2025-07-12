@@ -9,6 +9,7 @@ import Signup from './pages/Signup'
 import Cart from './pages/Cart'
 import { Container } from 'react-bootstrap'
 import Home from './pages/Home'
+import Products from './pages/Products'
 
 const Layout = () => {
   return (
@@ -40,6 +41,10 @@ function App() {
         {
           path: 'signup',
           element: <Signup />
+        },
+        {
+          path: 'products',
+          element: <Products />
         },
         {
           path: 'cart',
