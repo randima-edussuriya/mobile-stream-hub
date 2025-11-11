@@ -5,7 +5,7 @@ import {
   getCustomers,
 } from "../controllers/customer.js";
 
-import db from "../config/db.js";
+import db from "../config/dbConnection.js";
 
 const router = express.Router();
 
