@@ -1,10 +1,10 @@
 import express from "express";
 import { getStaffTypes } from "../controllers/staffType.js";
 
-import db from "../db.js";
+import db from "../config/db.js";
 
 const router = express.Router();
 
-router.get('/', getStaffTypes);
+router.get("/", getStaffTypes);
 
 export default router;
