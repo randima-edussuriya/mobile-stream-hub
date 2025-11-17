@@ -2,12 +2,14 @@ import db from "../../config/dbConnection.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export const signup = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const firstName = req.body.firstName?.trim();
     const lastName = req.body.lastName?.trim();
     const phoneNo = req.body.phoneNo?.trim();
+    const nicNo = req.body.nicNo?.trim();
     const address = req.body.address?.trim();
+    const staffType = req.body.staffType;
     const email = req.body.email?.trim();
     const confirmPassword = req.body.confirmPassword?.trim();
 
@@ -15,14 +17,16 @@ export const signup = async (req, res) => {
       !firstName ||
       !lastName ||
       !phoneNo ||
+      !nicNo ||
       !address ||
+      !staffType ||
       !email ||
       !confirmPassword
     )
       return res.json({ success: false, message: "Fileds are required" });
 
     //check existing user
-    const sqlUserExist = "SELECT * FROM customer WHERE email = ? LIMIT 1";
+    const sqlUserExist = "SELECT * FROM staff WHERE email = ? LIMIT 1";
     const existingUser = await db.query(sqlUserExist, [email]);
 
     if (existingUser.length > 0) {
@@ -34,15 +38,17 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(confirmPassword, salt);
 
     //insert user
-    const sqlInsert =
-      "INSERT INTO customer (`first_name`, `last_name`, `password`, `email`, `phone_number`, `address`) VALUES (?,?,?,?,?,?)";
+    const sqlInsert = `INSERT INTO staff (first_name, last_name, password, email, phone_number, nic_number, address, staff_type_id)
+                            VALUES (?,?,?,?,?,?,?,?)`;
     const values = [
       firstName,
       lastName,
       hashedPassword,
       email,
       phoneNo,
+      nicNo,
       address,
+      staffType,
     ];
     await db.query(sqlInsert, values);
     return res.json({ success: true, message: "signup successfully" });
@@ -50,24 +56,31 @@ export const signup = async (req, res) => {
     console.error(err);
     return res.json({
       success: false,
-      message: "Failed to signup. Please try again.",
+      message: "Failed to register. Please try again.",
     });
   }
 };
-
 export const login = async (req, res) => {
   try {
+    //Trimming
     const email = req.body.email?.trim();
     const password = req.body.password?.trim();
+
+    //check empty
     if (!email || !password)
       return res.json({ success: false, message: "Fields are required" });
 
     //check user exist
-    const sql = "SELECT * FROM customer WHERE `email`= ? LIMIT 1";
+    const sql = `
+            SELECT s.*, st.staff_type_name
+            FROM staff s
+            INNER JOIN staff_type st ON st.staff_type_id=s.staff_type_id
+            WHERE s.email=?
+            LIMIT 1;
+        `;
     const result = await db.query(sql, [email]);
-    if (result.length === 0) {
+    if (result.length === 0)
       return res.json({ success: false, message: "User does not exist" });
-    }
 
     //check user is deactive
     if (result[0].is_active === 0)
@@ -78,17 +91,17 @@ export const login = async (req, res) => {
       password,
       result[0].password
     );
-
     if (!isPasswordCorrect)
       return res.json({ success: false, message: "Incorrect password" });
 
-    const token = jwt.sign(
-      { id: result[0].customer_id },
-      process.env.JWT_SECRET
-    );
+    //create jwt
+    const token = jwt.sign({ id: result[0].staff_id }, process.env.JWT_SECRET);
+
+    //create cookie
     const userLogged = {
-      id: result[0].customer_id,
+      id: result[0].staff_id,
       name: result[0].first_name,
+      role: result[0].staff_type_name,
     };
     res.cookie("access_token", token, {
       httpOnly: true,
@@ -100,19 +113,19 @@ export const login = async (req, res) => {
       message: "Logged in successfully",
       data: userLogged,
     });
-  } catch (err) {
-    console.error(err);
-    return res.json({
-      success: false,
-      message: "Failed to login. Please try again.",
-    });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: "Failed to login. Please try again." });
   }
 };
-
-export const logout = (req, res) => {
+export const isAuthenticated = async (req, res) => {};
+export const logout = async (req, res) => {
   res.clearCookie("access_token", {
     sameSite: "none",
     secure: process.env.NODE_ENV === "production",
   });
-  res.json({ success: true, message: "Successfully logout" });
+  res.json({ success: true, message: "Logout Successfully" });
 };
+export const sendVerifyOtp = async (req, res) => {};
+export const verifyEmail = async (req, res) => {};
+export const resetPassword = async (req, res) => {};

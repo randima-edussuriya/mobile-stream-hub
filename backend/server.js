@@ -2,13 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
-import adminAuthRoutes from "./routes/auth/adminAuth.js";
-import customerAuthRoutes from "./routes/auth/customerAuth.js";
-import customerRoutes from "./routes/customer.js";
-import staffTypeRoutes from "./routes/staffType.js";
-import staffUserRoutes from "./routes/staffUser.js";
-import categoryRoutes from "./routes/category.js";
-
+import routes from "./routes/index.js";
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -21,14 +15,8 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-//auth routes
-app.use("/api/auth/admin", adminAuthRoutes);
-app.use("/api/auth/customer", customerAuthRoutes);
-
-app.use("/api/customer", customerRoutes);
-app.use("/api/staff_type", staffTypeRoutes);
-app.use("/api/staff_user", staffUserRoutes);
-app.use("/api/category", categoryRoutes);
+// mount routes
+app.use("/api", routes);
 
 //for test
 app.get("/", async (req, res) => {
