@@ -1,6 +1,33 @@
-import db from "../../config/dbConnection.js";
+import dbPool from "../../config/dbConnection.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+export const checkEmailExist = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const sql = "SELECT 1 FROM staff WHERE email = ? LIMIT 1";
+    const [rows] = await dbPool.query(sql, [email]);
+    if (rows.length > 0) {
+      return res.status(409).json({
+        success: false,
+        message: "Email already registered",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Email available",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to check email. Please try again.",
+    });
+  }
+};
+
+export const sendVerifyOtp = async (req, res) => {};
 
 export const register = async (req, res) => {
   try {
@@ -27,7 +54,7 @@ export const register = async (req, res) => {
 
     //check existing user
     const sqlUserExist = "SELECT * FROM staff WHERE email = ? LIMIT 1";
-    const existingUser = await db.query(sqlUserExist, [email]);
+    const existingUser = await dbPool.query(sqlUserExist, [email]);
 
     if (existingUser.length > 0) {
       return res.json({ success: false, message: "Email already exist" });
@@ -50,7 +77,7 @@ export const register = async (req, res) => {
       address,
       staffType,
     ];
-    await db.query(sqlInsert, values);
+    await dbPool.query(sqlInsert, values);
     return res.json({ success: true, message: "signup successfully" });
   } catch (err) {
     console.error(err);
@@ -78,7 +105,7 @@ export const login = async (req, res) => {
             WHERE s.email=?
             LIMIT 1;
         `;
-    const result = await db.query(sql, [email]);
+    const result = await dbPool.query(sql, [email]);
     if (result.length === 0)
       return res.json({ success: false, message: "User does not exist" });
 
@@ -126,6 +153,6 @@ export const logout = async (req, res) => {
   });
   res.json({ success: true, message: "Logout Successfully" });
 };
-export const sendVerifyOtp = async (req, res) => {};
+
 export const verifyEmail = async (req, res) => {};
 export const resetPassword = async (req, res) => {};
