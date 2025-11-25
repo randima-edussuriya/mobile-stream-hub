@@ -2,33 +2,6 @@ import dbPool from "../../config/dbConnection.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-export const checkEmailExist = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const sql = "SELECT 1 FROM staff WHERE email = ? LIMIT 1";
-    const [rows] = await dbPool.query(sql, [email]);
-    if (rows.length > 0) {
-      return res.status(409).json({
-        success: false,
-        message: "Email already registered",
-      });
-    }
-    return res.status(200).json({
-      success: true,
-      message: "Email available",
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to check email. Please try again.",
-    });
-  }
-};
-
-export const sendVerifyOtp = async (req, res) => {};
-
 export const register = async (req, res) => {
   try {
     const firstName = req.body.firstName?.trim();
