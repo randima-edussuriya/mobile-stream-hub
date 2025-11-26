@@ -4,43 +4,33 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const firstName = req.body.firstName?.trim();
-    const lastName = req.body.lastName?.trim();
-    const phoneNo = req.body.phoneNo?.trim();
-    const nicNo = req.body.nicNo?.trim();
-    const address = req.body.address?.trim();
-    const staffType = req.body.staffType;
-    const email = req.body.email?.trim();
-    const confirmPassword = req.body.confirmPassword?.trim();
-
-    if (
-      !firstName ||
-      !lastName ||
-      !phoneNo ||
-      !nicNo ||
-      !address ||
-      !staffType ||
-      !email ||
-      !confirmPassword
-    )
-      return res.json({ success: false, message: "Fileds are required" });
+    const {
+      firstName,
+      lastName,
+      password,
+      email,
+      phoneNo,
+      nicNo,
+      address,
+      staffTypeId,
+    } = req.body;
 
     //check existing user
-    const sqlUserExist = "SELECT * FROM staff WHERE email = ? LIMIT 1";
-    const existingUser = await dbPool.query(sqlUserExist, [email]);
-
+    const sqlUserExist = "SELECT 1 FROM staff WHERE email = ? LIMIT 1";
+    const [existingUser] = await dbPool.query(sqlUserExist, [email]);
     if (existingUser.length > 0) {
-      return res.json({ success: false, message: "Email already exist" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Email already registered" });
     }
 
     //hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     //insert user
     const sqlInsert = `INSERT INTO staff (first_name, last_name, password, email, phone_number, nic_number, address, staff_type_id)
                             VALUES (?,?,?,?,?,?,?,?)`;
-    const values = [
+    await dbPool.query(sqlInsert, [
       firstName,
       lastName,
       hashedPassword,
@@ -48,18 +38,20 @@ export const register = async (req, res) => {
       phoneNo,
       nicNo,
       address,
-      staffType,
-    ];
-    await dbPool.query(sqlInsert, values);
-    return res.json({ success: true, message: "signup successfully" });
-  } catch (err) {
-    console.error(err);
-    return res.json({
+      staffTypeId,
+    ]);
+    return res
+      .status(201)
+      .json({ success: true, message: "Registered successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
       success: false,
       message: "Failed to register. Please try again.",
     });
   }
 };
+
 export const login = async (req, res) => {
   try {
     //Trimming
