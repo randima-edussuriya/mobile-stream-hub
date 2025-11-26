@@ -82,6 +82,13 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
+    // verify otp is verified
+    if (rows[0].is_verified) {
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP already verified" });
+    }
+
     // valid otp
     if (rows[0].otp !== otp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
@@ -90,7 +97,7 @@ export const verifyOtp = async (req, res) => {
     // valid expiration
     if (new Date(rows[0].expires_at) < new Date()) {
       return res
-        .status(400)
+        .status(410)
         .json({ success: false, message: "OTP has expired" });
     }
 
