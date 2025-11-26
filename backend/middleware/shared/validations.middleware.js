@@ -52,3 +52,26 @@ export const validateVerifyOtp = (req, res, next) => {
   req.body = { email, otp, purpose };
   next();
 };
+
+export const validateLogin = (req, res, next) => {
+  const email = String(req.body.email || "")
+    .trim()
+    .toLocaleLowerCase();
+  const password = String(req.body.password || "").trim();
+
+  // validate empty fields
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email and password are required" });
+  }
+
+  // validate email format
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid email format" });
+  }
+  req.body = { email, password };
+  next();
+};

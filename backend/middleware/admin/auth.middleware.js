@@ -1,0 +1,26 @@
+import jwt from "jsonwebtoken";
+
+export const userAuth = (req, res, next) => {
+  const { access_token } = req.cookies;
+  if (!access_token)
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized access. Please login again.",
+    });
+  try {
+    //verify token
+    const tokenDecoded = jwt.verify(access_token, process.env.JWT_SECRET);
+    req.body = {
+      ...req.body,
+      userId: tokenDecoded.userId,
+      role: tokenDecoded.role,
+    };
+    next();
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Invalid or expired token.",
+    });
+    console.log(error);
+  }
+};
