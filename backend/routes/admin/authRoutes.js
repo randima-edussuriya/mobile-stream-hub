@@ -1,12 +1,21 @@
 import express from "express";
-import { login, register } from "../../controllers/admin/authController.js";
+import {
+  isAuthenticated,
+  login,
+  logout,
+  register,
+} from "../../controllers/admin/authController.js";
 import { validateRegister } from "../../middleware/admin/validations.middleware.js";
 import { isVerifiedOtp } from "../../middleware/shared/auth.middleware.js";
+import { validateLogin } from "../../middleware/shared/validations.middleware.js";
+import { userAuth } from "../../middleware/admin/auth.middleware.js";
 
 const router = express.Router();
 
 // base: /api/admin/auth
 router.post("/register", validateRegister, isVerifiedOtp, register);
-router.post("/login", login);
+router.post("/login", validateLogin, login);
+router.get("/is-authenticated", userAuth, isAuthenticated);
+router.post("/logout", logout);
 
 export default router;
