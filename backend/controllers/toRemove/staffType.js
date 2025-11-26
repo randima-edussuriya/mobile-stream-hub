@@ -1,4 +1,4 @@
-import db from "../config/dbConnection.js";
+import db from "../../config/dbConnection.js";
 
 export const getStaffTypes = async (req, res) => {
   try {

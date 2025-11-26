@@ -1,4 +1,4 @@
-import db from "../config/dbConnection.js";
+import db from "../../config/dbConnection.js";
 
 export const addCategory = async (req, res) => {
   try {
