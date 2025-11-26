@@ -188,7 +188,7 @@ function App() {
           )
         },
         {
-          path: '/unauthorized',
+          path: 'unauthorized',
           element: <div className='text-bg-danger ps-1'>Access Denied !</div>
         }
       ]
