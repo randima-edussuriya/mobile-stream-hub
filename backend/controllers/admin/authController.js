@@ -54,70 +54,74 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    //Trimming
-    const email = req.body.email?.trim();
-    const password = req.body.password?.trim();
-
-    //check empty
-    if (!email || !password)
-      return res.json({ success: false, message: "Fields are required" });
+    const { email, password } = req.body;
 
     //check user exist
     const sql = `
-            SELECT s.*, st.staff_type_name
+            SELECT s.staff_id, s.first_name, s.password, s.email, s.is_active, st.staff_type_name
             FROM staff s
             INNER JOIN staff_type st ON st.staff_type_id=s.staff_type_id
             WHERE s.email=?
             LIMIT 1;
         `;
-    const result = await dbPool.query(sql, [email]);
-    if (result.length === 0)
-      return res.json({ success: false, message: "User does not exist" });
+    const [user] = await dbPool.query(sql, [email]);
+    if (user.length === 0)
+      return res
+        .status(404)
+        .json({ success: false, message: "User does not exist" });
 
     //check user is deactive
-    if (result[0].is_active === 0)
-      return res.json({ success: false, message: "User is Deactivated" });
+    if (user[0].is_active === 0)
+      return res
+        .status(403)
+        .json({ success: false, message: "User is Deactivated" });
 
     //check hash password
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      result[0].password
-    );
+    const isPasswordCorrect = await bcrypt.compare(password, user[0].password);
     if (!isPasswordCorrect)
-      return res.json({ success: false, message: "Incorrect password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect password" });
 
     //create jwt
-    const token = jwt.sign({ id: result[0].staff_id }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { userId: user[0].staff_id, role: user[0].staff_type_name },
+      process.env.JWT_SECRET,
+      { expiresIn: "8h" }
+    );
 
     //create cookie
-    const userLogged = {
-      id: result[0].staff_id,
-      name: result[0].first_name,
-      role: result[0].staff_type_name,
-    };
     res.cookie("access_token", token, {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       secure: process.env.NODE_ENV === "production",
+      maxAge: 8 * 60 * 60 * 1000, // 8 hours
     });
-    res.json({
+
+    res.status(200).json({
       success: true,
       message: "Logged in successfully",
-      data: userLogged,
     });
   } catch (error) {
-    console.error(error);
-    res.json({ success: false, message: "Failed to login. Please try again." });
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to login. Please try again.",
+    });
   }
 };
-export const isAuthenticated = async (req, res) => {};
-export const logout = async (req, res) => {
-  res.clearCookie("access_token", {
-    sameSite: "none",
-    secure: process.env.NODE_ENV === "production",
-  });
-  res.json({ success: true, message: "Logout Successfully" });
+
+export const isAuthenticated = async (req, res) => {
+  res.status(200).json({ success: true, message: "Authenticated" });
 };
 
-export const verifyEmail = async (req, res) => {};
-export const resetPassword = async (req, res) => {};
+export const logout = async (req, res) => {
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+  });
+  return res
+    .status(200)
+    .json({ success: true, message: "Logged out successfully" });
+};
