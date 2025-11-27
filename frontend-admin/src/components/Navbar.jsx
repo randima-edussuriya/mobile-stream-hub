@@ -29,47 +29,34 @@ function Navbar({ onToggle }) {
           className="navbar-brand bi bi-justify-left fs-5"
           onClick={onToggle}
         ></i>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i className="navbar-brand bi bi-justify-right fs-5"></i>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i className="bi bi-person-circle fs-5"></i>
-              </a>
-              <ul className="dropdown-menu dropdown-menu-end">
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Profile
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Setting
-                  </a>
-                </li>
-                <li onClick={handelLogout}>
-                  <a className="dropdown-item">Logout</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
+        <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i className="bi bi-person-circle fs-5"></i>
+            </a>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li>
+                <a className="dropdown-item" href="#">
+                  Profile
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Setting
+                </a>
+              </li>
+              <li onClick={handelLogout}>
+                <a className="dropdown-item">Logout</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </nav>
     </>
   );

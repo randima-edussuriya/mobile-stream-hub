@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "../../assets/icons/logo.png";
 import { Link } from "react-router-dom";
 import "./Sidebar.css";
@@ -21,11 +20,11 @@ function Sidebar() {
         {/* ----------------------------------------------------
                             Menu items section
                 -------------------------------------------------------- */}
-        <div className="list-group list-group-flush rounded ">
+        <div className="list-group">
           <NavLink
             to={"/staff-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-person-gear fs-5 me-3"></i>
@@ -34,7 +33,7 @@ function Sidebar() {
           <NavLink
             to={"/customer-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-people fs-5 me-3"></i>
@@ -43,7 +42,7 @@ function Sidebar() {
           <NavLink
             to={"/category-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-bookmarks fs-5 me-3"></i>
@@ -52,7 +51,7 @@ function Sidebar() {
           <NavLink
             to={"/item-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-diagram-3 fs-5 me-3"></i>
@@ -61,7 +60,7 @@ function Sidebar() {
           <NavLink
             to={"/order-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-border-all fs-5 me-3"></i>
@@ -70,7 +69,7 @@ function Sidebar() {
           <NavLink
             to={"/delivery-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-truck fs-5 me-3"></i>
@@ -79,7 +78,7 @@ function Sidebar() {
           <NavLink
             to={"/repair-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-sliders2-vertical fs-5 me-3"></i>
@@ -88,7 +87,7 @@ function Sidebar() {
           <NavLink
             to={"/reorder-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-arrow-clockwise fs-5 me-3"></i>
@@ -97,7 +96,7 @@ function Sidebar() {
           <NavLink
             to={"/day-off-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-calendar-day fs-5 me-3"></i>
@@ -106,7 +105,7 @@ function Sidebar() {
           <NavLink
             to={"/loyalty-program-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-cursor fs-5 me-3"></i>
@@ -115,7 +114,7 @@ function Sidebar() {
           <NavLink
             to={"/feedback-rating-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-star fs-5 me-3"></i>
@@ -124,7 +123,7 @@ function Sidebar() {
           <NavLink
             to={"/customer-support-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-telephone-forward fs-5 me-3"></i>
@@ -133,7 +132,7 @@ function Sidebar() {
           <NavLink
             to={"/reports-management"}
             className={({ isActive }) =>
-              `list-group-item py-2${isActive ? " active_link" : ""}`
+              `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
             }
           >
             <i className="bi bi-flag fs-5 me-3"></i>
