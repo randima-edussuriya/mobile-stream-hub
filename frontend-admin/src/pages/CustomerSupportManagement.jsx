@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function CustomerSupportManagement() {
-  return (
-    <div>CustomerSupportManagement</div>
-  )
+  return <div>CustomerSupportManagement</div>;
 }
 
-export default CustomerSupportManagement
+export default CustomerSupportManagement;

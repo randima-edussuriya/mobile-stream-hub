@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function DayOffManagement() {
-  return (
-    <div>DayOffManagement</div>
-  )
+  return <div>DayOffManagement</div>;
 }
 
-export default DayOffManagement
+export default DayOffManagement;

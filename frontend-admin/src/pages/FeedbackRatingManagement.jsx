@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function FeedbackRatingManagement() {
-  return (
-    <div>FeedbackRatingManagement</div>
-  )
+  return <div>FeedbackRatingManagement</div>;
 }
 
-export default FeedbackRatingManagement
+export default FeedbackRatingManagement;

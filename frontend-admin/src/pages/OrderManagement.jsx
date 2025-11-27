@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function OrderManagement() {
-  return (
-    <div>OrderManagement</div>
-  )
+  return <div>OrderManagement</div>;
 }
 
-export default OrderManagement
+export default OrderManagement;

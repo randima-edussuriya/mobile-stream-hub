@@ -50,7 +50,7 @@ function Navbar({ onToggle }) {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <i className="bi bi-person-circle navbar_icon fs-5"></i>
+                <i className="bi bi-person-circle fs-5"></i>
               </a>
               <ul className="dropdown-menu dropdown-menu-end">
                 <li>

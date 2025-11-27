@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ItemManagement() {
-  return (
-    <div>ItemManagement</div>
-  )
+  return <div>ItemManagement</div>;
 }
 
-export default ItemManagement
+export default ItemManagement;

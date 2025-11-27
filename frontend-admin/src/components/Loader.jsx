@@ -3,7 +3,10 @@ import { Container, Spinner } from "react-bootstrap";
 
 function Loader() {
   return (
-    <Container fluid className="d-flex justify-content-center align-items-center min-vh-100 bg-primary-subtle">
+    <Container
+      fluid
+      className="d-flex justify-content-center align-items-center min-vh-100 bg-primary-subtle"
+    >
       <Spinner
         className="p-4"
         animation="border"

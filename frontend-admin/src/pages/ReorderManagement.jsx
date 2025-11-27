@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ReorderManagement() {
-  return (
-    <div>ReorderManagement</div>
-  )
+  return <div>ReorderManagement</div>;
 }
 
-export default ReorderManagement
+export default ReorderManagement;

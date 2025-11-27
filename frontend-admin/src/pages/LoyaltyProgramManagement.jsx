@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function LoyaltyProgramManagement() {
-  return (
-    <div>LoyaltyProgramManagement</div>
-  )
+  return <div>LoyaltyProgramManagement</div>;
 }
 
-export default LoyaltyProgramManagement
+export default LoyaltyProgramManagement;

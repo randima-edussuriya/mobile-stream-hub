@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function DeliveryManagement() {
-  return (
-    <div>DeliveryManagement</div>
-  )
+  return <div>DeliveryManagement</div>;
 }
 
-export default DeliveryManagement
+export default DeliveryManagement;

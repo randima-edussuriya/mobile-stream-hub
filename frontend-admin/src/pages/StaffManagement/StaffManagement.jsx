@@ -1,16 +1,16 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Button, Container, Table, Badge, Spinner } from 'react-bootstrap'
-import dayjs from 'dayjs';
-import { toast } from 'react-toastify';
-import Swal from 'sweetalert2'
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Button, Container, Table, Badge, Spinner } from "react-bootstrap";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function StaffManagement() {
   const [Loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [staffUsers, setStaffUsers] = useState([]);
-  const [isToogleStaffUserStatus, setIsToogleStaffUserStatus] = useState(false)
+  const [isToogleStaffUserStatus, setIsToogleStaffUserStatus] = useState(false);
 
   const navigate = useNavigate();
 
@@ -20,11 +20,11 @@ function StaffManagement() {
   useEffect(() => {
     const fetchStaffUsers = async () => {
       setLoading(true);
-      setError('');
+      setError("");
       setStaffUsers([]);
       setIsToogleStaffUserStatus(false);
       try {
-        const res = await axios.get('http://localhost:5000/api/staff_user');
+        const res = await axios.get("http://localhost:5000/api/staff_user");
         if (res.data.success) {
           setStaffUsers(res.data.data);
         } else {
@@ -32,19 +32,19 @@ function StaffManagement() {
         }
       } catch (error) {
         console.error(error);
-        setError('Failed to loading staff users. Please try again.');
+        setError("Failed to loading staff users. Please try again.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
     fetchStaffUsers();
-  }, [isToogleStaffUserStatus])
+  }, [isToogleStaffUserStatus]);
 
   /* -----------------------------------------------------------------
         Handle staff user status change
   --------------------------------------------------------------------*/
   const handleStatusChange = async (staffUserId, newStatus) => {
-    const actionText = newStatus ? 'activate' : 'deactivate';
+    const actionText = newStatus ? "activate" : "deactivate";
 
     const confim = await Swal.fire({
       customClass: {
@@ -57,26 +57,29 @@ function StaffManagement() {
       confirmButtonColor: "#10207A",
       cancelButtonColor: "#d33",
       confirmButtonText: `Yes, ${actionText}`,
-      width: '17em'
-    })
+      width: "17em",
+    });
 
     if (!confim.isConfirmed) return;
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/staff_user/status/${staffUserId}`,
+      const res = await axios.put(
+        `http://localhost:5000/api/staff_user/status/${staffUserId}`,
         { newStatus: newStatus }
       );
       if (res.data.success) {
         setIsToogleStaffUserStatus(true);
-        toast.success(res.data.message, { position: 'top-center' })
+        toast.success(res.data.message, { position: "top-center" });
       } else {
-        toast.error(res.data.message, { position: 'top-center' })
+        toast.error(res.data.message, { position: "top-center" });
       }
     } catch (error) {
       console.error(error);
-      toast.error('An error occurred. Please try again.', { position: 'top-center' })
+      toast.error("An error occurred. Please try again.", {
+        position: "top-center",
+      });
     }
-  }
+  };
 
   /* -----------------------------------------------------------------
         Render staff user data into table
@@ -85,77 +88,93 @@ function StaffManagement() {
     if (Loading) {
       return (
         <tr>
-          <td colSpan={9} className='text-center py-3'>
+          <td colSpan={9} className="text-center py-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
           </td>
         </tr>
-      )
+      );
     }
 
     if (error) {
       return (
         <tr>
-          <td colSpan={9} className='text-danger text-center'>{error}</td>
+          <td colSpan={9} className="text-danger text-center">
+            {error}
+          </td>
         </tr>
-      )
+      );
     }
 
     if (staffUsers.length === 0) {
       return (
         <tr>
-          <td colSpan={9} className='text-danger text-center'>No staff users found</td>
+          <td colSpan={9} className="text-danger text-center">
+            No staff users found
+          </td>
         </tr>
-      )
+      );
     }
 
-    return (
-      staffUsers.map(staffUser => (
-        <tr key={staffUser.staff_id}>
-          <td>{staffUser.staff_id}</td>
-          <td>{staffUser.first_name}</td>
-          <td>{staffUser.last_name}</td>
-          <td>{staffUser.staff_type_name}</td>
-          <td>{staffUser.email}</td>
-          <td>{staffUser.phone_number}</td>
-          <td>{staffUser.nic_number}</td>
-          <td>{staffUser.address}</td>
-          <td>{dayjs(staffUser.hire_date).format('YYYY-MM-DD HH:mm:ss')}</td>
-          <td>
-            <Badge bg={staffUser.is_active ? 'success' : 'danger'}>
-              {staffUser.is_active ? 'Active' : 'Deactive'}
-            </Badge>
-          </td>
-          <td>
-            <Button
-              className='fw-bold'
-              variant={staffUser.is_active ? 'outline-danger' : 'outline-success'}
-              size='sm'
-              onClick={() => handleStatusChange(staffUser.staff_id, staffUser.is_active ? 0 : 1)}
-            >
-              {staffUser.is_active ? 'Deactivate' : 'Active'}
-            </Button>
-          </td>
-        </tr >
-      ))
-    )
-  }
+    return staffUsers.map((staffUser) => (
+      <tr key={staffUser.staff_id}>
+        <td>{staffUser.staff_id}</td>
+        <td>{staffUser.first_name}</td>
+        <td>{staffUser.last_name}</td>
+        <td>{staffUser.staff_type_name}</td>
+        <td>{staffUser.email}</td>
+        <td>{staffUser.phone_number}</td>
+        <td>{staffUser.nic_number}</td>
+        <td>{staffUser.address}</td>
+        <td>{dayjs(staffUser.hire_date).format("YYYY-MM-DD HH:mm:ss")}</td>
+        <td>
+          <Badge bg={staffUser.is_active ? "success" : "danger"}>
+            {staffUser.is_active ? "Active" : "Deactive"}
+          </Badge>
+        </td>
+        <td>
+          <Button
+            className="fw-bold"
+            variant={staffUser.is_active ? "outline-danger" : "outline-success"}
+            size="sm"
+            onClick={() =>
+              handleStatusChange(
+                staffUser.staff_id,
+                staffUser.is_active ? 0 : 1
+              )
+            }
+          >
+            {staffUser.is_active ? "Deactivate" : "Active"}
+          </Button>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <>
-      <Container className='bg-secondary-subtle rounded shadow_white py-3 mt-3'>
-        <Container className='d-flex justify-content-between mb-3'>
+      <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
+        <Container className="d-flex justify-content-between mb-3">
           <h4>Staff Users</h4>
-          <Button onClick={() => navigate('/staff-register')} className='btn_main_dark shadow'>
+          <Button
+            onClick={() => navigate("/staff-register")}
+            className="btn_main_dark shadow"
+          >
             <i className="bi bi-plus-circle me-2 fs-6"></i>
             Add New
           </Button>
         </Container>
         <Container>
-          <Table responsive hover striped size='sm' className='rounded overflow-hidden shadow'>
+          <Table
+            responsive
+            hover
+            striped
+            size="sm"
+            className="rounded overflow-hidden shadow"
+          >
             <thead>
-              <tr className='fw-bold'>
+              <tr className="fw-bold">
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
@@ -169,14 +188,12 @@ function StaffManagement() {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              {renderTableBody()}
-            </tbody>
+            <tbody>{renderTableBody()}</tbody>
           </Table>
         </Container>
       </Container>
     </>
-  )
+  );
 }
 
-export default StaffManagement
+export default StaffManagement;

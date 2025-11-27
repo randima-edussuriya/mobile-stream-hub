@@ -1,12 +1,12 @@
 /* Import Google Font-Inter */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 /* Root Variables */
 :root {
-    --clr-primary-dark: #10207A;
-    --clr-primary-light: #51A6F5;
+  --clr-primary-dark: #10207a;
+  --clr-primary-light: #51a6f5;
 
-    --font-family: "Inter", sans-serif;
+  --font-family: "Inter", sans-serif;
 }
 
 /* Reset CSS */
@@ -91,13 +91,13 @@ time,
 mark,
 audio,
 video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-    font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  font-family: var(--font-family);
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -112,32 +112,32 @@ hgroup,
 menu,
 nav,
 section {
-    display: block;
+  display: block;
 }
 
 body {
-    line-height: 1;
+  line-height: 1;
 }
 
 ol,
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 blockquote,
 q {
-    quotes: none;
+  quotes: none;
 }
 
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-    content: '';
-    content: none;
+  content: "";
+  content: none;
 }
 
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
