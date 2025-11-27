@@ -1,13 +1,14 @@
 import express from "express";
 import {
   getAllUsers,
-  getUser,
+  getMeBasicData,
 } from "../../controllers/admin/userController.js";
+import { userAuth } from "../../middleware/admin/auth.middleware.js";
 
 const router = express.Router();
 
 // base: /api/admin/users
+router.get("/me/basic", userAuth, getMeBasicData);
 router.get("/", getAllUsers);
-router.get("/:id", getUser);
 
 export default router;
