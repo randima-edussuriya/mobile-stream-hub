@@ -1,13 +1,17 @@
-import { useContext } from "react"
-import { AuthContext } from "../context/authContext"
 import { Navigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
-export const PrivateRoute = ({ children }) => {
-    const { currentUser } = useContext(AuthContext);
-    return currentUser ? children : <Navigate to={'/'} replace />;
-}
+export const PrivateRoute = ({ authChecked, isLoggedIn, children }) => {
+  if (!authChecked) {
+    return <Loader />;
+  }
+  return isLoggedIn ? children : <Navigate to={"/"} replace />;
+};
 
-export const RoleRoute = ({ children, allowedRoles }) => {
-    const { currentUser } = useContext(AuthContext);
-    return allowedRoles.includes(currentUser.role) ? children : <Navigate to={'/unauthorized'} replace />
-}
+export const RoleRoute = ({ userData, allowedRoles, children }) => {
+  return allowedRoles.includes(userData.role) ? (
+    children
+  ) : (
+    <Navigate to={"/unauthorized"} replace />
+  );
+};
