@@ -19,32 +19,10 @@ function StaffManagement() {
   const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
-        Fetch Staff users from API
+        Handle staff user activity status change
   --------------------------------------------------------------------*/
-  useEffect(() => {
-    const fetchStaffUsers = async () => {
-      setLoading(true);
-      setError("");
-      setStaffUsers([]);
-      setIsToogleStaffUserStatus(false);
-      try {
-        const { data } = await axios.get(`${backendUrl}/api/admin/users`);
-        setStaffUsers(data.data);
-      } catch (error) {
-        setError(error?.response?.data?.message || "Something went wrong");
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStaffUsers();
-  }, [isToogleStaffUserStatus]);
-
-  /* -----------------------------------------------------------------
-        Handle staff user status change
-  --------------------------------------------------------------------*/
-  const handleStatusChange = async (staffUserId, newStatus) => {
-    const actionText = newStatus ? "activate" : "deactivate";
+  const handleStatusChange = async (staffUserId, isActive) => {
+    const actionText = isActive ? "activate" : "deactivate";
 
     const confim = await Swal.fire({
       customClass: {
@@ -52,34 +30,52 @@ function StaffManagement() {
         cancelButton: "btn btn-danger",
         title: "h5",
       },
-      title: `Are you sure to  ${actionText} this staff user`,
+      title: `Are you sure to  ${actionText} this staff user?`,
       showCancelButton: true,
-      confirmButtonColor: "#10207A",
-      cancelButtonColor: "#d33",
       confirmButtonText: `Yes, ${actionText}`,
-      width: "17em",
     });
 
     if (!confim.isConfirmed) return;
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/staff_user/status/${staffUserId}`,
-        { newStatus: newStatus }
+      await axios.put(
+        `http://localhost:5000/api/admin/users/${staffUserId}/status`,
+        { isActive }
       );
-      if (res.data.success) {
-        setIsToogleStaffUserStatus(true);
-        toast.success(res.data.message, { position: "top-center" });
-      } else {
-        toast.error(res.data.message, { position: "top-center" });
-      }
+      setIsToogleStaffUserStatus(true);
     } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
       console.error(error);
-      toast.error("An error occurred. Please try again.", {
-        position: "top-center",
-      });
     }
   };
+
+  /* -----------------------------------------------------------------
+        Fetch Staff users from API
+  --------------------------------------------------------------------*/
+  const fetchStaffUsers = async () => {
+    setLoading(true);
+    setError("");
+    setStaffUsers([]);
+    setIsToogleStaffUserStatus(false);
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/admin/users`);
+      setStaffUsers(data.data);
+    } catch (error) {
+      setError(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchStaffUsers();
+  }, [isToogleStaffUserStatus]);
 
   /* -----------------------------------------------------------------
         Render staff user data into table
@@ -139,10 +135,7 @@ function StaffManagement() {
             variant={staffUser.is_active ? "outline-danger" : "outline-success"}
             size="sm"
             onClick={() =>
-              handleStatusChange(
-                staffUser.staff_id,
-                staffUser.is_active ? 0 : 1
-              )
+              handleStatusChange(staffUser.staff_id, !staffUser.is_active)
             }
           >
             {staffUser.is_active ? "Deactivate" : "Active"}
