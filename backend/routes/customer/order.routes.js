@@ -3,7 +3,7 @@ import {
   getCustomerOrder,
   getCustomerOrders,
   placeOrder,
-} from "../../controllers/customer/orderController.js";
+} from "../../controllers/customer/order.controller.js";
 
 const router = express.Router();
 
