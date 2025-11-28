@@ -1,16 +1,20 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Container, Table, Badge, Spinner } from "react-bootstrap";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 
 function StaffManagement() {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [staffUsers, setStaffUsers] = useState([]);
   const [isToogleStaffUserStatus, setIsToogleStaffUserStatus] = useState(false);
+
+  const { backendUrl } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -24,15 +28,11 @@ function StaffManagement() {
       setStaffUsers([]);
       setIsToogleStaffUserStatus(false);
       try {
-        const res = await axios.get("http://localhost:5000/api/staff_user");
-        if (res.data.success) {
-          setStaffUsers(res.data.data);
-        } else {
-          setError(res.data.message);
-        }
+        const { data } = await axios.get(`${backendUrl}/api/admin/users`);
+        setStaffUsers(data.data);
       } catch (error) {
+        setError(error?.response?.data?.message || "Something went wrong");
         console.error(error);
-        setError("Failed to loading staff users. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -88,7 +88,7 @@ function StaffManagement() {
     if (Loading) {
       return (
         <tr>
-          <td colSpan={9} className="text-center py-3">
+          <td colSpan={11} className="text-center py-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -100,7 +100,7 @@ function StaffManagement() {
     if (error) {
       return (
         <tr>
-          <td colSpan={9} className="text-danger text-center">
+          <td colSpan={11} className="text-danger text-center">
             {error}
           </td>
         </tr>
@@ -110,7 +110,7 @@ function StaffManagement() {
     if (staffUsers.length === 0) {
       return (
         <tr>
-          <td colSpan={9} className="text-danger text-center">
+          <td colSpan={11} className="text-danger text-center">
             No staff users found
           </td>
         </tr>
