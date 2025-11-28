@@ -75,3 +75,32 @@ export const validateRegister = (req, res, next) => {
   };
   next();
 };
+
+export const validateUpdateUserStatus = (req, res, next) => {
+  const staffId = req.params.staffId?.trim();
+  const { isActive, userId } = req.body;
+  // validate staffId
+  if (!staffId || isNaN(staffId)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid staff ID" });
+  }
+
+  // validate isActive (must be boolean)
+  if (typeof isActive !== "boolean") {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid status value. Expecting true or false.",
+    });
+  }
+
+  // prevent deativating own account
+  if (userId == staffId)
+    return res.status(403).json({
+      success: false,
+      message: "You cannot change the status of your own account.",
+    });
+
+  req.body.staffId = staffId;
+  next();
+};
