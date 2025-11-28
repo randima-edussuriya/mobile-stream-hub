@@ -24,3 +24,21 @@ export const authenticateUser = (req, res, next) => {
     console.log(error);
   }
 };
+
+export const authorizeRoles = (allowedRoles) => {
+  return (req, res, next) => {
+    const { role } = req.body;
+    if (!allowedRoles.includes(role)) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Forbidden access. You do not have permission to perform this action.",
+      });
+    }
+    // next();
+    return res.status(200).json({
+      success: true,
+      message: "You are authorized to perform this action.",
+    });
+  };
+};
