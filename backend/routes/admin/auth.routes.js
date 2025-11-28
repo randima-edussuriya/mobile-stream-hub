@@ -4,7 +4,7 @@ import {
   login,
   logout,
   register,
-} from "../../controllers/admin/authController.js";
+} from "../../controllers/admin/auth.controller.js";
 import { validateRegister } from "../../middleware/admin/validations.middleware.js";
 import { isVerifiedOtp } from "../../middleware/shared/auth.middleware.js";
 import { validateLogin } from "../../middleware/shared/validations.middleware.js";

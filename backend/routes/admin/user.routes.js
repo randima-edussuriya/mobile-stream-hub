@@ -2,7 +2,7 @@ import express from "express";
 import {
   getAllUsers,
   getMeBasicData,
-} from "../../controllers/admin/userController.js";
+} from "../../controllers/admin/user.controller.js";
 import { authenticateUser } from "../../middleware/admin/auth.middleware.js";
 
 const router = express.Router();
