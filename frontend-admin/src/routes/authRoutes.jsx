@@ -9,7 +9,7 @@ export const PrivateRoute = ({ authChecked, isLoggedIn, children }) => {
 };
 
 export const RoleRoute = ({ userData, allowedRoles, children }) => {
-  return allowedRoles.includes(userData.role) ? (
+  return allowedRoles.includes(userData.userRole) ? (
     children
   ) : (
     <Navigate to={"/unauthorized"} replace />

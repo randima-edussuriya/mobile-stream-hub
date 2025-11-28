@@ -13,7 +13,7 @@ export const authenticateUser = (req, res, next) => {
     req.body = {
       ...req.body,
       userId: tokenDecoded.userId,
-      role: tokenDecoded.role,
+      userRole: tokenDecoded.userRole,
     };
     next();
   } catch (error) {
@@ -27,8 +27,8 @@ export const authenticateUser = (req, res, next) => {
 
 export const authorizeRoles = (allowedRoles) => {
   return (req, res, next) => {
-    const { role } = req.body;
-    if (!allowedRoles.includes(role)) {
+    const { userRole } = req.body;
+    if (!allowedRoles.includes(userRole)) {
       return res.status(403).json({
         success: false,
         message:
