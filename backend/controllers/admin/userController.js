@@ -1,6 +1,8 @@
 import dbPool from "../../config/dbConnection.js";
 
-export const getAllUsers = async (req, res) => {};
+export const getAllUsers = async (req, res) => {
+  
+};
 
 export const getMeBasicData = async (req, res) => {
   const { userId, role } = req.body;
