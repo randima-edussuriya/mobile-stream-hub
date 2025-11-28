@@ -47,7 +47,7 @@ export const register = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "Failed to register. Please try again.",
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
@@ -98,7 +98,7 @@ export const login = async (req, res) => {
       maxAge: 8 * 60 * 60 * 1000, // 8 hours
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Logged in successfully",
     });
@@ -106,13 +106,13 @@ export const login = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "Failed to login. Please try again.",
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
 
 export const isAuthenticated = async (req, res) => {
-  res.status(200).json({ success: true, message: "Authenticated" });
+  return res.status(200).json({ success: true, message: "Authenticated" });
 };
 
 export const logout = async (req, res) => {

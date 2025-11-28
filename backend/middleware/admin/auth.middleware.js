@@ -17,11 +17,11 @@ export const authenticateUser = (req, res, next) => {
     };
     next();
   } catch (error) {
-    res.status(401).json({
+    console.log(error);
+    return res.status(401).json({
       success: false,
       message: "Invalid or expired token.",
     });
-    console.log(error);
   }
 };
 
@@ -35,10 +35,6 @@ export const authorizeRoles = (allowedRoles) => {
           "Forbidden access. You do not have permission to perform this action.",
       });
     }
-    // next();
-    return res.status(200).json({
-      success: true,
-      message: "You are authorized to perform this action.",
-    });
+    next();
   };
 };

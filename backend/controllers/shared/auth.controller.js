@@ -60,9 +60,9 @@ export const sendVerifyOtp = async (req, res) => {
       .json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Something went wrong, Please try again later",
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
@@ -110,9 +110,9 @@ export const verifyOtp = async (req, res) => {
       .json({ success: true, message: "OTP verified successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Something went wrong, Please try again later",
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
