@@ -148,7 +148,10 @@ function StaffManagement() {
   return (
     <>
       <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
-        <Container className="d-flex justify-content-between mb-3">
+        <Container
+          className="d-flex justify-content-between mb-3 position-sticky top-0"
+          style={{ zIndex: 30 }}
+        >
           <h4>Staff Users</h4>
           <Button
             onClick={() => navigate("/staff-register")}
@@ -158,15 +161,9 @@ function StaffManagement() {
             Add New
           </Button>
         </Container>
-        <Container>
-          <Table
-            responsive
-            hover
-            striped
-            size="sm"
-            className="rounded overflow-hidden shadow"
-          >
-            <thead>
+        <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
+          <Table hover striped size="sm" className="shadow">
+            <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
                 <th>ID</th>
                 <th>First Name</th>
