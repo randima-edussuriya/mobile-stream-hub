@@ -17,11 +17,11 @@ import LoyaltyProgramManagement from "./pages/LoyaltyProgramManagement";
 import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
 import CustomerSupportManagement from "./pages/CustomerSupportManagement";
 import ReportsManagement from "./pages/ReportsManagement";
-import StaffRegister from "./pages/StaffManagement/StaffRegister";
 import RepairManagement from "./pages/RepairManagement";
 import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import CategoryManagement from "./pages/CategoryManagement/CategoryManagement";
 import { AppContext } from "./context/AppContext";
+import StaffRegisterFlow from "./pages/StaffManagement/StaffRegisterFlow";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -33,11 +33,15 @@ function App() {
       <div className="container-fluid bg-dark min-vh-100">
         <div className="row">
           {!toggle && (
-            <div className="col-4 col-md-3 col-lg-2 bg-primary-subtle">
+            <div className="col-4 col-md-3 col-lg-2 bg-primary-subtle vh-100 overflow-y-auto">
               <Sidebar />
             </div>
           )}
-          <div className={toggle ? "col" : "col-8 col-md-9 col-lg-10"}>
+          <div
+            className={`${
+              toggle ? "col" : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
+            } `}
+          >
             <Navbar
               onToggle={() => {
                 setToggle((pre) => !pre);
@@ -80,7 +84,7 @@ function App() {
           path: "staff-register",
           element: (
             <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <StaffRegister />
+              <StaffRegisterFlow />
             </RoleRoute>
           ),
         },
