@@ -12,7 +12,7 @@ function Footer() {
             {/* ----------------------------------------------------------------
                   Brand name, about, social icons links section
             -------------------------------------------------------------------- */}
-            <Col className="mx-auto mb-4">
+            <Col className="mb-4">
               <h6 className="text-uppercase fw-bold mb-4">Mobile Stream Hub</h6>
               <p>
                 Sales. Repairs. Accessories. Trusted service for all your mobile
@@ -49,7 +49,7 @@ function Footer() {
             {/* ----------------------------------------------------------------
                   Quick links section
             -------------------------------------------------------------------- */}
-            <Col className="mx-auto mb-4">
+            <Col className="mb-4">
               <h6 className="text-uppercase fw-bold mb-4">Qucik Links</h6>
               <p>
                 <Link
@@ -79,7 +79,7 @@ function Footer() {
             {/* ----------------------------------------------------------------
                   Contact details section
             -------------------------------------------------------------------- */}
-            <Col className="mx-auto mb-4">
+            <Col className="mb-4">
               <h6 className="text-uppercase fw-bold mb-4">Contact</h6>
               <p>
                 <i className="bi bi-geo-alt me-3"></i>

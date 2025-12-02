@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "../../assets/icons/logo.png";
 import {
   Container,
@@ -8,7 +7,7 @@ import {
   Dropdown,
   Badge,
 } from "react-bootstrap";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Header.css";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
@@ -96,7 +95,7 @@ function Header() {
                 <NavDropdown.Item>Action</NavDropdown.Item>
               </NavDropdown>
 
-              <Nav.Link as={NavLink} to={"/products"} className="navbar_link">
+              <Nav.Link as={Link} to={"/products"} className="navbar_link">
                 Products
               </Nav.Link>
               <Nav.Link as={Link} to={"/coming_soon"} className="navbar_link">
@@ -159,12 +158,7 @@ function Header() {
       {/* -------------------------------------------------------------------
             Search bar section
       ----------------------------------------------------------------------- */}
-      <Container
-        fluid
-        className="p-3 search_container d-flex justify-content-center"
-      >
-        <SearchBar />
-      </Container>
+      <SearchBar />
     </>
   );
 }

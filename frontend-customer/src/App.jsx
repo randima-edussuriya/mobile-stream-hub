@@ -1,4 +1,3 @@
-import React from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Header from "./components/Header/Header";
@@ -7,13 +6,12 @@ import ComingSoon from "./pages/ComingSoon";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Cart from "./pages/Cart";
-import { Container } from "react-bootstrap";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 
 const Layout = () => {
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="d-flex flex-column  min-vh-100">
       <div className="flex-grow-1">
         <Header />
         <Outlet />
@@ -58,11 +56,7 @@ function App() {
     },
   ]);
 
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
