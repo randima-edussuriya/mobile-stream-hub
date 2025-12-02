@@ -56,12 +56,12 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "",
       element: <Login />,
       errorElement: <div className="text-danger">Not Found: Invalid URL</div>,
     },
     {
-      path: "/",
+      path: "",
       element: (
         <PrivateRoute authChecked={authChecked} isLoggedIn={isLoggedIn}>
           <Layout />
