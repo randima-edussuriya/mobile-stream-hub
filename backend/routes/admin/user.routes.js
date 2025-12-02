@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAllUsers,
   getMeBasicData,
+  getStaffTypes,
   updateUserStatus,
 } from "../../controllers/admin/user.controller.js";
 import {
@@ -22,5 +23,6 @@ router.put(
   validateUpdateUserStatus,
   updateUserStatus
 );
+router.get("/staff-types", authenticateUser, authorizeRoles(["admin"]), getStaffTypes);
 
 export default router;
