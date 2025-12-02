@@ -8,7 +8,7 @@ export const validateSendVerifyOtp = (req, res, next) => {
   if (!email || !purpose) {
     return res
       .status(400)
-      .json({ success: false, message: "Email and purpose are required" });
+      .json({ success: false, message: "All fields are required" });
   }
   // validate format
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
@@ -31,7 +31,7 @@ export const validateVerifyOtp = (req, res, next) => {
   if (!email || !otp || !purpose) {
     return res.status(400).json({
       success: false,
-      message: "Email, OTP and purpose are required",
+      message: "All fields are required",
     });
   }
 
