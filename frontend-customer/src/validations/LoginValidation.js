@@ -1,17 +1,17 @@
-import React from 'react'
+import React from "react";
 
 const loginValidation = (formData) => {
-    const errors = {};
+  const errors = {};
 
-    //Trimming
-    const email = formData.email.trim();
-    const password = formData.password.trim();
+  //Trimming
+  const email = formData.email.trim();
+  const password = formData.password.trim();
 
-    //check empty
-    if (!email) errors.email = 'Email is required';
-    if (!password) errors.password = 'Password is required';
+  //check empty
+  if (!email) errors.email = "Email is required";
+  if (!password) errors.password = "Password is required";
 
-    return errors;
-}
+  return errors;
+};
 
-export default loginValidation
+export default loginValidation;

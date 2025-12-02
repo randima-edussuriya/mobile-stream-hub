@@ -1,26 +1,26 @@
 .footer_main {
-    background-color: #10207A !important;
-    color: white !important;
+  background-color: #10207a !important;
+  color: white !important;
 }
 
 /* ------------------------------------------------
             Soical icon
 ---------------------------------------------------*/
 .social_icon {
-    font-size: 20px !important;
-    transition: all 0.3s ease !important;
+  font-size: 20px !important;
+  transition: all 0.3s ease !important;
 }
 
 .social_icon:hover {
-    color: #51A6F5 !important;
+  color: #51a6f5 !important;
 }
 
 /* ------------------------------------------------
             Quick links
 ---------------------------------------------------*/
 .quick_link {
-    transition: all 0.3s ease !important;
+  transition: all 0.3s ease !important;
 }
 .quick_link:hover {
-    color: #51A6F5 !important;
+  color: #51a6f5 !important;
 }

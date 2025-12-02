@@ -2,40 +2,40 @@
     Navbar 
 ------------------------------------------------- */
 .navbar_icon {
-    font-size: 28px !important;
-    transition: all 0.3s ease !important;
+  font-size: 28px !important;
+  transition: all 0.3s ease !important;
 }
 
 .navbar_icon:hover {
-    background-color: white !important;
+  background-color: white !important;
 }
 
 .navbar_link {
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    margin-left: 5px !important;
-    transition: all 0.3s ease !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin-left: 5px !important;
+  transition: all 0.3s ease !important;
 }
 
 .navbar_link:hover {
-    color: black !important;
-    background-color: white !important;
+  color: black !important;
+  background-color: white !important;
 }
 
 #basic-nav-dropdown {
-    transition: all 0.3s ease !important;
+  transition: all 0.3s ease !important;
 }
 #basic-nav-dropdown:hover {
-    color: black !important;
+  color: black !important;
 }
 
 /* ----------------------------------------------
     Search Bar
 ------------------------------------------------- */
 .search_container {
-    background-color: #10207A !important;
+  background-color: #10207a !important;
 }
 
 .search_input_group {
-    background-color: #51A6F5 !important;
+  background-color: #51a6f5 !important;
 }

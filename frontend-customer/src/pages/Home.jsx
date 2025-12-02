@@ -1,5 +1,5 @@
-import React from 'react'
-import Slider from '../components/Slider/Slider'
+import React from "react";
+import Slider from "../components/Slider/Slider";
 
 function Home() {
   return (
@@ -9,7 +9,7 @@ function Home() {
       ----------------------------------------------------- */}
       <Slider />
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;

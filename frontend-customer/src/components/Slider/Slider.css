@@ -1,13 +1,13 @@
 .carousel_caption {
-    width: 50% !important;
-    top: 32% !important;
-    left: 6% !important;
-    text-align: center !important;
-    padding: 0 !important;
-    color: black !important;
-    font-weight: 600 !important;
+  width: 50% !important;
+  top: 32% !important;
+  left: 6% !important;
+  text-align: center !important;
+  padding: 0 !important;
+  color: black !important;
+  font-weight: 600 !important;
 }
 
 .carousel_caption p {
-    font-size: 20px !important;
+  font-size: 20px !important;
 }
