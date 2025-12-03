@@ -35,6 +35,14 @@ export const sendVerifyOtp = async (req, res) => {
       }
     }
     if (purpose === "customer_registration") {
+      //check existing user
+      const sqlUserExist = "SELECT 1 FROM customer WHERE email = ? LIMIT 1";
+      const [existingUser] = await dbPool.query(sqlUserExist, [email]);
+      if (existingUser.length > 0) {
+        return res
+          .status(409)
+          .json({ success: false, message: "Email already registered" });
+      }
     }
 
     if (purpose === "password_reset") {
