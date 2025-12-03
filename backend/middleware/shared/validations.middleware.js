@@ -54,10 +54,8 @@ export const validateVerifyOtp = (req, res, next) => {
 };
 
 export const validateLogin = (req, res, next) => {
-  const email = String(req.body.email || "")
-    .trim()
-    .toLocaleLowerCase();
-  const password = String(req.body.password || "").trim();
+  const email = req.body.email?.trim().toLocaleLowerCase();
+  const password = req.body.password?.trim();
 
   // validate empty fields
   if (!email || !password) {
