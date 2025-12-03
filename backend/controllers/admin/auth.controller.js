@@ -58,7 +58,7 @@ export const login = async (req, res) => {
 
     //check user exist
     const sql = `
-            SELECT s.staff_id, s.first_name, s.password, s.email, s.is_active, st.staff_type_name
+            SELECT s.staff_id, s.password, s.is_active, st.staff_type_name
             FROM staff s
             INNER JOIN staff_type st ON st.staff_type_id=s.staff_type_id
             WHERE s.email=?
