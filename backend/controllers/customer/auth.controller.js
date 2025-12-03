@@ -1,116 +1,113 @@
-import db from "../../config/dbConnection.js";
+import dbPool from "../../config/dbConnection.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const firstName = req.body.firstName?.trim();
-    const lastName = req.body.lastName?.trim();
-    const phoneNo = req.body.phoneNo?.trim();
-    const address = req.body.address?.trim();
-    const email = req.body.email?.trim();
-    const confirmPassword = req.body.confirmPassword?.trim();
-
-    if (
-      !firstName ||
-      !lastName ||
-      !phoneNo ||
-      !address ||
-      !email ||
-      !confirmPassword
-    )
-      return res.json({ success: false, message: "Fileds are required" });
+    const { firstName, lastName, password, email, phoneNo, address } = req.body;
 
     //check existing user
-    const sqlUserExist = "SELECT * FROM customer WHERE email = ? LIMIT 1";
-    const existingUser = await db.query(sqlUserExist, [email]);
-
+    const sqlUserExist = "SELECT 1 FROM customer WHERE email = ? LIMIT 1";
+    const [existingUser] = await dbPool.query(sqlUserExist, [email]);
     if (existingUser.length > 0) {
-      return res.json({ success: false, message: "Email already exist" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Email already registered" });
     }
 
     //hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     //insert user
-    const sqlInsert =
-      "INSERT INTO customer (`first_name`, `last_name`, `password`, `email`, `phone_number`, `address`) VALUES (?,?,?,?,?,?)";
-    const values = [
+    const sqlInsert = `INSERT INTO customer (first_name, last_name, password, email, phone_number, address)
+                            VALUES (?,?,?,?,?,?,?,?)`;
+    await dbPool.query(sqlInsert, [
       firstName,
       lastName,
       hashedPassword,
       email,
       phoneNo,
       address,
-    ];
-    await db.query(sqlInsert, values);
-    return res.json({ success: true, message: "signup successfully" });
-  } catch (err) {
-    console.error(err);
-    return res.json({
+    ]);
+    return res
+      .status(201)
+      .json({ success: true, message: "Registered successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
       success: false,
-      message: "Failed to signup. Please try again.",
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
+
 export const login = async (req, res) => {
   try {
-    const email = req.body.email?.trim();
-    const password = req.body.password?.trim();
-    if (!email || !password)
-      return res.json({ success: false, message: "Fields are required" });
+    const { email, password } = req.body;
 
     //check user exist
-    const sql = "SELECT * FROM customer WHERE `email`= ? LIMIT 1";
-    const result = await db.query(sql, [email]);
-    if (result.length === 0) {
-      return res.json({ success: false, message: "User does not exist" });
-    }
+    const sql = `
+            SELECT customer_id, password, is_active FROM customer
+            WHERE email=? LIMIT 1;
+        `;
+    const [user] = await dbPool.query(sql, [email]);
+    if (user.length === 0)
+      return res
+        .status(404)
+        .json({ success: false, message: "User does not exist" });
 
     //check user is deactive
-    if (result[0].is_active === 0)
-      return res.json({ success: false, message: "User is Deactivated" });
+    if (user[0].is_active === 0)
+      return res
+        .status(403)
+        .json({ success: false, message: "User is Deactivated" });
 
     //check hash password
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      result[0].password
-    );
-
+    const isPasswordCorrect = await bcrypt.compare(password, user[0].password);
     if (!isPasswordCorrect)
-      return res.json({ success: false, message: "Incorrect password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect password" });
 
+    //create jwt
     const token = jwt.sign(
-      { id: result[0].customer_id },
-      process.env.JWT_SECRET
+      { userId: user[0].customer_id },
+      process.env.JWT_SECRET,
+      { expiresIn: "8h" }
     );
-    const userLogged = {
-      id: result[0].customer_id,
-      name: result[0].first_name,
-    };
+
+    //create cookie
     res.cookie("access_token", token, {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       secure: process.env.NODE_ENV === "production",
+      maxAge: 8 * 60 * 60 * 1000, // 8 hours
     });
-    res.json({
+
+    return res.status(200).json({
       success: true,
       message: "Logged in successfully",
-      data: userLogged,
     });
-  } catch (err) {
-    console.error(err);
-    return res.json({
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
       success: false,
-      message: "Failed to login. Please try again.",
+      message: "Something went wrong. Please try again later.",
     });
   }
 };
+
+export const isAuthenticated = async (req, res) => {
+  return res.status(200).json({ success: true, message: "Authenticated" });
+};
+
 export const logout = async (req, res) => {
   res.clearCookie("access_token", {
-    sameSite: "none",
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
   });
-  res.json({ success: true, message: "Successfully logout" });
+  return res
+    .status(200)
+    .json({ success: true, message: "Logged out successfully" });
 };
