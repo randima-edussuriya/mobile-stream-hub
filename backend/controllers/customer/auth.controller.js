@@ -20,7 +20,7 @@ export const register = async (req, res) => {
 
     //insert user
     const sqlInsert = `INSERT INTO customer (first_name, last_name, password, email, phone_number, address)
-                            VALUES (?,?,?,?,?,?,?,?)`;
+                            VALUES (?,?,?,?,?,?)`;
     await dbPool.query(sqlInsert, [
       firstName,
       lastName,
