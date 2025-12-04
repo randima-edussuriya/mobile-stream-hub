@@ -1,15 +1,15 @@
 import jwt from "jsonwebtoken";
 
 export const authenticateUser = (req, res, next) => {
-  const { access_token } = req.cookies;
-  if (!access_token)
+  const { admin_access_token } = req.cookies;
+  if (!admin_access_token)
     return res.status(401).json({
       success: false,
       message: "Unauthorized access. Please login again.",
     });
   try {
     //verify token
-    const tokenDecoded = jwt.verify(access_token, process.env.JWT_SECRET);
+    const tokenDecoded = jwt.verify(admin_access_token, process.env.JWT_SECRET);
     req.body = {
       ...req.body,
       userId: tokenDecoded.userId,

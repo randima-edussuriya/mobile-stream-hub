@@ -91,7 +91,7 @@ export const login = async (req, res) => {
     );
 
     //create cookie
-    res.cookie("access_token", token, {
+    res.cookie("admin_access_token", token, {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       secure: process.env.NODE_ENV === "production",
@@ -116,7 +116,7 @@ export const isAuthenticated = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("access_token", {
+  res.clearCookie("admin_access_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
