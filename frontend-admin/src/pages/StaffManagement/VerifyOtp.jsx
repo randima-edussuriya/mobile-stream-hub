@@ -15,7 +15,6 @@ const VerifyOtp = ({ email, purpose, onOtpVerify }) => {
   useEffect(() => {
     if (timer === 0) return;
     const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
-    console.log(interval);
     return () => clearInterval(interval);
   }, [timer]);
 
