@@ -1,6 +1,12 @@
 import express from "express";
-import { sendVerifyOtp, verifyOtp } from "../../controllers/shared/auth.controller.js";
-import { validateSendVerifyOtp, validateVerifyOtp } from "../../middleware/shared/validations.middleware.js";
+import {
+  sendVerifyOtp,
+  verifyOtp,
+} from "../../controllers/shared/auth.controller.js";
+import {
+  validateSendVerifyOtp,
+  validateVerifyOtp,
+} from "../../middleware/shared/validations.middleware.js";
 
 const router = express.Router();
 
