@@ -4,10 +4,10 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import ComingSoon from "./pages/ComingSoon";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
+import SignupFlow from "./pages/SignupFlow";
 
 const Layout = () => {
   return (
@@ -38,7 +38,7 @@ function App() {
         },
         {
           path: "signup",
-          element: <Signup />,
+          element: <SignupFlow />,
         },
         {
           path: "products",

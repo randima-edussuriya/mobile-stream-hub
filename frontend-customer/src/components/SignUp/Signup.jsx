@@ -1,23 +1,23 @@
-import React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import signupValidation from "../validations/signupValidation";
+import { AppContext } from "../../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function Signup() {
+function Signup({ email, purpose, offOtpVerify }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     phoneNo: "",
     address: "",
-    email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { backendUrl } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -37,7 +37,6 @@ function Signup() {
       lastName: "",
       phoneNo: "",
       address: "",
-      email: "",
       password: "",
       confirmPassword: "",
     });
@@ -48,23 +47,33 @@ function Signup() {
     ------------------------------------------------------------------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = signupValidation(formData);
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length === 0) {
-      toast.success("can submit", { position: "top-center" });
-
-      // try {
-      //     const res = await axios.post('http://localhost:5000/api/auth/customer/signup', formData)
-      //     if (res.data.success) {
-      //         toast.success(res.data.message, { position: "top-center" })
-      //         navigate('/login');
-      //     } else {
-      //         toast.error(res.data.message, { position: "top-center" });
-      //     }
-      // } catch (err) {
-      //     console.error(err);
-      //     toast.error('An error occurred', { position: "top-center" });
-      // }
+    try {
+      // Validate password and confirm password
+      setErrorMessage("");
+      if (formData.password !== formData.confirmPassword) {
+        setErrorMessage("Password and Confirm Password do not match");
+        return;
+      }
+      // Register staff user API call
+      const { confirmPassword, ...otherFormdata } = formData;
+      await axios.post(`${backendUrl}/api/customer/auth/register`, {
+        ...otherFormdata,
+        email,
+        purpose,
+      });
+      toast.success("Staff registered successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+      // handle otp not verified case
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        offOtpVerify();
+      }
+      console.error(error);
     }
   };
   return (
@@ -73,8 +82,17 @@ function Signup() {
       className="d-flex justify-content-center align-items-center  mt-5 py-3"
     >
       <Container className="col-10 col-sm-5 p-3 bg_light rounded-2 shadow">
-        <h3 className="text-center">Sign Up</h3>
+        <h3 className="text-center">Step 3 - Sign Up</h3>
         <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formGroupEmail">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              value={email}
+              disabled
+              readOnly
+              className="bg-success-subtle"
+            />
+          </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupFirstName">
             <Form.Label>First Name</Form.Label>
             <Form.Control
@@ -83,9 +101,6 @@ function Signup() {
               name="firstName"
               onChange={handleChange}
             />
-            {errors.firstName && (
-              <span className="text-danger">{errors.firstName}</span>
-            )}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupLastName">
             <Form.Label>Last Name</Form.Label>
@@ -95,9 +110,6 @@ function Signup() {
               name="lastName"
               onChange={handleChange}
             />
-            {errors.lastName && (
-              <span className="text-danger">{errors.lastName}</span>
-            )}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupPhoneNo">
             <Form.Label>Phone Number</Form.Label>
@@ -107,9 +119,6 @@ function Signup() {
               name="phoneNo"
               onChange={handleChange}
             />
-            {errors.phoneNo && (
-              <span className="text-danger">{errors.phoneNo}</span>
-            )}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupAddress">
             <Form.Label>Address</Form.Label>
@@ -119,22 +128,8 @@ function Signup() {
               name="address"
               onChange={handleChange}
             />
-            {errors.address && (
-              <span className="text-danger">{errors.address}</span>
-            )}
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter email"
-              name="email"
-              onChange={handleChange}
-            />
-            {errors.email && (
-              <span className="text-danger">{errors.email}</span>
-            )}
-          </Form.Group>
+
           <Form.Group className="mb-3" controlId="formGroupPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -143,9 +138,6 @@ function Signup() {
               name="password"
               onChange={handleChange}
             />
-            {errors.password && (
-              <span className="text-danger">{errors.password}</span>
-            )}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupConfirmPassword">
             <Form.Label>Confirm Password</Form.Label>
@@ -155,8 +147,8 @@ function Signup() {
               name="confirmPassword"
               onChange={handleChange}
             />
-            {errors.confirmPassword && (
-              <span className="text-danger">{errors.confirmPassword}</span>
+            {errorMessage && (
+              <span className="text-danger">{errorMessage}</span>
             )}
           </Form.Group>
 

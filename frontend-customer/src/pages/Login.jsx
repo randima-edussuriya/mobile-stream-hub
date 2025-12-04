@@ -2,20 +2,19 @@ import React, { useContext } from "react";
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import loginValidation from "../validations/loginValidation";
 import { toast } from "react-toastify";
-import { AuthContext } from "../context/authContext";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState({});
+
+  const { backendUrl, setIsLoggedIn, getUserData } = useContext(AppContext);
 
   const navigate = useNavigate();
-
-  const { login } = useContext(AuthContext);
 
   /* ----------------------------------------------------------------------
                 Handle form input changes
@@ -28,22 +27,22 @@ function Login() {
                 Handle form submit
     ------------------------------------------------------------------------- */
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = loginValidation(formData);
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const res = await login(formData);
-        if (res.data.success) {
-          toast.success(res.data.message, { position: "top-center" });
-          navigate("/");
-        } else {
-          toast.error(res.data.message, { position: "top-center" });
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("An error occurred", { position: "top-center" });
-      }
+    try {
+      e.preventDefault();
+      const { data } = await axios.post(
+        `${backendUrl}/api/customer/auth/login`,
+        formData
+      );
+      toast.success(data.message);
+      setIsLoggedIn(true);
+      navigate("/");
+      getUserData();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong, Please try again later"
+      );
+      console.error(error);
     }
   };
 
@@ -63,9 +62,6 @@ function Login() {
               name="email"
               onChange={handleChange}
             />
-            {errors.email && (
-              <span className="text-danger">{errors.email}</span>
-            )}
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupPassword">
             <Form.Label>Password</Form.Label>
@@ -75,9 +71,6 @@ function Login() {
               name="password"
               onChange={handleChange}
             />
-            {errors.password && (
-              <span className="text-danger">{errors.password}</span>
-            )}
           </Form.Group>
           {/* --------------------------------------------------------------
                                 buttons section

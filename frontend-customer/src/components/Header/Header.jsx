@@ -7,38 +7,55 @@ import {
   Dropdown,
   Badge,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import { useContext } from "react";
-import { AuthContext } from "../../context/authContext";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
-import { useEffect } from "react";
 import axios from "axios";
+import { AppContext } from "../../context/AppContext";
 
 function Header() {
-  const { currentUser, logout } = useContext(AuthContext);
   const [categoriesPhone, setCategoriesPhone] = useState([]);
+
+  const { backendUrl, isLoggedIn, setIsLoggedIn, setUserData } =
+    useContext(AppContext);
+  const navigate = useNavigate();
+
+  const handelLogout = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/customer/auth/logout`);
+      setIsLoggedIn(false);
+      setUserData(null);
+      navigate("/login");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong, Please try again later"
+      );
+      console.error(error);
+    }
+  };
 
   /* ------------------------------------------------------------
         Fetch categories-phone from API
   --------------------------------------------------------------- */
-  useEffect(() => {
-    const getCategoriesPhone = async () => {
-      setCategoriesPhone([]);
-      try {
-        const res = await axios.get("http://localhost:5000/api/category/phone");
-        if (res.data.success) {
-          setCategoriesPhone(res.data.data);
-        } else {
-          console.error(res.data.message);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getCategoriesPhone();
-  }, []);
+  // useEffect(() => {
+  //   const getCategoriesPhone = async () => {
+  //     setCategoriesPhone([]);
+  //     try {
+  //       const res = await axios.get("http://localhost:5000/api/category/phone");
+  //       if (res.data.success) {
+  //         setCategoriesPhone(res.data.data);
+  //       } else {
+  //         console.error(res.data.message);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   getCategoriesPhone();
+  // }, []);
 
   return (
     <>
@@ -116,7 +133,7 @@ function Header() {
           <div className="ms-auto d-flex align-items-center gap-3">
             <Link to={"/cart"} className="text-reset position-relative me-3">
               <i className="bi bi-cart3 navbar_icon"></i>
-              {currentUser && (
+              {isLoggedIn && (
                 <Badge
                   pill
                   bg="danger"
@@ -127,7 +144,7 @@ function Header() {
               )}
             </Link>
 
-            {currentUser ? (
+            {isLoggedIn ? (
               <Dropdown className="me-auto">
                 <Dropdown.Toggle
                   variant="none"
@@ -139,7 +156,7 @@ function Header() {
                 <Dropdown.Menu className="dropdown-menu-end">
                   <Dropdown.Item>My Profle</Dropdown.Item>
                   <Dropdown.Item>Setting</Dropdown.Item>
-                  <Dropdown.Item onClick={logout}>Log Out</Dropdown.Item>
+                  <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
