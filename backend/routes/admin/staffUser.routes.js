@@ -4,7 +4,7 @@ import {
   getMeBasicData,
   getStaffTypes,
   updateUserStatus,
-} from "../../controllers/admin/user.controller.js";
+} from "../../controllers/admin/staffUser.controller.js";
 import {
   authenticateUser,
   authorizeRoles,
@@ -23,6 +23,11 @@ router.put(
   validateUpdateUserStatus,
   updateUserStatus
 );
-router.get("/staff-types", authenticateUser, authorizeRoles(["admin"]), getStaffTypes);
+router.get(
+  "/staff-types",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  getStaffTypes
+);
 
 export default router;

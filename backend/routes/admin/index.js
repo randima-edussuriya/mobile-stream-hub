@@ -1,5 +1,5 @@
 import express from "express";
-import userRoutes from "./user.routes.js";
+import userRoutes from "./staffUser.routes.js";
 import itemRoutes from "./item.routes.js";
 import orderRoutes from "./order.routes.js";
 import authRoutes from "./auth.routes.js";
