@@ -1,17 +1,23 @@
 import dbPool from "../../config/dbConnection.js";
 import { sendEmailVerifyEmail } from "../../services/email/sharedEmail.service.js";
 
+const allowedPurposes = [
+  "staff_registration",
+  "customer_registration",
+  "password_reset",
+];
+
 // map purposes to email handlers
 const emailHandlers = {
   staff_registration: sendEmailVerifyEmail,
   customer_registration: sendEmailVerifyEmail,
 };
 
-const allowedPurposes = [
-  "staff_registration",
-  "customer_registration",
-  "password_reset",
-];
+// map purposes to db tables
+const purposeToDbTable = {
+  staff_registration: "staff",
+  customer_registration: "customer",
+};
 
 export const sendVerifyOtp = async (req, res) => {
   try {
@@ -24,19 +30,14 @@ export const sendVerifyOtp = async (req, res) => {
         .json({ success: false, message: "Invalid OTP purpose" });
     }
 
-    if (purpose === "staff_registration") {
+    // handle registration purpose verifications
+    if (
+      purpose === "staff_registration" ||
+      purpose === "customer_registration"
+    ) {
       //check existing user
-      const sqlUserExist = "SELECT 1 FROM staff WHERE email = ? LIMIT 1";
-      const [existingUser] = await dbPool.query(sqlUserExist, [email]);
-      if (existingUser.length > 0) {
-        return res
-          .status(409)
-          .json({ success: false, message: "Email already registered" });
-      }
-    }
-    if (purpose === "customer_registration") {
-      //check existing user
-      const sqlUserExist = "SELECT 1 FROM customer WHERE email = ? LIMIT 1";
+      const dbTable = purposeToDbTable[purpose];
+      const sqlUserExist = `SELECT 1 FROM ${dbTable} WHERE email = ? LIMIT 1`;
       const [existingUser] = await dbPool.query(sqlUserExist, [email]);
       if (existingUser.length > 0) {
         return res
@@ -45,6 +46,7 @@ export const sendVerifyOtp = async (req, res) => {
       }
     }
 
+    // handle password reset purpose verifications
     if (purpose === "password_reset") {
     }
 
