@@ -22,6 +22,7 @@ function StaffRegisterFlow() {
       {email && otpVerified && (
         <StaffRegister
           email={email}
+          purpose={purpose}
           offOtpVerify={() => setOtpVerified(false)}
         />
       )}

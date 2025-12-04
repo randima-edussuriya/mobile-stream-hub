@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 
-function StaffRegister({ email, offOtpVerify }) {
+function StaffRegister({ email, purpose, offOtpVerify }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -65,7 +65,7 @@ function StaffRegister({ email, offOtpVerify }) {
       await axios.post(`${backendUrl}/api/admin/auth/register`, {
         ...otherFormdata,
         email,
-        purpose: "staff_registration",
+        purpose,
       });
       toast.success("Staff registered successfully");
       navigate("/staff-management");
