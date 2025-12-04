@@ -1,7 +1,7 @@
 export const validateSendVerifyOtp = (req, res, next) => {
   const email = String(req.body.email || "")
     .trim()
-    .toLowerCase();
+    .toLocaleLowerCase();
   const purpose = String(req.body.purpose || "").trim();
 
   // validate empty
@@ -23,7 +23,7 @@ export const validateSendVerifyOtp = (req, res, next) => {
 export const validateVerifyOtp = (req, res, next) => {
   const email = String(req.body.email || "")
     .trim()
-    .toLowerCase();
+    .toLocaleLowerCase();
   const otp = String(req.body.otp || "").trim();
   const purpose = String(req.body.purpose || "").trim();
 
