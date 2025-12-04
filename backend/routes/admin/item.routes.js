@@ -3,7 +3,7 @@ import {
   addItem,
   getAllItems,
   getItem,
-} from "../../controllers/admin/item.controler.js";
+} from "../../controllers/admin/item.controller.js";
 
 const router = express.Router();
 
