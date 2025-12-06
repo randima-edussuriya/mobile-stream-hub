@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Container, Table, Badge, Spinner } from "react-bootstrap";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 function CustomerManagement() {
   const [Loading, setLoading] = useState(true);
@@ -11,37 +14,15 @@ function CustomerManagement() {
   const [customers, setCustomers] = useState([]);
   const [isToogleCustomerStatus, setIsToogleCustomerStatus] = useState(false);
 
-  /* -----------------------------------------------------------------
-        Fetch customers from API
-    --------------------------------------------------------------------*/
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      setLoading(true);
-      setError("");
-      setCustomers([]);
-      setIsToogleCustomerStatus(false);
-      try {
-        const res = await axios.get("http://localhost:5000/api/customer");
-        if (res.data.success) {
-          setCustomers(res.data.data);
-        } else {
-          setError(res.data.message);
-        }
-      } catch (error) {
-        console.error(error);
-        setError("Failed to loading customers");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCustomers();
-  }, [isToogleCustomerStatus]);
+  const { backendUrl } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
-        Handle customer status change
-    --------------------------------------------------------------------*/
-  const handleStatusChange = async (customerId, newStatus) => {
-    const actionText = newStatus ? "activate" : "deactivate";
+        Handle customer activity status change
+  --------------------------------------------------------------------*/
+  const handleStatusChange = async (customerId, isActive) => {
+    const actionText = isActive ? "activate" : "deactivate";
 
     const confim = await Swal.fire({
       customClass: {
@@ -49,43 +30,61 @@ function CustomerManagement() {
         cancelButton: "btn btn-danger",
         title: "h5",
       },
-      title: `Are you sure to  ${actionText} this customer`,
+      title: `Are you sure to  ${actionText} this customer?`,
       showCancelButton: true,
-      confirmButtonColor: "#10207A",
-      cancelButtonColor: "#d33",
       confirmButtonText: `Yes, ${actionText}`,
-      width: "17em",
     });
 
     if (!confim.isConfirmed) return;
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/customer/status/${customerId}`,
-        { newStatus: newStatus }
+      await axios.put(
+        `http://localhost:5000/api/admin/customers/${customerId}/status`,
+        { isActive }
       );
-      if (res.data.success) {
-        setIsToogleCustomerStatus(true);
-        toast.success(res.data.message, { position: "top-center" });
-      } else {
-        toast.error(res.data.message, { position: "top-center" });
-      }
+      setIsToogleCustomerStatus(true);
     } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
       console.error(error);
-      toast.error("An error occurred. Please try again.", {
-        position: "top-center",
-      });
     }
   };
 
   /* -----------------------------------------------------------------
-        Render customer data into table
-    --------------------------------------------------------------------*/
+        Fetch Staff users from API
+  --------------------------------------------------------------------*/
+  const fetchCustomers = async () => {
+    setLoading(true);
+    setError("");
+    setCustomers([]);
+    setIsToogleCustomerStatus(false);
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/admin/customers`);
+      setCustomers(data.data);
+    } catch (error) {
+      setError(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchCustomers();
+  }, [isToogleCustomerStatus]);
+
+  /* -----------------------------------------------------------------
+        Render staff user data into table
+  --------------------------------------------------------------------*/
   const renderTableBody = () => {
     if (Loading) {
       return (
         <tr>
-          <td colSpan={9} className="text-center py-3">
+          <td colSpan={11} className="text-center py-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -97,7 +96,7 @@ function CustomerManagement() {
     if (error) {
       return (
         <tr>
-          <td colSpan={9} className="text-danger text-center">
+          <td colSpan={11} className="text-danger text-center">
             {error}
           </td>
         </tr>
@@ -107,8 +106,8 @@ function CustomerManagement() {
     if (customers.length === 0) {
       return (
         <tr>
-          <td colSpan={9} className="text-danger text-center">
-            No Customers found
+          <td colSpan={11} className="text-danger text-center">
+            No customers found
           </td>
         </tr>
       );
@@ -134,10 +133,7 @@ function CustomerManagement() {
             variant={customer.is_active ? "outline-danger" : "outline-success"}
             size="sm"
             onClick={() =>
-              handleStatusChange(
-                customer.customer_id,
-                customer.is_active ? 0 : 1
-              )
+              handleStatusChange(customer.customer_id, !customer.is_active)
             }
           >
             {customer.is_active ? "Deactivate" : "Active"}
@@ -150,18 +146,15 @@ function CustomerManagement() {
   return (
     <>
       <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
-        <Container>
+        <Container
+          className="mb-3 position-sticky top-0"
+          style={{ zIndex: 30 }}
+        >
           <h4>Customers</h4>
         </Container>
-        <Container>
-          <Table
-            responsive
-            hover
-            striped
-            size="sm"
-            className="rounded overflow-hidden shadow"
-          >
-            <thead>
+        <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
+          <Table hover striped size="sm" className="shadow">
+            <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
                 <th>ID</th>
                 <th>First Name</th>
@@ -169,7 +162,7 @@ function CustomerManagement() {
                 <th>E-mail</th>
                 <th>Phone No</th>
                 <th>Address</th>
-                <th>Created At</th>
+                <th>Created Date</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
