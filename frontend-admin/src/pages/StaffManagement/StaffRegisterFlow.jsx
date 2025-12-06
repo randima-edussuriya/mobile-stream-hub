@@ -1,7 +1,7 @@
 import { useState } from "react";
-import SendVerifyOtp from "./SendVerifyOtp";
-import VerifyOtp from "./VerifyOtp";
-import StaffRegister from "./StaffRegister";
+import SendVerifyOtp from "../../components/StaffRegister/SendVerifyOtp";
+import VerifyOtp from "../../components/StaffRegister/VerifyOtp";
+import StaffRegister from "../../components/StaffRegister/StaffRegister";
 
 function StaffRegisterFlow() {
   const [email, setEmail] = useState("");
