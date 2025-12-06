@@ -104,3 +104,25 @@ export const validateUpdateUserStatus = (req, res, next) => {
   req.body.staffId = staffId;
   next();
 };
+
+export const validateUpdateCustomerStatus = (req, res, next) => {
+  const customerId = req.params.customerId?.trim();
+  const { isActive, userId } = req.body;
+  // validate customerId
+  if (!customerId || isNaN(customerId)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid customer ID" });
+  }
+
+  // validate isActive (must be boolean)
+  if (typeof isActive !== "boolean") {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid status value. Expecting true or false.",
+    });
+  }
+
+  req.body.customerId = customerId;
+  next();
+};
