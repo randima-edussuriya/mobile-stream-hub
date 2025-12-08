@@ -116,9 +116,12 @@ function CustomerManagement() {
     return customers.map((customer) => (
       <tr key={customer.customer_id}>
         <td>{customer.customer_id}</td>
-        <td>{customer.first_name}</td>
-        <td>{customer.last_name}</td>
-        <td>{customer.email}</td>
+        <td>
+          <strong>
+            {customer.first_name} {customer.last_name}
+          </strong>
+          <div className="text-muted small">{customer.email}</div>
+        </td>
         <td>{customer.phone_number}</td>
         <td>{customer.address}</td>
         <td>{dayjs(customer.created_at).format("YYYY-MM-DD HH:mm:ss")}</td>
@@ -129,7 +132,7 @@ function CustomerManagement() {
         </td>
         <td>
           <Button
-            className="fw-bold"
+            className="fw-semibold border-2"
             variant={customer.is_active ? "outline-danger" : "outline-success"}
             size="sm"
             onClick={() =>
@@ -146,20 +149,15 @@ function CustomerManagement() {
   return (
     <>
       <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
-        <Container
-          className="mb-3 position-sticky top-0"
-          style={{ zIndex: 30 }}
-        >
+        <Container>
           <h4>Customers</h4>
         </Container>
-        <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
+        <Container className="overflow-y-auto" style={{ maxHeight: "78vh" }}>
           <Table hover striped size="sm" className="shadow">
             <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
                 <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>E-mail</th>
+                <th>Name/ E-mail</th>
                 <th>Phone No</th>
                 <th>Address</th>
                 <th>Created Date</th>
