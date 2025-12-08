@@ -22,6 +22,7 @@ import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import CategoryManagement from "./pages/CategoryManagement/CategoryManagement";
 import { AppContext } from "./context/AppContext";
 import StaffRegisterFlow from "./pages/StaffManagement/StaffRegisterFlow";
+import StaffProfile from "./pages/StaffManagement/StaffProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -76,17 +77,23 @@ function App() {
           path: "staff-management",
           element: (
             <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <StaffManagement />
+              <Outlet />
             </RoleRoute>
           ),
-        },
-        {
-          path: "staff-register",
-          element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <StaffRegisterFlow />
-            </RoleRoute>
-          ),
+          children: [
+            {
+              path: "",
+              element: <StaffManagement />,
+            },
+            {
+              path: "register",
+              element: <StaffRegisterFlow />,
+            },
+            {
+              path: "profile/:staffId",
+              element: <StaffProfile />,
+            },
+          ],
         },
         {
           path: "customer-management",
