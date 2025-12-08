@@ -89,7 +89,7 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
   const fetchStaffTypes = async () => {
     try {
       const { data } = await axios.get(
-        `${backendUrl}/api/admin/users/staff-types`
+        `${backendUrl}/api/admin/staff-users/staff-types`
       );
       setStafTypes(data.data);
     } catch (error) {

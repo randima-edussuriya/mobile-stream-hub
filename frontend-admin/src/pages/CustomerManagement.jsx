@@ -53,7 +53,7 @@ function CustomerManagement() {
   };
 
   /* -----------------------------------------------------------------
-        Fetch Staff users from API
+        Fetch customer users from API
   --------------------------------------------------------------------*/
   const fetchCustomers = async () => {
     setLoading(true);
@@ -78,7 +78,7 @@ function CustomerManagement() {
   }, [isToogleCustomerStatus]);
 
   /* -----------------------------------------------------------------
-        Render staff user data into table
+        Render customer user data into table
   --------------------------------------------------------------------*/
   const renderTableBody = () => {
     if (Loading) {

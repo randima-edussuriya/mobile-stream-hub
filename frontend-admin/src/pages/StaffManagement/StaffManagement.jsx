@@ -39,7 +39,7 @@ function StaffManagement() {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/users/${staffUserId}/status`,
+        `http://localhost:5000/api/admin/staff-users/${staffUserId}/status`,
         { isActive }
       );
       setIsToogleStaffUserStatus(true);
@@ -61,7 +61,7 @@ function StaffManagement() {
     setStaffUsers([]);
     setIsToogleStaffUserStatus(false);
     try {
-      const { data } = await axios.get(`${backendUrl}/api/admin/users`);
+      const { data } = await axios.get(`${backendUrl}/api/admin/staff-users`);
       setStaffUsers(data.data);
     } catch (error) {
       setError(

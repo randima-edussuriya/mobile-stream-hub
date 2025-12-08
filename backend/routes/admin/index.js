@@ -8,7 +8,7 @@ import customerRoutes from "./customer.routes.js";
 const router = express.Router();
 
 // base: api/admin
-router.use("/users", userRoutes);
+router.use("/staff-users", userRoutes);
 router.use("/items", itemRoutes);
 router.use("/orders", orderRoutes);
 router.use("/auth", authRoutes);

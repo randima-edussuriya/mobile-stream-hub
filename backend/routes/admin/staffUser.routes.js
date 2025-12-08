@@ -13,7 +13,7 @@ import { validateUpdateUserStatus } from "../../middleware/admin/validations.mid
 
 const router = express.Router();
 
-// base: /api/admin/users
+// base: /api/admin/staff-users
 router.get("/me/basic", authenticateUser, getMeBasicData);
 router.get("/", authenticateUser, authorizeRoles(["admin"]), getAllUsers);
 router.put(
