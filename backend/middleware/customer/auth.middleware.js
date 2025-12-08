@@ -10,10 +10,7 @@ export const authenticateUser = (req, res, next) => {
   try {
     //verify token
     const tokenDecoded = jwt.verify(access_token, process.env.JWT_SECRET);
-    req.body = {
-      ...req.body,
-      userId: tokenDecoded.userId,
-    };
+    req.user = { userId: tokenDecoded.userId };
     next();
   } catch (error) {
     console.log(error);

@@ -78,7 +78,9 @@ export const validateRegister = (req, res, next) => {
 
 export const validateUpdateUserStatus = (req, res, next) => {
   const staffId = req.params.staffId?.trim();
-  const { isActive, userId } = req.body;
+  const { isActive } = req.body;
+  const { userId } = req.user;
+
   // validate staffId
   if (!staffId || isNaN(staffId)) {
     return res
@@ -107,7 +109,8 @@ export const validateUpdateUserStatus = (req, res, next) => {
 
 export const validateUpdateCustomerStatus = (req, res, next) => {
   const customerId = req.params.customerId?.trim();
-  const { isActive, userId } = req.body;
+  const { isActive } = req.body;
+
   // validate customerId
   if (!customerId || isNaN(customerId)) {
     return res

@@ -2,7 +2,7 @@ import dbPool from "../../config/dbConnection.js";
 
 export const getMeBasicData = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.user;
 
     const sql = "SELECT first_name, email FROM customer WHERE customer_id=?";
     const [user] = await dbPool.query(sql, [userId]);

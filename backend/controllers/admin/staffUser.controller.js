@@ -2,7 +2,7 @@ import dbPool from "../../config/dbConnection.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.user;
     const sql = `
                 SELECT s.staff_id, s.first_name, s.last_name, s.email, s.is_active, s.phone_number, s.hire_date, st.staff_type_name
                 FROM staff s
@@ -25,7 +25,7 @@ export const getAllUsers = async (req, res) => {
 
 export const getMeBasicData = async (req, res) => {
   try {
-    const { userId, userRole } = req.body;
+    const { userId, userRole } = req.user;
 
     const sql = "SELECT first_name, email FROM `staff` WHERE staff_id=?";
     const [user] = await dbPool.query(sql, [userId]);

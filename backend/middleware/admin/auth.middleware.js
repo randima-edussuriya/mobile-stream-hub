@@ -10,11 +10,7 @@ export const authenticateUser = (req, res, next) => {
   try {
     //verify token
     const tokenDecoded = jwt.verify(admin_access_token, process.env.JWT_SECRET);
-    req.body = {
-      ...req.body,
-      userId: tokenDecoded.userId,
-      userRole: tokenDecoded.userRole,
-    };
+    req.user = { userId: tokenDecoded.userId, userRole: tokenDecoded.userRole };
     next();
   } catch (error) {
     console.log(error);
@@ -27,7 +23,7 @@ export const authenticateUser = (req, res, next) => {
 
 export const authorizeRoles = (allowedRoles) => {
   return (req, res, next) => {
-    const { userRole } = req.body;
+    const { userRole } = req.user;
     if (!allowedRoles.includes(userRole)) {
       return res.status(403).json({
         success: false,
