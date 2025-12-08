@@ -161,10 +161,7 @@ function StaffManagement() {
   return (
     <>
       <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
-        <Container
-          className="d-flex justify-content-between mb-3 position-sticky top-0"
-          style={{ zIndex: 30 }}
-        >
+        <Container className="d-flex justify-content-between mb-3">
           <h4>Staff Users</h4>
           <Button
             onClick={() => navigate("register")}
