@@ -14,7 +14,7 @@ function StaffManagement() {
   const [staffUsers, setStaffUsers] = useState([]);
   const [isToogleStaffUserStatus, setIsToogleStaffUserStatus] = useState(false);
 
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, userData } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -62,7 +62,11 @@ function StaffManagement() {
     setIsToogleStaffUserStatus(false);
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/staff-users`);
-      setStaffUsers(data.data);
+      // filter out logged in user from the list
+      const filteredUsers = data.data.filter(
+        (user) => user.staff_id !== userData.userId
+      );
+      setStaffUsers(filteredUsers);
     } catch (error) {
       setError(
         error?.response?.data?.message ||

@@ -2,14 +2,12 @@ import dbPool from "../../config/dbConnection.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const { userId } = req.user;
     const sql = `
                 SELECT s.staff_id, s.first_name, s.last_name, s.email, s.is_active, s.phone_number, s.hire_date, st.staff_type_name
                 FROM staff s
                 INNER JOIN staff_type st ON st.staff_type_id=s.staff_type_id
-                WHERE s.staff_id!=?
                 ORDER BY s.staff_id ASC`;
-    const [users] = await dbPool.query(sql, [userId]);
+    const [users] = await dbPool.query(sql);
     return res.status(200).json({
       success: true,
       data: users,
@@ -37,7 +35,12 @@ export const getMeBasicData = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      data: { name: user[0].first_name, email: user[0].email, userRole },
+      data: {
+        userId,
+        name: user[0].first_name,
+        email: user[0].email,
+        userRole,
+      },
     });
   } catch (error) {
     console.log(error);
