@@ -4,7 +4,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const { userId } = req.body;
     const sql = `
-                SELECT s.staff_id, s.first_name, s.last_name, s.email, s.is_active, s.phone_number, s.hire_date, s.nic_number, s.address, st.staff_type_name
+                SELECT s.staff_id, s.first_name, s.last_name, s.email, s.is_active, s.phone_number, s.hire_date, st.staff_type_name
                 FROM staff s
                 INNER JOIN staff_type st ON st.staff_type_id=s.staff_type_id
                 WHERE s.staff_id!=?

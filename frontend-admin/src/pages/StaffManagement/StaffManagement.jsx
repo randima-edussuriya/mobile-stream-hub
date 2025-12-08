@@ -116,30 +116,43 @@ function StaffManagement() {
     return staffUsers.map((staffUser) => (
       <tr key={staffUser.staff_id}>
         <td>{staffUser.staff_id}</td>
-        <td>{staffUser.first_name}</td>
-        <td>{staffUser.last_name}</td>
+        <td>
+          <strong>
+            {staffUser.first_name} {staffUser.last_name}
+          </strong>
+          <div className="text-muted small">{staffUser.email}</div>
+        </td>
         <td>{staffUser.staff_type_name}</td>
-        <td>{staffUser.email}</td>
         <td>{staffUser.phone_number}</td>
-        <td>{staffUser.nic_number}</td>
-        <td>{staffUser.address}</td>
         <td>{dayjs(staffUser.hire_date).format("YYYY-MM-DD HH:mm:ss")}</td>
         <td>
           <Badge bg={staffUser.is_active ? "success" : "danger"}>
-            {staffUser.is_active ? "Active" : "Deactive"}
+            {staffUser.is_active ? "Active" : "Inactive"}
           </Badge>
         </td>
         <td>
-          <Button
-            className="fw-bold"
-            variant={staffUser.is_active ? "outline-danger" : "outline-success"}
-            size="sm"
-            onClick={() =>
-              handleStatusChange(staffUser.staff_id, !staffUser.is_active)
-            }
-          >
-            {staffUser.is_active ? "Deactivate" : "Active"}
-          </Button>
+          <div className="d-flex gap-1">
+            <Button
+              className="btn_main_light_outline"
+              variant="none"
+              size="sm"
+              onClick={() => navigate(`profile/${staffUser.staff_id}`)}
+            >
+              View
+            </Button>
+            <Button
+              className="fw-semibold border-2"
+              variant={
+                staffUser.is_active ? "outline-danger" : "outline-success"
+              }
+              size="sm"
+              onClick={() =>
+                handleStatusChange(staffUser.staff_id, !staffUser.is_active)
+              }
+            >
+              {staffUser.is_active ? "Deactivate" : "Active"}
+            </Button>
+          </div>
         </td>
       </tr>
     ));
@@ -154,7 +167,7 @@ function StaffManagement() {
         >
           <h4>Staff Users</h4>
           <Button
-            onClick={() => navigate("/staff-register")}
+            onClick={() => navigate("register")}
             className="btn_main_dark shadow"
           >
             <i className="bi bi-plus-circle me-2 fs-6"></i>
@@ -166,13 +179,9 @@ function StaffManagement() {
             <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
                 <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>Name/ E-mail</th>
                 <th>User Role</th>
-                <th>E-mail</th>
                 <th>Phone No</th>
-                <th>NIC No</th>
-                <th>Address</th>
                 <th>Hired Date</th>
                 <th>Status</th>
                 <th>Action</th>
