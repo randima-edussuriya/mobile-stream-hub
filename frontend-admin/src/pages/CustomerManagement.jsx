@@ -1,12 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Container, Table, Badge, Spinner } from "react-bootstrap";
+import { Container, Table, Spinner, Form } from "react-bootstrap";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
+import { useUserAction } from "../hooks/useUserAction";
 
 function CustomerManagement() {
   const [Loading, setLoading] = useState(true);
@@ -16,41 +14,7 @@ function CustomerManagement() {
 
   const { backendUrl } = useContext(AppContext);
 
-  const navigate = useNavigate();
-
-  /* -----------------------------------------------------------------
-        Handle customer activity status change
-  --------------------------------------------------------------------*/
-  const handleStatusChange = async (customerId, isActive) => {
-    const actionText = isActive ? "activate" : "deactivate";
-
-    const confim = await Swal.fire({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
-        title: "h5",
-      },
-      title: `Are you sure to  ${actionText} this customer?`,
-      showCancelButton: true,
-      confirmButtonText: `Yes, ${actionText}`,
-    });
-
-    if (!confim.isConfirmed) return;
-
-    try {
-      await axios.put(
-        `http://localhost:5000/api/admin/customers/${customerId}/status`,
-        { isActive }
-      );
-      setIsToogleCustomerStatus(true);
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
-      console.error(error);
-    }
-  };
+  const { handleStatusChange } = useUserAction(backendUrl);
 
   /* -----------------------------------------------------------------
         Fetch customer users from API
@@ -126,21 +90,29 @@ function CustomerManagement() {
         <td>{customer.address}</td>
         <td>{dayjs(customer.created_at).format("YYYY-MM-DD HH:mm:ss")}</td>
         <td>
-          <Badge bg={customer.is_active ? "success" : "danger"}>
-            {customer.is_active ? "Active" : "Deactive"}
-          </Badge>
-        </td>
-        <td>
-          <Button
-            className="fw-semibold border-2"
-            variant={customer.is_active ? "outline-danger" : "outline-success"}
-            size="sm"
-            onClick={() =>
-              handleStatusChange(customer.customer_id, !customer.is_active)
+          <Form.Check
+            type="switch"
+            name="is_active"
+            id="is_active"
+            checked={customer.is_active}
+            onChange={() =>
+              handleStatusChange(
+                "customer",
+                customer.customer_id,
+                !customer.is_active,
+                () => setIsToogleCustomerStatus((prev) => !prev)
+              )
             }
-          >
-            {customer.is_active ? "Deactivate" : "Active"}
-          </Button>
+            label={
+              <span
+                className={`fw-semibold ${
+                  customer.is_active ? "text-success" : "text-danger"
+                }`}
+              >
+                {customer.is_active ? "Active" : "Inactive"}
+              </span>
+            }
+          />
         </td>
       </tr>
     ));
@@ -162,7 +134,6 @@ function CustomerManagement() {
                 <th>Address</th>
                 <th>Created Date</th>
                 <th>Status</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>{renderTableBody()}</tbody>

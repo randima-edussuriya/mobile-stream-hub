@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Container, Table, Badge, Spinner } from "react-bootstrap";
+import { Button, Container, Table, Spinner, Form } from "react-bootstrap";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
+import { useUserAction } from "../../hooks/useUserAction";
 
 function StaffManagement() {
   const [Loading, setLoading] = useState(true);
@@ -16,41 +15,9 @@ function StaffManagement() {
 
   const { backendUrl, userData } = useContext(AppContext);
 
+  const { handleStatusChange } = useUserAction(backendUrl);
+
   const navigate = useNavigate();
-
-  /* -----------------------------------------------------------------
-        Handle staff user activity status change
-  --------------------------------------------------------------------*/
-  const handleStatusChange = async (staffUserId, isActive) => {
-    const actionText = isActive ? "activate" : "deactivate";
-
-    const confim = await Swal.fire({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
-        title: "h5",
-      },
-      title: `Are you sure to  ${actionText} this staff user?`,
-      showCancelButton: true,
-      confirmButtonText: `Yes, ${actionText}`,
-    });
-
-    if (!confim.isConfirmed) return;
-
-    try {
-      await axios.put(
-        `http://localhost:5000/api/admin/staff-users/${staffUserId}/status`,
-        { isActive }
-      );
-      setIsToogleStaffUserStatus(true);
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
-      console.error(error);
-    }
-  };
 
   /* -----------------------------------------------------------------
         Fetch Staff users from API
@@ -130,9 +97,29 @@ function StaffManagement() {
         <td>{staffUser.phone_number}</td>
         <td>{dayjs(staffUser.hire_date).format("YYYY-MM-DD HH:mm:ss")}</td>
         <td>
-          <Badge bg={staffUser.is_active ? "success" : "danger"}>
-            {staffUser.is_active ? "Active" : "Inactive"}
-          </Badge>
+          <Form.Check
+            type="switch"
+            name="is_active"
+            id="is_active"
+            checked={staffUser.is_active}
+            onChange={() =>
+              handleStatusChange(
+                "staff",
+                staffUser.staff_id,
+                !staffUser.is_active,
+                () => setIsToogleStaffUserStatus((prev) => !prev)
+              )
+            }
+            label={
+              <span
+                className={`fw-semibold ${
+                  staffUser.is_active ? "text-success" : "text-danger"
+                }`}
+              >
+                {staffUser.is_active ? "Active" : "Inactive"}
+              </span>
+            }
+          />
         </td>
         <td>
           <div className="d-flex gap-1">
@@ -143,18 +130,6 @@ function StaffManagement() {
               onClick={() => navigate(`profile/${staffUser.staff_id}`)}
             >
               View
-            </Button>
-            <Button
-              className="fw-semibold border-2"
-              variant={
-                staffUser.is_active ? "outline-danger" : "outline-success"
-              }
-              size="sm"
-              onClick={() =>
-                handleStatusChange(staffUser.staff_id, !staffUser.is_active)
-              }
-            >
-              {staffUser.is_active ? "Deactivate" : "Active"}
             </Button>
           </div>
         </td>
