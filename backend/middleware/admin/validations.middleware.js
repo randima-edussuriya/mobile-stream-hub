@@ -129,3 +129,16 @@ export const validateUpdateCustomerStatus = (req, res, next) => {
   req.body.customerId = customerId;
   next();
 };
+
+// validate staff user ID
+export const validateStaffUserId = (req, res, next) => {
+  const staffId = req.params.staffId?.trim();
+
+  if (!staffId || isNaN(staffId)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid staff ID" });
+  }
+  req.body = { ...req.body, staffId };
+  next();
+};

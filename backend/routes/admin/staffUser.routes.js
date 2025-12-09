@@ -3,13 +3,17 @@ import {
   getAllUsers,
   getMeBasicData,
   getStaffTypes,
+  getStaffUser,
   updateUserStatus,
 } from "../../controllers/admin/staffUser.controller.js";
 import {
   authenticateUser,
   authorizeRoles,
 } from "../../middleware/admin/auth.middleware.js";
-import { validateUpdateUserStatus } from "../../middleware/admin/validations.middleware.js";
+import {
+  validateStaffUserId,
+  validateUpdateUserStatus,
+} from "../../middleware/admin/validations.middleware.js";
 
 const router = express.Router();
 
@@ -28,6 +32,13 @@ router.get(
   authenticateUser,
   authorizeRoles(["admin"]),
   getStaffTypes
+);
+router.get(
+  "/:staffId",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  validateStaffUserId,
+  getStaffUser
 );
 
 export default router;

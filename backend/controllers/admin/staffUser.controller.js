@@ -54,6 +54,17 @@ export const getMeBasicData = async (req, res) => {
 export const updateUserStatus = async (req, res) => {
   try {
     const { staffId, isActive } = req.body;
+
+    // check if staff user exists
+    const sqlCheck = "SELECT 1 FROM staff WHERE staff_id=?";
+    const [rows] = await dbPool.query(sqlCheck, [staffId]);
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Staff users not found",
+      });
+    }
+
     const sql = "UPDATE staff SET is_active=? WHERE staff_id=?";
     await dbPool.query(sql, [isActive, staffId]);
     return res.status(200).json({
@@ -76,6 +87,34 @@ export const getStaffTypes = async (req, res) => {
     return res.status(200).json({
       success: true,
       data: staffTypes,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getStaffUser = async (req, res) => {
+  try {
+    const { staffId } = req.body;
+    const sql = `
+          SELECT s.staff_id, s.first_name, s.last_name, s.email, s.is_active, s.phone_number, s.hire_date, s.nic_number, s.address, st.staff_type_id
+          FROM staff s
+          INNER JOIN staff_type st ON st.staff_type_id=s.staff_type_id
+          WHERE s.staff_id=?`;
+    const [staffUsers] = await dbPool.query(sql, [staffId]);
+    if (staffUsers.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Staff user not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: staffUsers[0],
     });
   } catch (error) {
     console.log(error);
