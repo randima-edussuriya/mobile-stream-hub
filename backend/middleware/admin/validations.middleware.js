@@ -142,3 +142,48 @@ export const validateStaffUserId = (req, res, next) => {
   req.body = { ...req.body, staffId };
   next();
 };
+
+export const validateUpdateStaffUser = (req, res, next) => {
+  const staffId = req.params.staffId?.trim();
+  const firstName = req.body.firstName?.trim();
+  const lastName = req.body.lastName?.trim();
+  const phoneNo = req.body.phoneNo?.trim();
+  const nicNo = req.body.nicNo?.trim();
+  const address = req.body.address?.trim();
+  const staffTypeId = req.body.staffTypeId;
+
+  // validate ID
+  if (!staffId || isNaN(staffId) || !staffTypeId || isNaN(staffTypeId)) {
+    return res.status(400).json({ success: false, message: "Invalid ID" });
+  }
+
+  if (!firstName || !lastName || !phoneNo || !nicNo || !address) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
+
+  // validate phone number format
+  if (!/^(?:\+94|0)[1-9][0-9]{8}$/.test(phoneNo)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid phone number format" });
+  }
+
+  // validate NIC format
+  if (!/^[0-9]{9}[vV]$|^[0-9]{12}$/.test(nicNo)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid NIC number format" });
+  }
+  req.body = {
+    staffId,
+    firstName,
+    lastName,
+    phoneNo,
+    nicNo,
+    address,
+    staffTypeId,
+  };
+  next();
+};

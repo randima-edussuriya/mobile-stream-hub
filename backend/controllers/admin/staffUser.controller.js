@@ -124,3 +124,52 @@ export const getStaffUser = async (req, res) => {
     });
   }
 };
+
+export const updateStaffUser = async (req, res) => {
+  try {
+    const {
+      staffId,
+      firstName,
+      lastName,
+      phoneNo,
+      nicNo,
+      address,
+      staffTypeId,
+    } = req.body;
+
+    // check if staff user exists
+    const sqlCheck = "SELECT 1 FROM staff WHERE staff_id=?";
+    const [rows] = await dbPool.query(sqlCheck, [staffId]);
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Staff user not found",
+      });
+    }
+
+    const sql = `
+          UPDATE staff
+          SET first_name=?, last_name=?, phone_number=?, nic_number=?, address=?, staff_type_id=?
+          WHERE staff_id=?
+    `;
+    await dbPool.query(sql, [
+      firstName,
+      lastName,
+      phoneNo,
+      nicNo,
+      address,
+      staffTypeId,
+      staffId,
+    ]);
+    return res.status(200).json({
+      success: true,
+      message: "Staff user updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

@@ -4,6 +4,7 @@ import {
   getMeBasicData,
   getStaffTypes,
   getStaffUser,
+  updateStaffUser,
   updateUserStatus,
 } from "../../controllers/admin/staffUser.controller.js";
 import {
@@ -12,6 +13,7 @@ import {
 } from "../../middleware/admin/auth.middleware.js";
 import {
   validateStaffUserId,
+  validateUpdateStaffUser,
   validateUpdateUserStatus,
 } from "../../middleware/admin/validations.middleware.js";
 
@@ -39,6 +41,14 @@ router.get(
   authorizeRoles(["admin"]),
   validateStaffUserId,
   getStaffUser
+);
+
+router.put(
+  "/:staffId",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  validateUpdateStaffUser,
+  updateStaffUser
 );
 
 export default router;
