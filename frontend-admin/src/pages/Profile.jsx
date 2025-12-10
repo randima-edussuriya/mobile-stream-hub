@@ -66,7 +66,7 @@ function Profile() {
   ----------------------------------------------------- */
   if (error) {
     return (
-      <Container className="bg-secondary-subtle rounded shadow_white p-3 text-center mt-3">
+      <Container className="bg-secondary-subtle rounded shadow p-3 text-center mt-3">
         <div className="text-end">
           <Button
             className="border-2 shadow"
@@ -82,7 +82,7 @@ function Profile() {
   }
 
   return (
-    <Container className="bg-secondary-subtle rounded shadow_white p-3 mt-3">
+    <Container className="bg-secondary-subtle rounded shadow p-3 mt-3">
       <Row>
         <Col>
           <h4>

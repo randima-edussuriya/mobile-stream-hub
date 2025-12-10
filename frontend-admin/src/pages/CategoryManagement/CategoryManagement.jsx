@@ -83,21 +83,15 @@ function CategoryManagement() {
         <td>{categoey.category_type}</td>
         {hasPermission(userData.userRole, "category:delete") && (
           <td>
-            <div className="d-flex gap-3">
-              <Button
-                variant="outline-danger"
-                className="border-2 fw-semibold px-1"
-                size="sm"
-              >
-                Delete
-              </Button>
-              <Button
-                variant="none"
-                className="btn_main_light_outline px-1"
-                size="sm"
-              >
-                View
-              </Button>
+            <div className="d-flex gap-3 align-items-center">
+              <i
+                role="button"
+                className="bi bi-trash text-danger action_icon"
+              ></i>
+              <i
+                role="button"
+                className="bi-arrow-up-right-square text-primary action_icon"
+              ></i>
             </div>
           </td>
         )}
@@ -107,7 +101,7 @@ function CategoryManagement() {
 
   return (
     <>
-      <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
+      <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="d-flex justify-content-between mb-3">
           <h4>Categories</h4>
           {hasPermission(userData.userRole, "category:add") && (

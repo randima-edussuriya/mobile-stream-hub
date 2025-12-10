@@ -88,7 +88,7 @@ const VerifyOtp = ({ email, purpose, onOtpVerify }) => {
       className="d-flex justify-content-center align-items-center"
     >
       <Container
-        className="col-10 col-sm-4 p-3 rounded bg-secondary-subtle shadow_white"
+        className="col-10 col-sm-4 p-3 rounded bg-secondary-subtle shadow"
         style={{ marginTop: "180px" }}
       >
         <h3 className="text-center mb-3">Step 2 - Staff User Register</h3>

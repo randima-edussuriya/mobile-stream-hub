@@ -153,7 +153,7 @@ function StaffProfile() {
   }
 
   return (
-    <Container className="bg-secondary-subtle rounded shadow_white p-3 mt-3">
+    <Container className="bg-secondary-subtle rounded shadow p-3 mt-3">
       <Row>
         <Col>
           <h4>

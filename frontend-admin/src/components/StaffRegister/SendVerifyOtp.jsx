@@ -37,7 +37,7 @@ function SendVerifyOtp({ onEmail, purpose }) {
       className="d-flex justify-content-center align-items-center"
     >
       <Container
-        className="col-10 col-sm-6 p-3 rounded bg-secondary-subtle shadow_white"
+        className="col-10 col-sm-6 p-3 rounded bg-secondary-subtle shadow"
         style={{ marginTop: "180px" }}
       >
         <h3 className="text-center mb-3">Step 1 - Staff User Register</h3>
@@ -51,7 +51,7 @@ function SendVerifyOtp({ onEmail, purpose }) {
             placeholder="Enter email"
             name="email"
             onChange={handleChange}
-            className="shadow mb-4"
+            className="mb-4"
           />
           <div>
             <Button className="btn_main_dark me-3 shadow" type="submit">

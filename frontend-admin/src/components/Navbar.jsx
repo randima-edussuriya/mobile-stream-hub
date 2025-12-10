@@ -24,20 +24,21 @@ function Navbar({ onToggle }) {
     }
   };
   return (
-    <nav className="navbar navbar-expand navbar-dark px-3 bg-dark sticky-top">
+    <nav className="navbar navbar-expand bg-dark bg-gradient px-3 rounded-bottom sticky-top">
       <i
-        className="navbar-brand bi bi-justify-left fs-5"
+        role="button"
+        className="navbar-brand bi bi-justify-left fs-5 text-white action_icon"
         onClick={onToggle}
       ></i>
       <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
         <li className="nav-item dropdown">
           <a
-            className="nav-link dropdown-toggle"
+            className="nav-link dropdown-toggle action_icon"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i className="bi bi-person-circle fs-5"></i>
+            <i className="bi bi-person-circle fs-5 text-white"></i>
           </a>
           <ul role="button" className="dropdown-menu dropdown-menu-end">
             <li onClick={() => navigate("/profile")}>

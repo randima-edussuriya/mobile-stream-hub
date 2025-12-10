@@ -33,7 +33,7 @@ function App() {
 
   const Layout = () => {
     return (
-      <div className="container-fluid bg-dark min-vh-100">
+      <div className="container-fluid bg-secondary min-vh-100">
         <div className="row">
           {!toggle && (
             <div className="col-4 col-md-3 col-lg-2 bg-primary-subtle vh-100 overflow-y-auto">
@@ -42,7 +42,7 @@ function App() {
           )}
           <div
             className={`${
-              toggle ? "col" : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
+              toggle ? "col px-0" : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
             } `}
           >
             <Navbar

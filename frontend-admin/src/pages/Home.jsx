@@ -6,7 +6,7 @@ function Home() {
       <div className="container-fluid mt-3">
         <div className="row g-3">
           <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-            <div className="p-3 bg-success-subtle shadow_white d-flex justify-content-around align-items-center rounded">
+            <div className="p-3 bg-success-subtle shadow d-flex justify-content-around align-items-center rounded">
               <div>
                 <h3 className="fs-3">0</h3>
                 <span className="fs-5">Customers</span>
@@ -15,7 +15,7 @@ function Home() {
             </div>
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-            <div className="p-3 bg-danger-subtle shadow_white d-flex justify-content-around align-items-center rounded">
+            <div className="p-3 bg-danger-subtle shadow d-flex justify-content-around align-items-center rounded">
               <div>
                 <h3 className="fs-3">0</h3>
                 <span className="fs-5">Products</span>
@@ -24,7 +24,7 @@ function Home() {
             </div>
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-            <div className="p-3 bg-info-subtle shadow_white d-flex justify-content-around align-items-center rounded">
+            <div className="p-3 bg-info-subtle shadow d-flex justify-content-around align-items-center rounded">
               <div>
                 <h3 className="fs-3">0</h3>
                 <span className="fs-5">Categories</span>
@@ -33,7 +33,7 @@ function Home() {
             </div>
           </div>
           <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-            <div className="p-3 bg-white shadow_white d-flex justify-content-around align-items-center rounded">
+            <div className="p-3 bg-white shadow d-flex justify-content-around align-items-center rounded">
               <div>
                 <h3 className="fs-3">0</h3>
                 <span className="fs-5">Orders</span>
@@ -43,7 +43,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="bg-body-tertiary rounded mt-4 shadow_white">
+        <div className="bg-body-tertiary rounded mt-4 shadow">
           <Chart1 />
         </div>
       </div>

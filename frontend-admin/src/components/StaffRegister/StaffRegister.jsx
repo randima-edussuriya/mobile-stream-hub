@@ -109,7 +109,7 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
       fluid
       className="d-flex justify-content-center align-items-center  mt-3 mb-5 py-0 rounded"
     >
-      <Container className="col-10 col-sm-6 p-3 rounded bg-secondary-subtle shadow_white">
+      <Container className="col-10 col-sm-6 p-3 rounded bg-secondary-subtle shadow">
         <h3 className="text-center mb-3">Step 3 - Staff User Register</h3>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formGroupEmail">
@@ -119,7 +119,7 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               readOnly
               name="email"
               value={email}
-              className="bg-success-subtle border-1 border-success shadow"
+              className="bg-success-subtle border-1 border-success"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupFirstName">
@@ -129,7 +129,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter first name"
               name="firstName"
               onChange={handleChange}
-              className="shadow"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupLastName">
@@ -139,7 +138,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter last name"
               name="lastName"
               onChange={handleChange}
-              className="shadow"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupPhoneNo">
@@ -149,7 +147,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter phone number"
               name="phoneNo"
               onChange={handleChange}
-              className="shadow"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupNicNo">
@@ -159,7 +156,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter NIC number"
               name="nicNo"
               onChange={handleChange}
-              className="shadow"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupAddress">
@@ -169,7 +165,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter address"
               name="address"
               onChange={handleChange}
-              className="shadow"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupStaffType">
@@ -206,7 +201,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter password"
               name="password"
               onChange={handleChange}
-              className="shadow"
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupConfirmPassword">
@@ -216,7 +210,6 @@ function StaffRegister({ email, purpose, offOtpVerify }) {
               placeholder="Enter password"
               name="confirmPassword"
               onChange={handleChange}
-              className="shadow"
             />
             {errorMessage && (
               <span className="text-danger">{errorMessage}</span>

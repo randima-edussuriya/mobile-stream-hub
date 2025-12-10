@@ -120,14 +120,11 @@ function StaffManagement() {
           />
         </td>
         <td>
-          <Button
-            className="btn_main_light_outline px-1"
-            variant="none"
-            size="sm"
+          <i
+            role="button"
+            className="bi-arrow-up-right-square text-primary action_icon"
             onClick={() => navigate(`profile/${staffUser.staff_id}`)}
-          >
-            View
-          </Button>
+          ></i>
         </td>
       </tr>
     ));
@@ -135,7 +132,7 @@ function StaffManagement() {
 
   return (
     <>
-      <Container className="bg-secondary-subtle rounded shadow_white py-3 mt-3">
+      <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="d-flex justify-content-between mb-3">
           <h4>Staff Users</h4>
           <Button
