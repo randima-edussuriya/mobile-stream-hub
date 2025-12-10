@@ -51,6 +51,34 @@ export const getMeBasicData = async (req, res) => {
   }
 };
 
+export const getMe = async (req, res) => {
+  try {
+    const { userId, userRole } = req.user;
+
+    const sql = `
+          SELECT staff_id, first_name, last_name, email, is_active, phone_number, hire_date, nic_number, address
+          FROM staff s
+          WHERE staff_id=?`;
+    const [user] = await dbPool.query(sql, [userId]);
+    if (user.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: { ...user[0], user_role: userRole },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const updateUserStatus = async (req, res) => {
   try {
     const { staffId, isActive } = req.body;

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllUsers,
+  getMe,
   getMeBasicData,
   getStaffTypes,
   getStaffUser,
@@ -21,6 +22,7 @@ const router = express.Router();
 
 // base: /api/admin/staff-users
 router.get("/me/basic", authenticateUser, getMeBasicData);
+router.get("/me", authenticateUser, getMe);
 router.get("/", authenticateUser, authorizeRoles(["admin"]), getAllUsers);
 router.put(
   "/:staffId/status",

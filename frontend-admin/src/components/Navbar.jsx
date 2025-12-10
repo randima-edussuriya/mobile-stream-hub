@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function Navbar({ onToggle }) {
-  const { backendUrl, setIsLoggedIn, setUserData } = useContext(AppContext);
+  const { backendUrl, setIsLoggedIn, setUserData, userData } =
+    useContext(AppContext);
   const navigate = useNavigate();
 
   const handelLogout = async () => {
@@ -32,25 +33,17 @@ function Navbar({ onToggle }) {
         <li className="nav-item dropdown">
           <a
             className="nav-link dropdown-toggle"
-            href="#"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
             <i className="bi bi-person-circle fs-5"></i>
           </a>
-          <ul className="dropdown-menu dropdown-menu-end">
-            <li>
-              <a className="dropdown-item" href="#">
-                Profile
-              </a>
+          <ul role="button" className="dropdown-menu dropdown-menu-end">
+            <li onClick={() => navigate("/profile")}>
+              <a className="dropdown-item">Profile</a>
             </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                Setting
-              </a>
-            </li>
-            <li onClick={handelLogout}>
+            <li role="button" onClick={handelLogout}>
               <a className="dropdown-item">Logout</a>
             </li>
           </ul>

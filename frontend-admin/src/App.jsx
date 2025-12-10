@@ -23,6 +23,7 @@ import CategoryManagement from "./pages/CategoryManagement/CategoryManagement";
 import { AppContext } from "./context/AppContext";
 import StaffRegisterFlow from "./pages/StaffManagement/StaffRegisterFlow";
 import StaffProfile from "./pages/StaffManagement/StaffProfile";
+import Profile from "./pages/Profile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -72,6 +73,10 @@ function App() {
         {
           path: "home",
           element: <Home />,
+        },
+        {
+          path: "profile",
+          element: <Profile />,
         },
         {
           path: "staff-management",
