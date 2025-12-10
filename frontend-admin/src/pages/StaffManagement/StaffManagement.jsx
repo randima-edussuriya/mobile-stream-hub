@@ -11,7 +11,6 @@ function StaffManagement() {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [staffUsers, setStaffUsers] = useState([]);
-  const [isToogleStaffUserStatus, setIsToogleStaffUserStatus] = useState(false);
 
   const { backendUrl, userData } = useContext(AppContext);
 
@@ -26,7 +25,6 @@ function StaffManagement() {
     setLoading(true);
     setError("");
     setStaffUsers([]);
-    setIsToogleStaffUserStatus(false);
     try {
       const { data } = await axios.get(`${backendUrl}/api/admin/staff-users`);
       // filter out logged in user from the list
@@ -46,7 +44,7 @@ function StaffManagement() {
   };
   useEffect(() => {
     fetchStaffUsers();
-  }, [isToogleStaffUserStatus]);
+  }, []);
 
   /* -----------------------------------------------------------------
         Render staff user data into table
@@ -107,7 +105,7 @@ function StaffManagement() {
                 "staff",
                 staffUser.staff_id,
                 !staffUser.is_active,
-                () => setIsToogleStaffUserStatus((prev) => !prev)
+                fetchStaffUsers
               )
             }
             label={

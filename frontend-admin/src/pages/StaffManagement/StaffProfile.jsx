@@ -24,9 +24,6 @@ function StaffProfile() {
     address: "",
     staffTypeId: "",
   });
-  const [isUpdateProfile, setIsUpdateProfile] = useState(false);
-
-  let staffTypeId;
 
   const { backendUrl } = useContext(AppContext);
 
@@ -94,6 +91,9 @@ function StaffProfile() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  /*--------------------------------------------------
+        handle save updated staff user data
+  ---------------------------------------------------- */
   const handleSave = async () => {
     try {
       await axios.put(
@@ -102,7 +102,7 @@ function StaffProfile() {
       );
       toast.success("Staff user updated successfully");
       setEditing(false);
-      setIsUpdateProfile((prev) => !prev);
+      loadData();
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
@@ -112,21 +112,24 @@ function StaffProfile() {
     }
   };
 
+  /*-----------------------------------
+        load all data
+  ------------------------------------- */
+  const loadData = async () => {
+    setLoading(true);
+
+    try {
+      await Promise.all([fetchStaffTypes(), fetchStaffUserProfile()]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-
-      try {
-        await Promise.all([fetchStaffTypes(), fetchStaffUserProfile()]);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadData();
-  }, [staffId, isUpdateProfile]);
+  }, []);
 
   /*----------------------------------------------------------------
         Render loading state
@@ -178,7 +181,7 @@ function StaffProfile() {
                 "staff",
                 staffUser.staff_id,
                 !staffUser.is_active,
-                () => setIsUpdateProfile((prev) => !prev)
+                loadData
               )
             }
             label={
