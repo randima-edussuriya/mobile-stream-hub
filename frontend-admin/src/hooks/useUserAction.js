@@ -8,8 +8,8 @@ export const useUserAction = (backendUrl) => {
 
     const confirm = await Swal.fire({
       customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
+        confirmButton: "btn btn_main_dark",
+        cancelButton: "btn btn-outline-danger border-2 fw-semibold",
         title: "h5",
       },
       title: `Are you sure to  ${actionText} this user?`,
