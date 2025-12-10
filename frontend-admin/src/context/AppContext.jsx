@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { createContext } from "react";
 import { toast } from "react-toastify";
-import Loader from "../components/Loader";
 
 axios.defaults.withCredentials = true;
 
