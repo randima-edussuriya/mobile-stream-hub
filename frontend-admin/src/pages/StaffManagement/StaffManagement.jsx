@@ -120,16 +120,14 @@ function StaffManagement() {
           />
         </td>
         <td>
-          <div className="d-flex gap-1">
-            <Button
-              className="btn_main_light_outline"
-              variant="none"
-              size="sm"
-              onClick={() => navigate(`profile/${staffUser.staff_id}`)}
-            >
-              View
-            </Button>
-          </div>
+          <Button
+            className="btn_main_light_outline"
+            variant="none"
+            size="sm"
+            onClick={() => navigate(`profile/${staffUser.staff_id}`)}
+          >
+            View
+          </Button>
         </td>
       </tr>
     ));
