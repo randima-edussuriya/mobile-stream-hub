@@ -121,7 +121,7 @@ function StaffManagement() {
         </td>
         <td>
           <Button
-            className="btn_main_light_outline"
+            className="btn_main_light_outline px-1"
             variant="none"
             size="sm"
             onClick={() => navigate(`profile/${staffUser.staff_id}`)}

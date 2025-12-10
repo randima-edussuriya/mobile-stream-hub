@@ -83,9 +83,22 @@ function CategoryManagement() {
         <td>{categoey.category_type}</td>
         {hasPermission(userData.userRole, "category:delete") && (
           <td>
-            <Button variant="outline-danger" className="border-0 px-2 py-1">
-              <i className="bi bi-trash-fill"></i>
-            </Button>
+            <div className="d-flex gap-2">
+              <Button
+                variant="outline-danger"
+                className="border-2 fw-semibold px-1"
+                size="sm"
+              >
+                Delete
+              </Button>
+              <Button
+                variant="none"
+                className="btn_main_light_outline px-1"
+                size="sm"
+              >
+                View
+              </Button>
+            </div>
           </td>
         )}
       </tr>
