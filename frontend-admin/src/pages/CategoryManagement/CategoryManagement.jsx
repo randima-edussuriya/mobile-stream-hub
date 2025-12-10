@@ -83,7 +83,7 @@ function CategoryManagement() {
         <td>{categoey.category_type}</td>
         {hasPermission(userData.userRole, "category:delete") && (
           <td>
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-3">
               <Button
                 variant="outline-danger"
                 className="border-2 fw-semibold px-1"
