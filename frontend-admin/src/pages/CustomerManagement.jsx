@@ -119,7 +119,7 @@ function CustomerManagement() {
   };
 
   return (
-    <>
+    <Container>
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container>
           <h4>Customers</h4>
@@ -140,7 +140,7 @@ function CustomerManagement() {
           </Table>
         </Container>
       </Container>
-    </>
+    </Container>
   );
 }
 

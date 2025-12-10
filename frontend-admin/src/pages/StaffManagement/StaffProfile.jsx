@@ -153,166 +153,168 @@ function StaffProfile() {
   }
 
   return (
-    <Container className="bg-secondary-subtle rounded shadow p-3 mt-3">
-      <Row>
-        <Col>
-          <h4>
-            {staffUser.first_name} {staffUser.last_name}
-          </h4>
-          <Form.Check
-            type="switch"
-            name="is_active"
-            id="is_active"
-            checked={staffUser.is_active}
-            onChange={() =>
-              handleStatusChange(
-                "staff",
-                staffUser.staff_id,
-                !staffUser.is_active,
-                loadData
-              )
-            }
-            label={
-              <span
-                className={`fw-semibold ${
-                  staffUser.is_active ? "text-success" : "text-danger"
-                }`}
-              >
-                {staffUser.is_active ? "Active" : "Inactive"}
-              </span>
-            }
-          />
-        </Col>
-        <Col xs="auto">
-          <Button
-            className="me-2 border-2 shadow"
-            variant="secondary"
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-          <Button
-            variant="none"
-            className="btn_main_light_outline shadow"
-            onClick={() => setEditing((prev) => !prev)}
-          >
-            {editing ? "Cancel" : "Edit"}
-          </Button>
-        </Col>
-      </Row>
-
-      {/* ------------------------------------------------
-            Contact details section
-      ---------------------------------------------------- */}
-      <Row>
-        <Col md={6} className="mt-3">
-          <h6>Contact</h6>
-          <hr className="mt-0 border-1" />
-          <Row>
-            <Col>
-              <Form.Group className="mb-2">
-                <Form.Label>First name</Form.Label>
-                <Form.Control
-                  name="firstName"
-                  onChange={handeleChange}
-                  value={formData.firstName}
-                  disabled={!editing}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-2">
-                <Form.Label>Last name</Form.Label>
-                <Form.Control
-                  name="lastName"
-                  onChange={handeleChange}
-                  value={formData.lastName}
-                  disabled={!editing}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Form.Group className="mb-2">
-            <Form.Label>Email</Form.Label>
-            <Form.Control value={staffUser.email} disabled />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Phone number</Form.Label>
-            <Form.Control
-              name="phoneNo"
-              onChange={handeleChange}
-              value={formData.phoneNo}
-              disabled={!editing}
-            />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Address</Form.Label>
-            <Form.Control
-              name="address"
-              onChange={handeleChange}
-              as="textarea"
-              rows={2}
-              value={formData.address}
-              disabled={!editing}
-            />
-          </Form.Group>
-        </Col>
-
-        {/* -------------------------------------------------
-              Employment details section
-        ------------------------------------------------------ */}
-        <Col md={6} className="mt-3">
-          <h6>Employment</h6>
-          <hr className="mt-0" />
-          <Form.Group className="mb-2">
-            <Form.Label>User ID</Form.Label>
-            <Form.Control value={staffUser.staff_id} disabled />
-          </Form.Group>
-
-          <Form.Group className="mb-2">
-            <Form.Label>Role</Form.Label>
-            <Form.Select
-              name="staffTypeId"
-              onChange={handeleChange}
-              value={formData.staffTypeId}
-              disabled={!editing}
-            >
-              {
-                /* -----------------------------------------------------------------
-                      Render staff types to UI
-                --------------------------------------------------------------------*/
-                stafTypes.length === 0 ? (
-                  <option value="" className="text-danger">
-                    Not available staff types
-                  </option>
-                ) : (
-                  stafTypes.map((row) => (
-                    <option value={row.staff_type_id} key={row.staff_type_id}>
-                      {row.staff_type_name}
-                    </option>
-                  ))
+    <Container>
+      <Container className="bg-secondary-subtle rounded shadow p-3 mt-3">
+        <Row>
+          <Col>
+            <h4>
+              {staffUser.first_name} {staffUser.last_name}
+            </h4>
+            <Form.Check
+              type="switch"
+              name="is_active"
+              id="is_active"
+              checked={staffUser.is_active}
+              onChange={() =>
+                handleStatusChange(
+                  "staff",
+                  staffUser.staff_id,
+                  !staffUser.is_active,
+                  loadData
                 )
               }
-            </Form.Select>
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Hire date</Form.Label>
-            <Form.Control
-              value={dayjs(staffUser.hire_date).format("YYYY-MM-DD HH:mm:ss")}
-              disabled
+              label={
+                <span
+                  className={`fw-semibold ${
+                    staffUser.is_active ? "text-success" : "text-danger"
+                  }`}
+                >
+                  {staffUser.is_active ? "Active" : "Inactive"}
+                </span>
+              }
             />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>NIC</Form.Label>
-            <Form.Control
-              name="nicNo"
-              onChange={handeleChange}
-              value={formData.nicNo}
-              disabled={!editing}
-            />
-          </Form.Group>
-          <Form.Group className="mb-2"></Form.Group>
-        </Col>
+          </Col>
+          <Col xs="auto">
+            <Button
+              className="me-2 border-2 shadow"
+              variant="secondary"
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button>
+            <Button
+              variant="none"
+              className="btn_main_light_outline shadow"
+              onClick={() => setEditing((prev) => !prev)}
+            >
+              {editing ? "Cancel" : "Edit"}
+            </Button>
+          </Col>
+        </Row>
+
+        {/* ------------------------------------------------
+            Contact details section
+      ---------------------------------------------------- */}
+        <Row>
+          <Col md={6} className="mt-3">
+            <h6>Contact</h6>
+            <hr className="mt-0 border-1" />
+            <Row>
+              <Col>
+                <Form.Group className="mb-2">
+                  <Form.Label>First name</Form.Label>
+                  <Form.Control
+                    name="firstName"
+                    onChange={handeleChange}
+                    value={formData.firstName}
+                    disabled={!editing}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-2">
+                  <Form.Label>Last name</Form.Label>
+                  <Form.Control
+                    name="lastName"
+                    onChange={handeleChange}
+                    value={formData.lastName}
+                    disabled={!editing}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group className="mb-2">
+              <Form.Label>Email</Form.Label>
+              <Form.Control value={staffUser.email} disabled />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Phone number</Form.Label>
+              <Form.Control
+                name="phoneNo"
+                onChange={handeleChange}
+                value={formData.phoneNo}
+                disabled={!editing}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                name="address"
+                onChange={handeleChange}
+                as="textarea"
+                rows={2}
+                value={formData.address}
+                disabled={!editing}
+              />
+            </Form.Group>
+          </Col>
+
+          {/* -------------------------------------------------
+              Employment details section
+        ------------------------------------------------------ */}
+          <Col md={6} className="mt-3">
+            <h6>Employment</h6>
+            <hr className="mt-0" />
+            <Form.Group className="mb-2">
+              <Form.Label>User ID</Form.Label>
+              <Form.Control value={staffUser.staff_id} disabled />
+            </Form.Group>
+
+            <Form.Group className="mb-2">
+              <Form.Label>Role</Form.Label>
+              <Form.Select
+                name="staffTypeId"
+                onChange={handeleChange}
+                value={formData.staffTypeId}
+                disabled={!editing}
+              >
+                {
+                  /* -----------------------------------------------------------------
+                      Render staff types to UI
+                --------------------------------------------------------------------*/
+                  stafTypes.length === 0 ? (
+                    <option value="" className="text-danger">
+                      Not available staff types
+                    </option>
+                  ) : (
+                    stafTypes.map((row) => (
+                      <option value={row.staff_type_id} key={row.staff_type_id}>
+                        {row.staff_type_name}
+                      </option>
+                    ))
+                  )
+                }
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Hire date</Form.Label>
+              <Form.Control
+                value={dayjs(staffUser.hire_date).format("YYYY-MM-DD HH:mm:ss")}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>NIC</Form.Label>
+              <Form.Control
+                name="nicNo"
+                onChange={handeleChange}
+                value={formData.nicNo}
+                disabled={!editing}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2"></Form.Group>
+          </Col>
+        </Row>
         {editing && (
           <div className="mt-3 text-center">
             <Button
@@ -324,7 +326,7 @@ function StaffProfile() {
             </Button>
           </div>
         )}
-      </Row>
+      </Container>
     </Container>
   );
 }

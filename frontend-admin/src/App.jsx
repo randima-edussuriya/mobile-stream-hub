@@ -23,8 +23,8 @@ import { AppContext } from "./context/AppContext";
 import StaffRegisterFlow from "./pages/StaffManagement/StaffRegisterFlow";
 import StaffProfile from "./pages/StaffManagement/StaffProfile";
 import Profile from "./pages/Profile";
-import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import ErrorProvider from "./pages/ErrorProvider";
+import CategoryProfile from "./pages/CategoryManagement/CategoryProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -42,8 +42,10 @@ function App() {
           )}
           <div
             className={`${
-              toggle ? "col px-0" : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
-            } `}
+              toggle
+                ? "col"
+                : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
+            } px-0`}
           >
             <Navbar
               onToggle={() => {
@@ -130,13 +132,18 @@ function App() {
               ),
             },
             {
-              path: "add",
+              path: "profile/:categoryId",
               element: (
                 <RoleRoute
                   userData={userData}
-                  allowedRoles={["admin", "inventory manager"]}
+                  allowedRoles={[
+                    "admin",
+                    "inventory manager",
+                    "cashier",
+                    "technician",
+                  ]}
                 >
-                  <CategoryAdd />
+                  <CategoryProfile />
                 </RoleRoute>
               ),
             },
