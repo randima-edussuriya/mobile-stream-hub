@@ -8,6 +8,7 @@ import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import dayjs from "dayjs";
 import { useUserAction } from "../../hooks/useUserAction";
 import { toast } from "react-toastify";
+import ErrorProvider from "../ErrorProvider";
 
 function StaffProfile() {
   const [Loading, setLoading] = useState(true);
@@ -148,20 +149,7 @@ function StaffProfile() {
         Render error state
   ----------------------------------------------------- */
   if (error) {
-    return (
-      <Container className="bg-secondary-subtle rounded shadow_white p-3 text-center mt-3">
-        <div className="text-end">
-          <Button
-            className="border-2 shadow"
-            variant="secondary"
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-        </div>
-        <h5 className="text-danger">{error}</h5>
-      </Container>
-    );
+    return <ErrorProvider errorMessage={error} />;
   }
 
   return (
