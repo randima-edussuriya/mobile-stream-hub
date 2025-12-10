@@ -18,12 +18,13 @@ import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
 import CustomerSupportManagement from "./pages/CustomerSupportManagement";
 import ReportsManagement from "./pages/ReportsManagement";
 import RepairManagement from "./pages/RepairManagement";
-import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import CategoryManagement from "./pages/CategoryManagement/CategoryManagement";
 import { AppContext } from "./context/AppContext";
 import StaffRegisterFlow from "./pages/StaffManagement/StaffRegisterFlow";
 import StaffProfile from "./pages/StaffManagement/StaffProfile";
 import Profile from "./pages/Profile";
+import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
+import ErrorProvider from "./pages/ErrorProvider";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -60,7 +61,7 @@ function App() {
     {
       path: "",
       element: <Login />,
-      errorElement: <div className="text-danger">Not Found: Invalid URL</div>,
+      errorElement: <ErrorProvider errorMessage="Page Not Found" />,
     },
     {
       path: "",
@@ -110,19 +111,36 @@ function App() {
         },
         {
           path: "category-management",
-          element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <CategoryManagement />
-            </RoleRoute>
-          ),
-        },
-        {
-          path: "category-add",
-          element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <CategoryAdd />
-            </RoleRoute>
-          ),
+          element: <Outlet />,
+          children: [
+            {
+              path: "",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={[
+                    "admin",
+                    "inventory manager",
+                    "cashier",
+                    "technician",
+                  ]}
+                >
+                  <CategoryManagement />
+                </RoleRoute>
+              ),
+            },
+            {
+              path: "add",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={["admin", "inventory manager"]}
+                >
+                  <CategoryAdd />
+                </RoleRoute>
+              ),
+            },
+          ],
         },
         {
           path: "item-management",
@@ -206,7 +224,7 @@ function App() {
         },
         {
           path: "unauthorized",
-          element: <div className="text-bg-danger ps-1">Access Denied !</div>,
+          element: <ErrorProvider errorMessage="Access Denied" />,
         },
       ],
     },
