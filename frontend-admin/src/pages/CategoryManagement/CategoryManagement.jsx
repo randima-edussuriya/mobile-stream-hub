@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import { hasPermission } from "../../utils/permissions";
+import { confirmAction } from "../../utils/confirmAction";
+import { toast } from "react-toastify";
 
 function CategoryManagement() {
   const [Loading, setLoading] = useState(true);
@@ -36,6 +38,29 @@ function CategoryManagement() {
       setLoading(false);
     }
   };
+
+  /* -----------------------------------------------------------------
+        Handle category delete
+  --------------------------------------------------------------------*/
+  const handleDelete = async (categoryId) => {
+    const result = await confirmAction(
+      "Are you sure you want to delete this category?"
+    );
+    if (!result.isConfirmed) return;
+
+    try {
+      await axios.delete(`${backendUrl}/api/admin/categories/${categoryId}`);
+      toast.success("Category deleted successfully");
+      fetchCategories();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -76,31 +101,33 @@ function CategoryManagement() {
       );
     }
 
-    return categories.map((categoey) => (
-      <tr key={categoey.category_id}>
-        <td>{categoey.category_id}</td>
-        <td>{categoey.category_name}</td>
-        <td>{categoey.category_type}</td>
-        {hasPermission(userData.userRole, "category:delete") && (
-          <td>
-            <div className="d-flex gap-3 align-items-center">
+    return categories.map((category) => (
+      <tr key={category.category_id}>
+        <td>{category.category_id}</td>
+        <td>{category.category_name}</td>
+        <td>{category.category_type}</td>
+        <td>
+          <div className="d-flex gap-3 align-items-center">
+            {hasPermission(userData.userRole, "category:delete") && (
               <i
                 role="button"
                 className="bi bi-trash text-danger action_icon"
+                onClick={() => handleDelete(category.category_id)}
               ></i>
-              <i
-                role="button"
-                className="bi-arrow-up-right-square text-primary action_icon"
-              ></i>
-            </div>
-          </td>
-        )}
+            )}
+            <i
+              role="button"
+              className="bi-arrow-up-right-square text-primary action_icon"
+              onClick={() => navigate(`profile/${category.category_id}`)}
+            ></i>
+          </div>
+        </td>
       </tr>
     ));
   };
 
   return (
-    <>
+    <Container>
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="d-flex justify-content-between mb-3">
           <h4>Categories</h4>
@@ -121,16 +148,14 @@ function CategoryManagement() {
                 <th>Category ID</th>
                 <th>Name</th>
                 <th>Type</th>
-                {hasPermission(userData.userRole, "category:delete") && (
-                  <th>Action</th>
-                )}
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>{renderTableBody()}</tbody>
           </Table>
         </Container>
       </Container>
-    </>
+    </Container>
   );
 }
 

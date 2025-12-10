@@ -25,6 +25,7 @@ import StaffProfile from "./pages/StaffManagement/StaffProfile";
 import Profile from "./pages/Profile";
 import ErrorProvider from "./pages/ErrorProvider";
 import CategoryProfile from "./pages/CategoryManagement/CategoryProfile";
+import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -42,9 +43,7 @@ function App() {
           )}
           <div
             className={`${
-              toggle
-                ? "col"
-                : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
+              toggle ? "col" : "col-8 col-md-9 col-lg-10 vh-100 overflow-y-auto"
             } px-0`}
           >
             <Navbar
@@ -81,6 +80,9 @@ function App() {
           path: "profile",
           element: <Profile />,
         },
+        /*--------------------------------------------------------
+              staff-management routes
+        ---------------------------------------------------------- */
         {
           path: "staff-management",
           element: (
@@ -103,6 +105,9 @@ function App() {
             },
           ],
         },
+        /*--------------------------------------------------------
+              customer-management routes
+        ---------------------------------------------------------- */
         {
           path: "customer-management",
           element: (
@@ -111,6 +116,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              category-management routes
+        ---------------------------------------------------------- */
         {
           path: "category-management",
           element: <Outlet />,
@@ -147,8 +155,22 @@ function App() {
                 </RoleRoute>
               ),
             },
+            {
+              path: "add",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={["admin", "inventory manager"]}
+                >
+                  <CategoryAdd />
+                </RoleRoute>
+              ),
+            },
           ],
         },
+        /*--------------------------------------------------------
+              item-management routes
+        ---------------------------------------------------------- */
         {
           path: "item-management",
           element: (
@@ -157,6 +179,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              order-management routes
+        ---------------------------------------------------------- */
         {
           path: "order-management",
           element: (
@@ -165,6 +190,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              delivery-management routes
+        ---------------------------------------------------------- */
         {
           path: "delivery-management",
           element: (
@@ -173,6 +201,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              repair-management routes
+        ---------------------------------------------------------- */
         {
           path: "repair-management",
           element: (
@@ -181,6 +212,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              reorder-management routes
+        ---------------------------------------------------------- */
         {
           path: "reorder-management",
           element: (
@@ -189,6 +223,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              day-off-management routes
+        ---------------------------------------------------------- */
         {
           path: "day-off-management",
           element: (
@@ -197,6 +234,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              loyalty-program-management routes
+        ---------------------------------------------------------- */
         {
           path: "loyalty-program-management",
           element: (
@@ -205,6 +245,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              feedback-rating-management routes
+        ---------------------------------------------------------- */
         {
           path: "feedback-rating-management",
           element: (
@@ -213,6 +256,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              customer-support-management routes
+        ---------------------------------------------------------- */
         {
           path: "customer-support-management",
           element: (
@@ -221,6 +267,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              reports-management routes
+        ---------------------------------------------------------- */
         {
           path: "reports-management",
           element: (
@@ -229,6 +278,9 @@ function App() {
             </RoleRoute>
           ),
         },
+        /*--------------------------------------------------------
+              unauthorized routes
+        ---------------------------------------------------------- */
         {
           path: "unauthorized",
           element: <ErrorProvider errorMessage="Access Denied" />,

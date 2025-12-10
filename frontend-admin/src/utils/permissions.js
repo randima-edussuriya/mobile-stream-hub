@@ -1,6 +1,6 @@
 export const permissions = {
-  admin: ["category:add", "category:delete"],
-  "inventory manager": ["category:add", "category:delete"],
+  admin: ["category:add", "category:delete", "category:edit"],
+  "inventory manager": ["category:add", "category:delete", "category:edit"],
   cashier: [],
   technician: [],
   "deliver person": [],

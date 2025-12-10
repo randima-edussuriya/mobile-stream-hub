@@ -187,3 +187,46 @@ export const validateUpdateStaffUser = (req, res, next) => {
   };
   next();
 };
+
+export const validateCategoryId = (req, res, next) => {
+  const categoryId = req.params.categoryId?.trim();
+
+  if (!categoryId || isNaN(categoryId)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid category ID" });
+  }
+  req.body = { ...req.body, categoryId };
+  next();
+};
+
+export const validateUpdateCategory = (req, res, next) => {
+  const categoryId = req.params.categoryId?.trim();
+  const categoryName = req.body.categoryName?.trim();
+  const categoryType = req.body.categoryType?.trim();
+
+  // validate category ID
+  if (!categoryId || isNaN(categoryId)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid Category ID" });
+  }
+
+  // validate category name and type
+  if (!categoryName || !categoryType) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
+
+  // validate category type
+  const validTypes = ["phone", "accessory", "repair part"];
+  if (!validTypes.includes(categoryType.toLowerCase())) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid category type.",
+    });
+  }
+  req.body = { categoryId, categoryName, categoryType };
+  next();
+};
