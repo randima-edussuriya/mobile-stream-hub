@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import { PrivateRoute } from "./routes/authRoutes";
 import { useContext } from "react";
 import { AppContext } from "./context/AppContext";
+import ContactUs from "./pages/ContactUs";
 
 const Layout = () => {
   return (
@@ -59,11 +60,15 @@ function App() {
           element: <Products />,
         },
         {
+          path: "contact-us",
+          element: <ContactUs />,
+        },
+        {
           path: "cart",
           element: <Cart />,
         },
         {
-          path: "coming_soon",
+          path: "coming-soon",
           element: <ComingSoon />,
         },
       ],

@@ -53,7 +53,7 @@ function Footer() {
               <h6 className="text-uppercase fw-bold mb-4">Qucik Links</h6>
               <p>
                 <Link
-                  to={"/coming_soon"}
+                  to={"/coming-soon"}
                   className="text-reset text-decoration-none quick_link"
                 >
                   Products
@@ -61,7 +61,7 @@ function Footer() {
               </p>
               <p>
                 <Link
-                  to={"/coming_soon"}
+                  to={"/coming-soon"}
                   className="text-reset text-decoration-none quick_link"
                 >
                   Repairs
@@ -69,7 +69,7 @@ function Footer() {
               </p>
               <p>
                 <Link
-                  to={"/coming_soon"}
+                  to={"/coming-soon"}
                   className="text-reset text-decoration-none quick_link"
                 >
                   About Us
