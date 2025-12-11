@@ -3,7 +3,7 @@ import transporter from "../../config/nodemailer.js";
 export const sendEmailVerifyEmail = async (to, otp) => {
   await transporter.sendMail({
     from: `"Mobile Stream Hub" <${process.env.SENDER_EMAIL}>`,
-    to: to,
+    to,
     subject: "Mobile Stream Hub - Email Verification OTP",
     html: `
         <div style="font-family:Arial,sans-serif;font-size:14px">
