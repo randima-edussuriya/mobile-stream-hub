@@ -9,7 +9,7 @@ function SearchBar() {
     >
       <Form className="col-10 col-sm-6 ">
         <InputGroup className="p-1 rounded-3 search_input_group">
-          <Form.Control placeholder="Search here" />
+          <Form.Control placeholder="Search products here" />
           <Button variant="dark" className="btn_main_dark">
             <i className="bi bi-search"></i>
           </Button>
