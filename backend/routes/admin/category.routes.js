@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addCategory,
   deleteCategory,
   getCategories,
   getCategory,
@@ -9,7 +10,11 @@ import {
   authenticateUser,
   authorizeRoles,
 } from "../../middleware/admin/auth.middleware.js";
-import { validateCategoryId, validateUpdateCategory } from "../../middleware/admin/validations.middleware.js";
+import {
+  validateAddCategory,
+  validateCategoryId,
+  validateUpdateCategory,
+} from "../../middleware/admin/validations.middleware.js";
 
 const router = express.Router();
 
@@ -41,6 +46,14 @@ router.put(
   authorizeRoles(["admin", "inventory manager"]),
   validateUpdateCategory,
   updateCategory
+);
+
+router.post(
+  "",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager"]),
+  validateAddCategory,
+  addCategory
 );
 
 export default router;

@@ -230,3 +230,26 @@ export const validateUpdateCategory = (req, res, next) => {
   req.body = { categoryId, categoryName, categoryType };
   next();
 };
+
+export const validateAddCategory = (req, res, next) => {
+  const categoryName = req.body.categoryName?.trim();
+  const categoryType = req.body.categoryType?.trim();
+
+  // validate empty fields
+  if (!categoryName || !categoryType) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
+
+  // validate category type
+  const validTypes = ["phone", "accessory", "repair part"];
+  if (!validTypes.includes(categoryType.toLowerCase())) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid category type.",
+    });
+  }
+  req.body = { categoryName, categoryType };
+  next();
+};

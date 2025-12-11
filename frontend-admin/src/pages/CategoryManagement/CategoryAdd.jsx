@@ -1,9 +1,10 @@
-import React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { AppContext } from "../../context/AppContext";
 
 function CategoryAdd() {
   const [formData, setFormData] = useState({
@@ -11,18 +12,20 @@ function CategoryAdd() {
     categoryType: "",
   });
 
+  const { backendUrl } = useContext(AppContext);
+
   const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
-          Handle form input changes 
-    --------------------------------------------------------------------*/
+        Handle form input changes 
+  --------------------------------------------------------------------*/
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   /* -----------------------------------------------------------------
-          Handle form reset 
-    --------------------------------------------------------------------*/
+        Handle form reset
+  --------------------------------------------------------------------*/
   const handleReset = () => {
     setFormData({
       categoryName: "",
@@ -31,37 +34,33 @@ function CategoryAdd() {
   };
 
   /* -----------------------------------------------------------------
-           Handle form submit
-     --------------------------------------------------------------------*/
+         Handle form submit
+   --------------------------------------------------------------------*/
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/category",
-        formData
+      // add category API call
+      await axios.post(`${backendUrl}/api/admin/categories`, formData);
+      toast.success("Category added successfully");
+      navigate("/category-management");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
       );
-      if (res.data.success) {
-        toast.success(res.data.message, { position: "top-center" });
-        navigate("/category-management");
-      } else {
-        toast.error(res.data.message, { position: "top-center" });
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("An error occurred. Please try again.", {
-        position: "top-center",
-      });
+      console.error(error);
     }
   };
+
   return (
     <Container
       fluid
       className="d-flex justify-content-center align-items-center  mt-3 mb-5 py-0 rounded"
     >
-      <Container className="col-10 col-sm-6 p-3  rounded bg-secondary-subtle shadow_white">
-        <h3 className="text-center mb-3">Add Category</h3>
+      <Container className="col-10 col-sm-6 p-3 rounded bg-secondary-subtle shadow">
+        <h3 className="text-center mb-3">Category Add</h3>
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formGroupName">
+          <Form.Group className="mb-3" controlId="formGroupFirstName">
             <Form.Label>Category Name</Form.Label>
             <Form.Control
               type="text"
@@ -70,29 +69,25 @@ function CategoryAdd() {
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formGroupCategoryType">
-            <Form.Label>Category Type</Form.Label>
-            <Form.Select
-              value={formData.categoryType}
-              name="categoryType"
-              onChange={handleChange}
-            >
-              <option value="">Select category type</option>
-              <option value="accessory">Accessory</option>
-              <option value="phone">Phone</option>
-              <option value="repair part">Repair part</option>
+          <Form.Group className="mb-2">
+            <Form.Label>Catgory Type</Form.Label>
+            <Form.Select name="categoryType" onChange={handleChange}>
+              <option value="">Select Category Type</option>
+              <option value="phone">phone</option>
+              <option value="accessory">accessory</option>
+              <option value="repair part">repair part</option>
             </Form.Select>
           </Form.Group>
 
           <div className="mb-3">
             <Button className="btn_main_dark me-3 shadow" type="submit">
-              Add
+              Add Category
             </Button>
             <Button
               variant="outline-danger"
               className="btn_style me-3 border-2 shadow"
-              onClick={handleReset}
               type="reset"
+              onClick={handleReset}
             >
               Reset
             </Button>

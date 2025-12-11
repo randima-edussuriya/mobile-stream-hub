@@ -102,3 +102,23 @@ export const updateCategory = async (req, res) => {
     });
   }
 };
+
+export const addCategory = async (req, res) => {
+  try {
+    const { categoryName, categoryType } = req.body;
+
+    const sqlInsert =
+      "INSERT INTO category (category_name, category_type) VALUES (?, ?)";
+    await dbPool.query(sqlInsert, [categoryName, categoryType]);
+    return res.status(201).json({
+      success: true,
+      message: "Category added successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
