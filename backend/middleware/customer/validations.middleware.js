@@ -89,3 +89,43 @@ export const validateUpdateMe = (req, res, next) => {
   };
   next();
 };
+
+export const validateSubmitInquiry = (req, res, next) => {
+  const name = req.body.name?.trim();
+  const email = req.body.email?.trim().toLocaleLowerCase();
+  const address = req.body.address?.trim();
+  const phoneNo = req.body.phoneNo?.trim();
+  const subject = req.body.subject?.trim();
+  const message = req.body.message?.trim();
+
+  // validate empty fields
+  if (!name || !email || !address || !phoneNo || !subject || !message) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
+
+  // validate email format
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid email format" });
+  }
+
+  // validate phone number format
+  if (!/^(?:\+94|0)[1-9][0-9]{8}$/.test(phoneNo)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid phone number format" });
+  }
+
+  req.body = {
+    name,
+    email,
+    address,
+    phoneNo,
+    subject,
+    message,
+  };
+  next();
+};
