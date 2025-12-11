@@ -17,7 +17,7 @@ function Slider() {
               Discover unbeatable deals on top brands. Get experience with
               cutting-edge technology now.
             </p>
-            <Link to={"/coming_soon"} className="btn btn-dark">
+            <Link to={"/products"} className="btn btn-dark">
               Get Products
             </Link>
           </Carousel.Caption>
