@@ -6,21 +6,34 @@ import {
   NavDropdown,
   Dropdown,
   Badge,
+  Row,
+  Col,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
 import axios from "axios";
 import { AppContext } from "../../context/AppContext";
+import { toast } from "react-toastify";
 
 function Header() {
-  const [categoriesPhone, setCategoriesPhone] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const { backendUrl, isLoggedIn, setIsLoggedIn, setUserData } =
     useContext(AppContext);
   const navigate = useNavigate();
+
+  // filter categories for phones
+  const categoriesPhone = categories.filter(
+    (category) => category.category_type === "phone"
+  );
+
+  // filter categories for accessories
+  const categoriesAccessories = categories.filter(
+    (category) => category.category_type === "accessory"
+  );
 
   const handelLogout = async () => {
     try {
@@ -38,24 +51,25 @@ function Header() {
   };
 
   /* ------------------------------------------------------------
-        Fetch categories-phone from API
+        Fetch categories from API
   --------------------------------------------------------------- */
-  // useEffect(() => {
-  //   const getCategoriesPhone = async () => {
-  //     setCategoriesPhone([]);
-  //     try {
-  //       const res = await axios.get("http://localhost:5000/api/category/phone");
-  //       if (res.data.success) {
-  //         setCategoriesPhone(res.data.data);
-  //       } else {
-  //         console.error(res.data.message);
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   getCategoriesPhone();
-  // }, []);
+  const fetchCategories = async () => {
+    try {
+      setCategories([]);
+      const { data } = await axios.get(`${backendUrl}/api/customer/categories`);
+      setCategories(data.data);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <>
@@ -94,8 +108,9 @@ function Header() {
                   categoriesPhone.map((row) => (
                     <NavDropdown.Item
                       as={Link}
-                      to={`/products/?category=${row.category_name}`}
+                      to={`/products/?categoryName=${row.category_name}`}
                       key={row.category_id}
+                      className="overflow-y-auto"
                     >
                       {row.category_name}
                     </NavDropdown.Item>
@@ -107,9 +122,22 @@ function Header() {
                 title="Accessories"
                 id="basic-nav-dropdown"
               >
-                <NavDropdown.Item>Action</NavDropdown.Item>
-                <NavDropdown.Item>Action</NavDropdown.Item>
-                <NavDropdown.Item>Action</NavDropdown.Item>
+                {/* ------------------------------------------------
+                      render categoris-phone into dropdown
+                ---------------------------------------------------- */}
+                {categoriesAccessories.length === 0 ? (
+                  <NavDropdown.Item>Not Available</NavDropdown.Item>
+                ) : (
+                  categoriesAccessories.map((row) => (
+                    <NavDropdown.Item
+                      as={Link}
+                      to={`/products/?categoryName=${row.category_name}`}
+                      key={row.category_id}
+                    >
+                      {row.category_name}
+                    </NavDropdown.Item>
+                  ))
+                )}
               </NavDropdown>
 
               <Nav.Link as={Link} to={"/products"} className="navbar_link">
@@ -155,7 +183,6 @@ function Header() {
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu-end">
                   <Dropdown.Item>My Profle</Dropdown.Item>
-                  <Dropdown.Item>Setting</Dropdown.Item>
                   <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
