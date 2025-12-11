@@ -60,3 +60,32 @@ export const validateRegister = (req, res, next) => {
   };
   next();
 };
+
+export const validateUpdateMe = (req, res, next) => {
+  const firstName = req.body.firstName?.trim();
+  const lastName = req.body.lastName?.trim();
+  const phoneNo = req.body.phoneNo?.trim();
+  const address = req.body.address?.trim();
+
+  console.log(req.body);
+  // validate empty fields
+  if (!firstName || !lastName || !phoneNo || !address) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
+
+  // validate phone number format
+  if (!/^(?:\+94|0)[1-9][0-9]{8}$/.test(phoneNo)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid phone number format" });
+  }
+  req.body = {
+    firstName,
+    lastName,
+    phoneNo,
+    address,
+  };
+  next();
+};

@@ -8,6 +8,10 @@ import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import SignupFlow from "./pages/SignupFlow";
+import Profile from "./pages/Profile";
+import { PrivateRoute } from "./routes/authRoutes";
+import { useContext } from "react";
+import { AppContext } from "./context/AppContext";
 
 const Layout = () => {
   return (
@@ -22,6 +26,8 @@ const Layout = () => {
 };
 
 function App() {
+  const { isLoggedIn } = useContext(AppContext);
+
   const router = createBrowserRouter([
     {
       path: "",
@@ -39,6 +45,14 @@ function App() {
         {
           path: "signup",
           element: <SignupFlow />,
+        },
+        {
+          path: "profile",
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <Profile />
+            </PrivateRoute>
+          ),
         },
         {
           path: "products",
