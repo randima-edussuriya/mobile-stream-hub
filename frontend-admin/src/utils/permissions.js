@@ -5,6 +5,7 @@ export const permissions = {
     "category:edit",
     "item:delete",
     "item:add",
+    "item:edit",
   ],
   "inventory manager": [
     "category:add",
@@ -12,6 +13,7 @@ export const permissions = {
     "category:edit",
     "item:delete",
     "item:add",
+    "item:edit",
   ],
   cashier: [],
   technician: [],

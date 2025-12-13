@@ -26,6 +26,7 @@ import ErrorProvider from "./pages/ErrorProvider";
 import CategoryProfile from "./pages/CategoryManagement/CategoryProfile";
 import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import ItemManagement from "./pages/ItemManagement/ItemManagement";
+import ItemProfile from "./pages/ItemManagement/ItemProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -173,19 +174,41 @@ function App() {
         ---------------------------------------------------------- */
         {
           path: "item-management",
-          element: (
-            <RoleRoute
-              userData={userData}
-              allowedRoles={[
-                "admin",
-                "inventory manager",
-                "cashier",
-                "technician",
-              ]}
-            >
-              <ItemManagement />
-            </RoleRoute>
-          ),
+          element: <Outlet />,
+          children: [
+            {
+              path: "",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={[
+                    "admin",
+                    "inventory manager",
+                    "cashier",
+                    "technician",
+                  ]}
+                >
+                  <ItemManagement />
+                </RoleRoute>
+              ),
+            },
+            {
+              path: "profile/:itemId",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={[
+                    "admin",
+                    "inventory manager",
+                    "cashier",
+                    "technician",
+                  ]}
+                >
+                  <ItemProfile />
+                </RoleRoute>
+              ),
+            },
+          ],
         },
         /*--------------------------------------------------------
               order-management routes
