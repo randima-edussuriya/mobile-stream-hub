@@ -1,3 +1,5 @@
+import e from "express";
+
 export const validateRegister = (req, res, next) => {
   const firstName = String(req.body.firstName || "").trim();
   const lastName = String(req.body.lastName || "").trim();
@@ -251,5 +253,35 @@ export const validateAddCategory = (req, res, next) => {
     });
   }
   req.body = { categoryName, categoryType };
+  next();
+};
+
+export const validateAddItem = (req, res, next) => {
+  const imageFile = req.file;
+  const item = JSON.parse(req.body.itemData);
+
+  // trim string fields
+  item.name = item.name?.trim();
+  item.brand = item.brand?.trim();
+  item.description = item.description?.trim();
+
+  // validate empty image file, string fields
+  if (!imageFile || !item.name || !item.brand || !item.description) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
+
+  // validate numeric fields
+  const { name, brand, description, ...numericdFields } = item;
+  for (const [key, value] of Object.entries(numericdFields)) {
+    if (value === undefined || value === null || isNaN(value)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid or missing value for ${key}`,
+      });
+    }
+  }
+  req.body.itemData = item;
   next();
 };
