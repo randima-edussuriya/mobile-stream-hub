@@ -62,6 +62,22 @@ export const addItem = async (req, res) => {
   }
 };
 
-export const getAllItems = async (req, res) => {};
+export const getAllItems = async (req, res) => {
+  try {
+    const sql = `
+              SELECT i.item_id, i.name, i.image, i.brand, i.sell_price, i.stock_quantity, i.discount, i.reorder_point, c.category_name
+              FROM item i
+              INNER JOIN category c ON c.category_id=i.category_id
+              ORDER BY item_id ASC`;
+    const [items] = await dbPool.query(sql);
+    return res.status(200).json({ success: true, data: items });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
 
 export const getItem = async (req, res) => {};

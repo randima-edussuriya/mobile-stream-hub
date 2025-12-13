@@ -8,7 +8,6 @@ import StaffManagement from "./pages/StaffManagement/StaffManagement";
 import { PrivateRoute, RoleRoute } from "./routes/authRoutes";
 import Login from "./pages/Login";
 import CustomerManagement from "./pages/CustomerManagement";
-import ItemManagement from "./pages/ItemManagement";
 import OrderManagement from "./pages/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
 import ReorderManagement from "./pages/ReorderManagement";
@@ -26,6 +25,7 @@ import Profile from "./pages/Profile";
 import ErrorProvider from "./pages/ErrorProvider";
 import CategoryProfile from "./pages/CategoryManagement/CategoryProfile";
 import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
+import ItemManagement from "./pages/ItemManagement/ItemManagement";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -174,7 +174,15 @@ function App() {
         {
           path: "item-management",
           element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
+            <RoleRoute
+              userData={userData}
+              allowedRoles={[
+                "admin",
+                "inventory manager",
+                "cashier",
+                "technician",
+              ]}
+            >
               <ItemManagement />
             </RoleRoute>
           ),

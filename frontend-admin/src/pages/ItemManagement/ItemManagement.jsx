@@ -1,6 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Container, Table, Spinner, Form } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Table,
+  Spinner,
+  Form,
+  Image,
+  Badge,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
@@ -11,22 +19,22 @@ import { toast } from "react-toastify";
 function CategoryManagement() {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [items, setItems] = useState([]);
 
   const { backendUrl, userData } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
-        Fetch categories from API
+        Fetch items from API
   --------------------------------------------------------------------*/
-  const fetchCategories = async () => {
+  const fetchItems = async () => {
     setLoading(true);
     setError("");
-    setCategories([]);
+    setItems([]);
     try {
-      const { data } = await axios.get(`${backendUrl}/api/admin/categories`);
-      setCategories(data.data);
+      const { data } = await axios.get(`${backendUrl}/api/admin/items`);
+      setItems(data.data);
     } catch (error) {
       setError(
         error?.response?.data?.message ||
@@ -42,30 +50,46 @@ function CategoryManagement() {
         Handle category delete
   --------------------------------------------------------------------*/
   const handleDelete = async (categoryId) => {
-    const result = await confirmAction(
-      "Are you sure you want to delete this category?"
-    );
-    if (!result.isConfirmed) return;
+    // const result = await confirmAction(
+    //   "Are you sure you want to delete this category?"
+    // );
+    // if (!result.isConfirmed) return;
+    // try {
+    //   await axios.delete(`${backendUrl}/api/admin/items/${categoryId}`);
+    //   toast.success("Category deleted successfully");
+    //   fetchItems();
+    // } catch (error) {
+    //   toast.error(
+    //     error?.response?.data?.message ||
+    //       "Something went wrong. Please try again later."
+    //   );
+    //   console.error(error);
+    // }
+  };
 
-    try {
-      await axios.delete(`${backendUrl}/api/admin/categories/${categoryId}`);
-      toast.success("Category deleted successfully");
-      fetchCategories();
-    } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
-      );
-      console.error(error);
+  /* ---------------------------------------------
+      Stock status handler
+  ----------------------------------------------*/
+  const getStockStatus = (item) => {
+    if (item.stock_quantity === 0) {
+      return <Badge bg="danger">Out of Stock</Badge>;
     }
+    if (item.stock_quantity <= item.reorder_point) {
+      return (
+        <Badge bg="warning" text="dark">
+          Low Stock
+        </Badge>
+      );
+    }
+    return <Badge bg="success">In Stock</Badge>;
   };
 
   useEffect(() => {
-    fetchCategories();
+    fetchItems();
   }, []);
 
   /* -----------------------------------------------------------------
-        Render categories data into table
+        Render items data into table
   --------------------------------------------------------------------*/
   const renderTableBody = () => {
     if (Loading) {
@@ -90,34 +114,62 @@ function CategoryManagement() {
       );
     }
 
-    if (categories.length === 0) {
+    if (items.length === 0) {
       return (
         <tr>
           <td colSpan={11} className="text-danger text-center">
-            No categories found
+            No items found
           </td>
         </tr>
       );
     }
 
-    return categories.map((category) => (
-      <tr key={category.category_id}>
-        <td>{category.category_id}</td>
-        <td>{category.category_name}</td>
-        <td>{category.category_type}</td>
+    return items.map((item) => (
+      <tr key={item.item_id}>
+        <td style={{ maxWidth: "80px" }} className="text-center">
+          <Image
+            src={item.image}
+            width={90}
+            alt={item.name}
+            rounded
+            className="object-fit-cover"
+          />
+        </td>
+        <td>{item.item_id}</td>
+        <td style={{ maxWidth: "200px" }}>{item.name}</td>
+        <td className="text-muted fw-semibold" style={{ maxWidth: "70px" }}>
+          {item.brand}
+        </td>
+        <td style={{ maxWidth: "90px" }}>{item.category_name}</td>
+        <td className="text-end fw-medium" style={{ maxWidth: "50px" }}>
+          {Number(item.sell_price).toLocaleString()}
+        </td>
+        <td className="text-center">{item.stock_quantity}</td>
+        <td className="text-center">
+          {Number(item.discount) > 0 ? (
+            <Badge bg="success" pill>
+              {item.discount}%
+            </Badge>
+          ) : (
+            <span className="text-muted">
+              <i className="bi bi-dash-lg"></i>
+            </span>
+          )}
+        </td>
+        <td className="text-center">{getStockStatus(item)}</td>
         <td>
           <div className="d-flex gap-3 align-items-center">
-            {hasPermission(userData.userRole, "category:delete") && (
+            {hasPermission(userData.userRole, "item:delete") && (
               <i
                 role="button"
                 className="bi bi-trash text-danger action_icon"
-                onClick={() => handleDelete(category.category_id)}
+                onClick={() => handleDelete(item.item_id)}
               ></i>
             )}
             <i
               role="button"
               className="bi-arrow-up-right-square text-primary action_icon"
-              onClick={() => navigate(`profile/${category.category_id}`)}
+              onClick={() => navigate(`profile/${item.item_id}`)}
             ></i>
           </div>
         </td>
@@ -129,8 +181,8 @@ function CategoryManagement() {
     <Container>
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="d-flex justify-content-between mb-3">
-          <h4>Categories</h4>
-          {hasPermission(userData.userRole, "category:add") && (
+          <h4>Items</h4>
+          {hasPermission(userData.userRole, "item:add") && (
             <Button
               onClick={() => navigate("add")}
               className="btn_main_dark shadow"
@@ -141,13 +193,19 @@ function CategoryManagement() {
           )}
         </Container>
         <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
-          <Table hover striped size="sm" className="shadow">
+          <Table hover striped size="sm" className="shadow" bordered>
             <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
-                <th>Category ID</th>
+                <th>Image</th>
+                <th>ID</th>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Action</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th className="text-end">Sell Price (LKR)</th>
+                <th className="text-center">Stock</th>
+                <th className="text-center">Discount</th>
+                <th className="text-center">Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>{renderTableBody()}</tbody>

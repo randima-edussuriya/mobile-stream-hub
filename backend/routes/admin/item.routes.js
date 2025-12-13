@@ -15,8 +15,6 @@ import multerErrorHandler from "../../middleware/admin/multerErrorHandler.middle
 const router = express.Router();
 
 // base: /api/admin/items
-router.get("/", getAllItems);
-router.get("/:id", getItem);
 router.post(
   "/",
   authenticateUser,
@@ -26,5 +24,13 @@ router.post(
   validateAddItem,
   addItem
 );
+router.get(
+  "/",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
+  getAllItems
+);
+
+router.get("/:id", getItem);
 
 export default router;
