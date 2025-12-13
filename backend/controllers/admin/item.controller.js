@@ -80,4 +80,56 @@ export const getAllItems = async (req, res) => {
   }
 };
 
-export const getItem = async (req, res) => {};
+export const deleteItem = async (req, res) => {
+  try {
+    const { itemId } = req.body;
+
+    // check if item exists
+    const [existingItemRows] = await dbPool.query(
+      "SELECT 1 FROM item WHERE item_id = ?",
+      [itemId]
+    );
+    if (existingItemRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found.",
+      });
+    }
+
+    // delete item
+    await dbPool.query("DELETE FROM item WHERE item_id = ?", [itemId]);
+    return res
+      .status(200)
+      .json({ success: true, message: "Item deleted successfully." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getItem = async (req, res) => {
+  try {
+    const { itemId } = req.body;
+    const [item] = await dbPool.query("SELECT * FROM item WHERE item_id = ?", [
+      itemId,
+    ]);
+    // check if item exists
+    if (item.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found.",
+      });
+    }
+
+    return res.status(200).json({ success: true, data: item[0] });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

@@ -49,22 +49,22 @@ function CategoryManagement() {
   /* -----------------------------------------------------------------
         Handle category delete
   --------------------------------------------------------------------*/
-  const handleDelete = async (categoryId) => {
-    // const result = await confirmAction(
-    //   "Are you sure you want to delete this category?"
-    // );
-    // if (!result.isConfirmed) return;
-    // try {
-    //   await axios.delete(`${backendUrl}/api/admin/items/${categoryId}`);
-    //   toast.success("Category deleted successfully");
-    //   fetchItems();
-    // } catch (error) {
-    //   toast.error(
-    //     error?.response?.data?.message ||
-    //       "Something went wrong. Please try again later."
-    //   );
-    //   console.error(error);
-    // }
+  const handleDelete = async (itemId) => {
+    const result = await confirmAction(
+      "Are you sure you want to delete this item?"
+    );
+    if (!result.isConfirmed) return;
+    try {
+      await axios.delete(`${backendUrl}/api/admin/items/${itemId}`);
+      toast.success("Category deleted successfully");
+      fetchItems();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+      console.error(error);
+    }
   };
 
   /* ---------------------------------------------

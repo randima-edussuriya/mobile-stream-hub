@@ -285,3 +285,13 @@ export const validateAddItem = (req, res, next) => {
   req.body.itemData = item;
   next();
 };
+
+export const validateItemId = (req, res, next) => {
+  const itemId = req.params.itemId?.trim();
+
+  if (!itemId || isNaN(itemId)) {
+    return res.status(400).json({ success: false, message: "Invalid item ID" });
+  }
+  req.body = { ...req.body, itemId };
+  next();
+};
