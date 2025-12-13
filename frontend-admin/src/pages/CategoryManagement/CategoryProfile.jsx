@@ -45,7 +45,6 @@ function CategoryProfile() {
         categoryType: data.data.category_type,
       });
     } catch (error) {
-      console.log(categoryId);
       setError(
         error?.response?.data?.message ||
           "Something went wrong. Please try again."
