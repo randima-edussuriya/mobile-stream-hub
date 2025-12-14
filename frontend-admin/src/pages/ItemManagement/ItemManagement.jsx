@@ -47,7 +47,7 @@ function CategoryManagement() {
   };
 
   /* -----------------------------------------------------------------
-        Handle category delete
+        Handle Item delete
   --------------------------------------------------------------------*/
   const handleDelete = async (itemId) => {
     const result = await confirmAction(
@@ -56,7 +56,7 @@ function CategoryManagement() {
     if (!result.isConfirmed) return;
     try {
       await axios.delete(`${backendUrl}/api/admin/items/${itemId}`);
-      toast.success("Category deleted successfully");
+      toast.success("Item deleted successfully");
       fetchItems();
     } catch (error) {
       toast.error(

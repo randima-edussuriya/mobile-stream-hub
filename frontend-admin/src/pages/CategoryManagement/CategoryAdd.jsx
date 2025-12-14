@@ -59,6 +59,15 @@ function CategoryAdd() {
       <Container className="col-10 col-sm-6 p-3 rounded bg-secondary-subtle shadow">
         <h3 className="text-center mb-3">Category Add</h3>
         <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-2">
+            <Form.Label>Category Type</Form.Label>
+            <Form.Select name="categoryType" onChange={handleChange}>
+              <option value="">Select Category Type</option>
+              <option value="phone">phone</option>
+              <option value="accessory">accessory</option>
+              <option value="repair part">repair part</option>
+            </Form.Select>
+          </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupFirstName">
             <Form.Label>Category Name</Form.Label>
             <Form.Control
@@ -68,16 +77,6 @@ function CategoryAdd() {
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Catgory Type</Form.Label>
-            <Form.Select name="categoryType" onChange={handleChange}>
-              <option value="">Select Category Type</option>
-              <option value="phone">phone</option>
-              <option value="accessory">accessory</option>
-              <option value="repair part">repair part</option>
-            </Form.Select>
-          </Form.Group>
-
           <div className="my-3">
             <Button className="btn_main_dark me-3 shadow" type="submit">
               Add Category
