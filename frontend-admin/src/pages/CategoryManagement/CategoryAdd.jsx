@@ -3,7 +3,6 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 
 function CategoryAdd() {
