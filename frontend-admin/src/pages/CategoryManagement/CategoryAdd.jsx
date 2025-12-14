@@ -78,7 +78,7 @@ function CategoryAdd() {
             </Form.Select>
           </Form.Group>
 
-          <div className="mb-3">
+          <div className="my-3">
             <Button className="btn_main_dark me-3 shadow" type="submit">
               Add Category
             </Button>
