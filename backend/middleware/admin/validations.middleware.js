@@ -265,6 +265,16 @@ export const validateAddItem = (req, res, next) => {
   item.brand = item.brand?.trim();
   item.description = item.description?.trim();
 
+  // trim numeric fields coming as strings
+  item.sellPrice = item.sellPrice?.trim();
+  item.costPrice = item.costPrice?.trim();
+  item.stockQuantity = item.stockQuantity?.trim();
+  item.reorderPoint = item.reorderPoint?.trim();
+
+  // id fields comes as strings, from <select> elements
+  item.supplierId = item.supplierId?.trim();
+  item.categoryId = item.categoryId?.trim();
+
   // validate empty image file, string fields
   if (!imageFile || !item.name || !item.brand || !item.description) {
     return res
@@ -273,14 +283,25 @@ export const validateAddItem = (req, res, next) => {
   }
 
   // validate numeric fields
-  const { name, brand, description, ...numericdFields } = item;
-  for (const [key, value] of Object.entries(numericdFields)) {
-    if (value === undefined || value === null || isNaN(value)) {
+  const { name, brand, description, ...numericFields } = item;
+  for (const [key, value] of Object.entries(numericFields)) {
+    // validate missing value
+    if (value === undefined || value === null || value === "") {
       return res.status(400).json({
         success: false,
-        message: `Invalid or missing value for ${key}`,
+        message: `Missing value for ${key}`,
       });
     }
+
+    // validate non-numeric or negative values
+    const numValue = Number(value);
+    if (Number.isNaN(numValue) || numValue < 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid value for ${key}`,
+      });
+    }
+    item[key] = numValue;
   }
   req.body.itemData = item;
   next();

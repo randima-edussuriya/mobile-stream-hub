@@ -27,6 +27,7 @@ import CategoryProfile from "./pages/CategoryManagement/CategoryProfile";
 import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import ItemManagement from "./pages/ItemManagement/ItemManagement";
 import ItemProfile from "./pages/ItemManagement/ItemProfile";
+import ItemAdd from "./pages/ItemManagement/ItemAdd";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -205,6 +206,17 @@ function App() {
                   ]}
                 >
                   <ItemProfile />
+                </RoleRoute>
+              ),
+            },
+            {
+              path: "add",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={["admin", "inventory manager"]}
+                >
+                  <ItemAdd />
                 </RoleRoute>
               ),
             },
