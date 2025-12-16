@@ -18,7 +18,9 @@ const VerifyOtp = ({ email, purpose, onOtpVerify }) => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // Handle OTP Input
+  /*----------------------------------------------------
+        handle OTP input change
+  ------------------------------------------------------ */
   const handleChange = (value, index) => {
     if (!/^\d?$/.test(value)) return; // Only digits
 
@@ -32,13 +34,18 @@ const VerifyOtp = ({ email, purpose, onOtpVerify }) => {
     }
   };
 
-  // Handle Backspace
+  /*----------------------------------------------------
+        Handle Backspace
+  ------------------------------------------------------ */
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputsRef.current[index - 1].focus();
     }
   };
 
+  /*----------------------------------------------------
+        handle OTP verify
+  ------------------------------------------------------ */
   // Check if all OTP fields are filled
   const isOtpFilled = otp.every((digit) => digit !== "");
 
@@ -61,7 +68,9 @@ const VerifyOtp = ({ email, purpose, onOtpVerify }) => {
     }
   };
 
-  // Handle Resend OTP
+  /*----------------------------------------------------
+        handle Resend OTP
+  ------------------------------------------------------ */
   const handleResend = async () => {
     setTimer(30);
     setOtp(Array(6).fill(""));
@@ -97,13 +106,14 @@ const VerifyOtp = ({ email, purpose, onOtpVerify }) => {
           Enter the 6-digit code sent to your email.
         </p>
 
-        {/* OTP INPUTS */}
+        {/* ------------------------------------
+              OTP INPUTS
+        ---------------------------------------- */}
         <Row className="g-2 justify-content-center mb-4">
           {otp.map((digit, index) => (
             <Col key={index} xs={2}>
               <Form.Control
-                type="text"
-                maxLength={1}
+                type="number"
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}

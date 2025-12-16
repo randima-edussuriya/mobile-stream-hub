@@ -47,9 +47,9 @@ function SendVerifyOtp({ onEmail, purpose }) {
             register.
           </p>
           <Form.Control
+            name="email"
             type="text"
             placeholder="Enter email"
-            name="email"
             onChange={handleChange}
             className="mb-4"
           />

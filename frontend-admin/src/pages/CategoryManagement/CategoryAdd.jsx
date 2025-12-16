@@ -71,9 +71,9 @@ function CategoryAdd() {
           <Form.Group className="mb-3" controlId="formGroupFirstName">
             <Form.Label>Category Name</Form.Label>
             <Form.Control
+              name="categoryName"
               type="text"
               placeholder="Enter category name"
-              name="categoryName"
               onChange={handleChange}
             />
           </Form.Group>

@@ -191,10 +191,10 @@ function ItemAdd() {
               <Form.Group className="mb-2">
                 <Form.Label>Item Name</Form.Label>
                 <Form.Control
-                  type="text"
-                  placeholder="Enter item name"
                   name="name"
+                  type="text"
                   value={itemFormData.name}
+                  placeholder="Enter item name"
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -202,10 +202,10 @@ function ItemAdd() {
               <Form.Group className="mb-2">
                 <Form.Label>Brand</Form.Label>
                 <Form.Control
-                  type="text"
-                  placeholder="Enter brand name"
                   name="brand"
+                  type="text"
                   value={itemFormData.brand}
+                  placeholder="Enter brand name"
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -230,8 +230,8 @@ function ItemAdd() {
                 <Form.Label>Category</Form.Label>
                 <Form.Select
                   name="categoryId"
-                  onChange={handleChange}
                   value={itemFormData.categoryId}
+                  onChange={handleChange}
                 >
                   <option value="">Select Category</option>
                   {
@@ -261,12 +261,12 @@ function ItemAdd() {
               <Form.Group className="mb-2" controlId="formGroupWarranty">
                 <Form.Label>Warranty Months</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="Enter warranty months"
                   name="warrantyMonths"
+                  type="number"
                   value={itemFormData.warrantyMonths}
-                  onChange={handleChange}
+                  placeholder="Enter warranty months"
                   min="0"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>
@@ -276,11 +276,11 @@ function ItemAdd() {
           <Form.Group className="mb-2" controlId="formGroupDescription">
             <Form.Label>Description</Form.Label>
             <Form.Control
+              name="description"
               as="textarea"
               rows={3}
-              placeholder="Enter item description"
-              name="description"
               value={itemFormData.description}
+              placeholder="Enter item description"
               onChange={handleChange}
             />
           </Form.Group>
@@ -291,12 +291,13 @@ function ItemAdd() {
               <Form.Group className="mb-2" controlId="formGroupSellPrice">
                 <Form.Label>Sell Price (Rs.)</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="Enter sell price"
                   name="sellPrice"
+                  type="number"
                   value={itemFormData.sellPrice}
-                  onChange={handleChange}
+                  placeholder="Enter sell price"
                   min="0"
+                  step="0.01"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>
@@ -305,12 +306,13 @@ function ItemAdd() {
               <Form.Group className="mb-2" controlId="formGroupCostPrice">
                 <Form.Label>Cost Price (Rs.)</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="Enter cost price"
                   name="costPrice"
+                  type="number"
                   value={itemFormData.costPrice}
-                  onChange={handleChange}
+                  placeholder="Enter cost price"
                   min="0"
+                  step="0.01"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>
@@ -319,13 +321,14 @@ function ItemAdd() {
               <Form.Group className="mb-2" controlId="formGroupDiscount">
                 <Form.Label>Discount Percentage (%)</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="Enter discount percentage"
                   name="discountPercentage"
+                  type="number"
                   value={itemFormData.discountPercentage}
-                  onChange={handleChange}
+                  placeholder="Enter discount percentage"
                   min="0"
                   max="100"
+                  step="0.01"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>
@@ -337,12 +340,12 @@ function ItemAdd() {
               <Form.Group className="mb-2" controlId="formGroupStockQuantity">
                 <Form.Label>Stock Quantity</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="Enter stock quantity"
                   name="stockQuantity"
+                  type="number"
                   value={itemFormData.stockQuantity}
-                  onChange={handleChange}
+                  placeholder="Enter stock quantity"
                   min="0"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>
@@ -351,12 +354,12 @@ function ItemAdd() {
               <Form.Group className="mb-2" controlId="formGroupReorderPoint">
                 <Form.Label>Reorder Point</Form.Label>
                 <Form.Control
-                  type="number"
-                  placeholder="Enter reorder point"
                   name="reorderPoint"
+                  type="number"
                   value={itemFormData.reorderPoint}
-                  onChange={handleChange}
+                  placeholder="Enter reorder point"
                   min="0"
+                  onChange={handleChange}
                 />
               </Form.Group>
             </Col>
@@ -367,8 +370,8 @@ function ItemAdd() {
             <Form.Label>Supplier Information</Form.Label>
             <Form.Select
               name="supplierId"
-              onChange={handleChange}
               value={itemFormData.supplierId}
+              onChange={handleChange}
             >
               <option value="">Select Supplier</option>
 

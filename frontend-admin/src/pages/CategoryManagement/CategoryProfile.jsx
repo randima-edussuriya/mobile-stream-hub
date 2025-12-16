@@ -149,8 +149,9 @@ function CategoryProfile() {
               <Form.Label>Category name</Form.Label>
               <Form.Control
                 name="categoryName"
-                onChange={handeleChange}
                 value={formData.categoryName}
+                placeholder="Enter category type"
+                onChange={handeleChange}
                 disabled={!editing}
               />
             </Form.Group>
@@ -160,8 +161,8 @@ function CategoryProfile() {
               <Form.Label>Catgory Type</Form.Label>
               <Form.Select
                 name="categoryType"
-                onChange={handeleChange}
                 value={formData.categoryType}
+                onChange={handeleChange}
                 disabled={!editing}
               >
                 <option value="phone">phone</option>

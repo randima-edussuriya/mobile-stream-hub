@@ -161,9 +161,9 @@ function StaffProfile() {
               {staffUser.first_name} {staffUser.last_name}
             </h4>
             <Form.Check
-              type="switch"
               name="is_active"
               id="is_active"
+              type="switch"
               checked={staffUser.is_active}
               onChange={() =>
                 handleStatusChange(
@@ -215,8 +215,10 @@ function StaffProfile() {
                   <Form.Label>First name</Form.Label>
                   <Form.Control
                     name="firstName"
-                    onChange={handeleChange}
+                    type="text"
                     value={formData.firstName}
+                    placeholder="Enter first name"
+                    onChange={handeleChange}
                     disabled={!editing}
                   />
                 </Form.Group>
@@ -226,8 +228,10 @@ function StaffProfile() {
                   <Form.Label>Last name</Form.Label>
                   <Form.Control
                     name="lastName"
-                    onChange={handeleChange}
+                    type="text"
                     value={formData.lastName}
+                    placeholder="Enter last name"
+                    onChange={handeleChange}
                     disabled={!editing}
                   />
                 </Form.Group>
@@ -241,8 +245,10 @@ function StaffProfile() {
               <Form.Label>Phone number</Form.Label>
               <Form.Control
                 name="phoneNo"
-                onChange={handeleChange}
+                type="text"
                 value={formData.phoneNo}
+                placeholder="Enter phone number"
+                onChange={handeleChange}
                 disabled={!editing}
               />
             </Form.Group>
@@ -250,10 +256,11 @@ function StaffProfile() {
               <Form.Label>Address</Form.Label>
               <Form.Control
                 name="address"
-                onChange={handeleChange}
                 as="textarea"
                 rows={2}
                 value={formData.address}
+                placeholder="Enter address"
+                onChange={handeleChange}
                 disabled={!editing}
               />
             </Form.Group>
@@ -274,8 +281,8 @@ function StaffProfile() {
               <Form.Label>Role</Form.Label>
               <Form.Select
                 name="staffTypeId"
-                onChange={handeleChange}
                 value={formData.staffTypeId}
+                onChange={handeleChange}
                 disabled={!editing}
               >
                 {
@@ -307,8 +314,10 @@ function StaffProfile() {
               <Form.Label>NIC</Form.Label>
               <Form.Control
                 name="nicNo"
-                onChange={handeleChange}
+                type="text"
                 value={formData.nicNo}
+                placeholder="Enter NIC number"
+                onChange={handeleChange}
                 disabled={!editing}
               />
             </Form.Group>
