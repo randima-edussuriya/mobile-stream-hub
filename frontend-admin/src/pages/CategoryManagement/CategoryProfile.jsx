@@ -25,7 +25,7 @@ function CategoryProfile() {
   const navigate = useNavigate();
 
   /*---------------------------------------------------------
-        fetch category user profile data
+        fetch category profile data
   ------------------------------------------------------------*/
   const fetchCategoryProfile = async () => {
     try {
@@ -60,7 +60,7 @@ function CategoryProfile() {
   };
 
   /*--------------------------------------------------
-        handle save updated staff user data
+        handle save updated category data
   ---------------------------------------------------- */
   const handleSave = async () => {
     try {
