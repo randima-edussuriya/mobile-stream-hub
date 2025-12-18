@@ -36,10 +36,6 @@ function ItemAdd() {
   });
   const [image, setImage] = useState(null);
 
-  if (image) {
-    console.log(URL.createObjectURL(image));
-  }
-
   //   const [imagePreview, setImagePreview] = useState(null);
   const { backendUrl } = useContext(AppContext);
   const navigate = useNavigate();
