@@ -6,7 +6,8 @@ import ComingSoon from "./pages/ComingSoon";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
-import Products from "./pages/Products";
+import Products from "./pages/products/Products";
+import ProductDetails from "./pages/products/ProductDetails";
 import SignupFlow from "./pages/SignupFlow";
 import Profile from "./pages/Profile";
 import { PrivateRoute } from "./routes/authRoutes";
@@ -58,6 +59,10 @@ function App() {
         {
           path: "products",
           element: <Products />,
+        },
+        {
+          path: "products/:itemId",
+          element: <ProductDetails />,
         },
         {
           path: "contact-us",
