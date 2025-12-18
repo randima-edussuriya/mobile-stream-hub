@@ -25,7 +25,8 @@ function ItemProfile() {
   const { itemId } = useParams();
   const [editing, setEditing] = useState(false);
   const [item, setItem] = useState({});
-  const [formData, setFormData] = useState({});
+  const [itemFormData, setItemFormData] = useState({});
+  const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
 
@@ -34,21 +35,30 @@ function ItemProfile() {
   const navigate = useNavigate();
 
   /*---------------------------------------------------------
-        fetch item user profile data
+        fetch item profile data
   ------------------------------------------------------------*/
   const fetchItemProfile = async () => {
     try {
       setItem({});
-      setFormData({});
+      setItemFormData({});
       setError("");
       const { data } = await axios.get(
         `${backendUrl}/api/admin/items/${itemId}`
       );
       setItem(data.data);
-      //   setFormData({
-      //     categoryName: data.data.category_name,
-      //     categoryType: data.data.category_type,
-      //   });
+      setItemFormData({
+        name: data.data.name,
+        brand: data.data.brand,
+        description: data.data.description,
+        sellPrice: data.data.sell_price,
+        costPrice: data.data.cost_price,
+        stockQuantity: data.data.stock_quantity,
+        discountPercentage: data.data.discount,
+        warrantyMonths: data.data.warranty_months,
+        reorderPoint: data.data.reorder_point,
+        supplierId: data.data.supplier_id,
+        categoryId: data.data.category_id,
+      });
     } catch (error) {
       setError(
         error?.response?.data?.message ||
@@ -94,29 +104,35 @@ function ItemProfile() {
     }
   };
 
-  const handeleChange = (e) => {
-    // setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    setItemFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   /*--------------------------------------------------
-        handle save updated staff user data
+        handle save updated item data
   ---------------------------------------------------- */
-  const handleSave = async () => {
-    // try {
-    //   await axios.put(
-    //     `${backendUrl}/api/admin/categories/${categoryId}`,
-    //     formData
-    //   );
-    //   toast.success("Category is updated successfully");
-    //   setEditing(false);
-    //   fetchItemProfile();
-    // } catch (error) {
-    //   toast.error(
-    //     error?.response?.data?.message ||
-    //       "Something went wrong. Please try again."
-    //   );
-    //   console.error(error);
-    // }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      if (image) {
+        formData.append("image", image);
+      }
+      formData.append("itemData", JSON.stringify(itemFormData));
+      const { data } = await axios.put(
+        `${backendUrl}/api/admin/items/${itemId}`,
+        formData
+      );
+      toast.success(data.message || "Item updated successfully.");
+      setEditing(false);
+      loadData();
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+      console.error(error);
+    }
   };
 
   /* ---------------------------------------------
@@ -210,195 +226,278 @@ function ItemProfile() {
 
         {/* ------------------------------------------------
             item details section
-      ---------------------------------------------------- */}
-        <Row>
-          <Col xs={12} lg={4}>
-            <Image
-              src={item.image}
-              alt={item.name}
-              rounded
-              fluid
-              className="object-fit-cover"
-            />
-          </Col>
-          <Col xs={12} lg={8}>
-            <Row>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Item ID</Form.Label>
-                  <Form.Control value={item.item_id} disabled />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Brand</Form.Label>
-                  <Form.Control value={item.brand} disabled={!editing} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Category</Form.Label>
-                  <Form.Select
-                    name="categoryType"
-                    onChange={handeleChange}
-                    value={item.category_id}
-                    disabled={!editing}
-                  >
-                    {
-                      /* ---------------------------------------------------------
+            ---------------------------------------------------- */}
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Col xs={12} lg={4}>
+              {/* -------------------------------------
+                  item image
+            ----------------------------------------- */}
+              <Form.Group className="mb-2">
+                <Form.Label
+                  htmlFor="image-upload"
+                  className="position-relative"
+                >
+                  <Image
+                    src={image ? URL.createObjectURL(image) : item.image}
+                    alt={itemFormData.name}
+                    rounded
+                    fluid
+                    className="object-fit-cover"
+                  />
+                  {editing && (
+                    <Badge
+                      role="button"
+                      bg="dark"
+                      pill
+                      className="position-absolute end-0 p-2 m-1"
+                    >
+                      <i className="bi bi-pencil-square fs-4 "></i>
+                    </Badge>
+                  )}
+                </Form.Label>
+                <Form.Control
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    setImage(e.target.files[0]);
+                  }}
+                  disabled={!editing}
+                  className="d-none"
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={12} lg={8}>
+              <Row>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Item ID</Form.Label>
+                    <Form.Control value={item.item_id} disabled />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                      name="name"
+                      type="text"
+                      value={itemFormData.name}
+                      placeholder="Enter item name"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Category</Form.Label>
+                    <Form.Select
+                      name="categoryId"
+                      value={itemFormData.categoryId}
+                      onChange={handleChange}
+                      disabled={!editing}
+                    >
+                      {
+                        /* ---------------------------------------------------------
                       Render categories to UI
                     --------------------------------------------------------------*/
-                      categories.length === 0 ? (
-                        <option value="" className="text-danger">
-                          Not available Categories
-                        </option>
-                      ) : (
-                        categories.map((category) => (
-                          <option
-                            value={category.category_id}
-                            key={category.category_id}
-                          >
-                            {`${category.category_name} - (${category.category_type})`}
+                        categories.length === 0 ? (
+                          <option value="" className="text-danger">
+                            Not available Categories
                           </option>
-                        ))
-                      )
-                    }
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Warranty Months</Form.Label>
-                  <Form.Control
-                    value={item.warranty_months}
-                    disabled={!editing}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Stock Quantity</Form.Label>
-                  <Form.Control
-                    value={item.stock_quantity}
-                    disabled={!editing}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Reorder Point</Form.Label>
-                  <Form.Control
-                    value={item.reorder_point}
-                    disabled={!editing}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Sell Price</Form.Label>
-                  <Form.Control
-                    value={Number(item.sell_price).toLocaleString("en-LK", {
-                      currency: "LKR",
-                      style: "currency",
-                    })}
-                    disabled={!editing}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Cost Price</Form.Label>
-                  <Form.Control
-                    value={Number(item.cost_price).toLocaleString("en-LK", {
-                      currency: "LKR",
-                      style: "currency",
-                    })}
-                    disabled={!editing}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-2">
-                  <Form.Label>Discount (%)</Form.Label>
-                  <Form.Control value={item.discount} disabled={!editing} />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row className="text-muted mt-2">
-              <Col xs="auto">
-                <p>
-                  Created:{" "}
-                  {dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss")}
-                </p>
-              </Col>
-              <Col>
-                <p>
-                  Updated:{" "}
-                  {dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss")}
-                </p>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <div className="mt-2">
-          <Form.Group className="mb-2">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              name="address"
-              onChange={handeleChange}
-              as="textarea"
-              rows={2}
-              value={item.description}
-              disabled={!editing}
-            />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Supplier Information</Form.Label>
-            <Form.Select
-              name="categoryType"
-              onChange={handeleChange}
-              value={item.supplier_id}
-              disabled={!editing}
-            >
-              {
-                /* ---------------------------------------------------------
+                        ) : (
+                          categories.map((category) => (
+                            <option
+                              value={category.category_id}
+                              key={category.category_id}
+                            >
+                              {`${category.category_name} - (${category.category_type})`}
+                            </option>
+                          ))
+                        )
+                      }
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Brand</Form.Label>
+                    <Form.Control
+                      name="brand"
+                      type="text"
+                      value={itemFormData.brand}
+                      placeholder="Enter brand name"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Stock Quantity</Form.Label>
+                    <Form.Control
+                      name="stockQuantity"
+                      type="number"
+                      value={itemFormData.stockQuantity}
+                      placeholder="Enter stock quantity"
+                      min="0"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Reorder Point</Form.Label>
+                    <Form.Control
+                      name="reorderPoint"
+                      type="number"
+                      value={itemFormData.reorderPoint}
+                      placeholder="Enter reorder point"
+                      min="0"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Warranty Months</Form.Label>
+                    <Form.Control
+                      name="warrantyMonths"
+                      type="number"
+                      value={itemFormData.warrantyMonths}
+                      placeholder="Enter warranty months"
+                      min="0"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Sell Price</Form.Label>
+                    <Form.Control
+                      name="sellPrice"
+                      type="number"
+                      value={itemFormData.sellPrice}
+                      placeholder="Enter sell price"
+                      min="0"
+                      step="0.01"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Cost Price</Form.Label>
+                    <Form.Control
+                      name="costPrice"
+                      type="number"
+                      value={itemFormData.costPrice}
+                      placeholder="Enter cost price"
+                      min="0"
+                      step="0.01"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-2">
+                    <Form.Label>Discount (%)</Form.Label>
+                    <Form.Control
+                      name="discountPercentage"
+                      type="number"
+                      value={itemFormData.discountPercentage}
+                      placeholder="Enter discount percentage"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                      onChange={handleChange}
+                      disabled={!editing}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className="text-muted mt-2">
+                <Col xs="auto">
+                  <p>
+                    Created:{" "}
+                    {dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss")}
+                  </p>
+                </Col>
+                <Col>
+                  <p>
+                    Updated:{" "}
+                    {dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss")}
+                  </p>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <div className="mt-2">
+            <Form.Group className="mb-2">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                name="description"
+                as="textarea"
+                rows={2}
+                value={itemFormData.description}
+                onChange={handleChange}
+                disabled={!editing}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Supplier Information</Form.Label>
+              <Form.Select
+                name="supplierId"
+                value={itemFormData.supplierId}
+                onChange={handleChange}
+                disabled={!editing}
+              >
+                {
+                  /* ---------------------------------------------------------
                       Render Suppliers to UI
                     --------------------------------------------------------------*/
-                suppliers.length === 0 ? (
-                  <option value="" className="text-danger">
-                    Not available Suppliers
-                  </option>
-                ) : (
-                  suppliers.map((supplier) => (
-                    <option
-                      value={supplier.supplier_id}
-                      key={supplier.supplier_id}
-                    >
-                      {`${supplier.name} - (${supplier.email}) - ${supplier.address} - (${supplier.phone_number})`}
+                  suppliers.length === 0 ? (
+                    <option value="" className="text-danger">
+                      Not available Suppliers
                     </option>
-                  ))
-                )
-              }
-            </Form.Select>
-          </Form.Group>
-        </div>
-        {editing && (
-          <div className="mt-3 text-center">
-            <Button
-              variant="none"
-              onClick={handleSave}
-              className="me-2 btn_main_dark shadow px-5"
-            >
-              Update
-            </Button>
+                  ) : (
+                    suppliers.map((supplier) => (
+                      <option
+                        value={supplier.supplier_id}
+                        key={supplier.supplier_id}
+                      >
+                        {`${supplier.name} - (${supplier.email}) - ${supplier.address} - (${supplier.phone_number})`}
+                      </option>
+                    ))
+                  )
+                }
+              </Form.Select>
+            </Form.Group>
           </div>
-        )}
+          {editing && (
+            <div className="mt-3 text-center">
+              <Button
+                variant="none"
+                type="submit"
+                className="me-2 btn_main_dark shadow px-5"
+              >
+                Update
+              </Button>
+            </div>
+          )}
+        </Form>
       </Container>
     </Container>
   );

@@ -4,6 +4,7 @@ import {
   deleteItem,
   getAllItems,
   getItem,
+  updateItem,
 } from "../../controllers/admin/item.controller.js";
 import {
   authenticateUser,
@@ -12,6 +13,7 @@ import {
 import {
   validateAddItem,
   validateItemId,
+  validateUpdateItem,
 } from "../../middleware/admin/validations.middleware.js";
 import uploadImage from "../../middleware/admin/multer.middleware.js";
 import multerErrorHandler from "../../middleware/admin/multerErrorHandler.middleware.js";
@@ -27,6 +29,15 @@ router.post(
   multerErrorHandler,
   validateAddItem,
   addItem
+);
+router.put(
+  "/:itemId",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager"]),
+  uploadImage.single("image"),
+  multerErrorHandler,
+  validateUpdateItem,
+  updateItem
 );
 router.get(
   "/",

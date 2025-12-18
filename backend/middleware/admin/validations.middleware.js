@@ -260,36 +260,38 @@ export const validateAddItem = (req, res, next) => {
   const imageFile = req.file;
   const item = JSON.parse(req.body.itemData);
 
-  // trim string fields
-  item.name = item.name?.trim();
-  item.brand = item.brand?.trim();
-  item.description = item.description?.trim();
-
-  // trim numeric fields coming as strings
-  item.sellPrice = item.sellPrice?.trim();
-  item.costPrice = item.costPrice?.trim();
-  item.stockQuantity = item.stockQuantity?.trim();
-  item.reorderPoint = item.reorderPoint?.trim();
-
-  // id fields comes as strings, from <select> elements
-  item.supplierId = item.supplierId?.trim();
-  item.categoryId = item.categoryId?.trim();
-
-  // validate empty image file, string fields
-  if (!imageFile || !item.name || !item.brand || !item.description) {
+  // validate image file
+  if (!imageFile) {
     return res
       .status(400)
-      .json({ success: false, message: "All fields are required" });
+      .json({ success: false, message: "Image file is required" });
+  }
+
+  // validate string fields
+  const stringFields = ["name", "brand", "description"];
+  for (const field of stringFields) {
+    if (typeof item[field] !== "string" || item[field].trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: `${field} is required.`,
+      });
+    }
+    // trim the field
+    item[field] = item[field].trim();
   }
 
   // validate numeric fields
   const { name, brand, description, ...numericFields } = item;
   for (const [key, value] of Object.entries(numericFields)) {
     // validate missing value
-    if (value === undefined || value === null || value === "") {
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
       return res.status(400).json({
         success: false,
-        message: `Missing value for ${key}`,
+        message: `${key} is required.`,
       });
     }
 
@@ -314,5 +316,52 @@ export const validateItemId = (req, res, next) => {
     return res.status(400).json({ success: false, message: "Invalid item ID" });
   }
   req.body = { ...req.body, itemId };
+  next();
+};
+
+export const validateUpdateItem = (req, res, next) => {
+  const item = JSON.parse(req.body.itemData);
+  const { itemId } = req.params;
+  item.itemId = itemId;
+
+  // validate string fields
+  const stringFields = ["name", "brand", "description"];
+  for (const field of stringFields) {
+    if (typeof item[field] !== "string" || item[field].trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: `${field} is required.`,
+      });
+    }
+    // trim the field
+    item[field] = item[field].trim();
+  }
+
+  // validate numeric fields
+  const { name, brand, description, ...numericFields } = item;
+  for (const [key, value] of Object.entries(numericFields)) {
+    // validate missing value
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `${key} is required.`,
+      });
+    }
+
+    // validate non-numeric or negative values
+    const numValue = Number(value);
+    if (Number.isNaN(numValue) || numValue < 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid value for ${key}`,
+      });
+    }
+    item[key] = numValue;
+  }
+  req.body.itemData = item;
   next();
 };

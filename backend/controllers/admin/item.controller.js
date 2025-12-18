@@ -62,6 +62,91 @@ export const addItem = async (req, res) => {
   }
 };
 
+export const updateItem = async (req, res) => {
+  try {
+    const imageFile = req.file;
+    const item = req.body.itemData;
+    let updatedImageUrl = null;
+
+    if (imageFile) {
+      // upload image to ImageKit
+      const response = await imageKit.files.upload({
+        file: fs.createReadStream(imageFile.path),
+        fileName: imageFile.originalname,
+        folder: "/mobile-stream-hub/items",
+      });
+
+      // delete local file after upload
+      fs.unlinkSync(imageFile.path);
+
+      // URL generation with transformations
+      const optimizedImageUrl = imageKit.helper.buildSrc({
+        urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+        src: response.filePath,
+        transformation: [
+          {
+            width: 400,
+            crop: "maintain_ratio",
+            quality: "auto",
+            format: "webp",
+          },
+        ],
+      });
+
+      updatedImageUrl = optimizedImageUrl;
+    }
+
+    let sql, values;
+    if (updatedImageUrl) {
+      sql = `UPDATE item SET name=?, image=?, brand=?, description=?, sell_price=?, cost_price=?, stock_quantity=?, discount=?, warranty_months=?, reorder_point=?, supplier_id=?, category_id=?
+         WHERE item_id=?`;
+      values = [
+        item.name,
+        updatedImageUrl,
+        item.brand,
+        item.description,
+        item.sellPrice,
+        item.costPrice,
+        item.stockQuantity,
+        item.discountPercentage,
+        item.warrantyMonths,
+        item.reorderPoint,
+        item.supplierId,
+        item.categoryId,
+        item.itemId,
+      ];
+    } else {
+      sql = `UPDATE item SET name=?, brand=?, description=?, sell_price=?, cost_price=?, stock_quantity=?, discount=?, warranty_months=?, reorder_point=?, supplier_id=?, category_id=?
+         WHERE item_id=?`;
+      values = [
+        item.name,
+        item.brand,
+        item.description,
+        item.sellPrice,
+        item.costPrice,
+        item.stockQuantity,
+        item.discountPercentage,
+        item.warrantyMonths,
+        item.reorderPoint,
+        item.supplierId,
+        item.categoryId,
+        item.itemId,
+      ];
+    }
+
+    await dbPool.query(sql, values);
+    return res
+      .status(201)
+      .json({ success: true, message: "Item Updated successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const getAllItems = async (req, res) => {
   try {
     const sql = `
