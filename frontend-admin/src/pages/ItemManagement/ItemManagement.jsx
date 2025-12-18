@@ -9,7 +9,7 @@ import {
   Image,
   Badge,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import { hasPermission } from "../../utils/permissions";
@@ -166,11 +166,12 @@ function CategoryManagement() {
                 onClick={() => handleDelete(item.item_id)}
               ></i>
             )}
-            <i
-              role="button"
-              className="bi-arrow-up-right-square text-primary action_icon"
-              onClick={() => navigate(`profile/${item.item_id}`)}
-            ></i>
+            <Link to={`profile/${item.item_id}`}>
+              <i
+                role="button"
+                className="bi-arrow-up-right-square text-primary action_icon"
+              ></i>
+            </Link>
           </div>
         </td>
       </tr>
