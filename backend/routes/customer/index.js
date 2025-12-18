@@ -4,6 +4,7 @@ import authRoutes from "./auth.routes.js";
 import userRoutes from "./user.routes.js";
 import categoriesRoutes from "./category.routes.js";
 import inquiryRoutes from "./inquiry.routes.js";
+import itemRoutes from "./item.routes.js";
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.use("/users", userRoutes);
 router.use("/orders", orderRoutes);
 router.use("/categories", categoriesRoutes);
 router.use("/inquiries", inquiryRoutes);
+router.use("/items", itemRoutes);
 
 export default router;
