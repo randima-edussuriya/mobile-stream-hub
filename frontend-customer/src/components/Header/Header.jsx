@@ -146,7 +146,7 @@ function Header() {
               <Nav.Link as={Link} to={"/coming-soon"} className="navbar_link">
                 Repairs
               </Nav.Link>
-              <Nav.Link as={Link} to={"/coming-soon"} className="navbar_link">
+              <Nav.Link as={Link} to={"/about-us"} className="navbar_link">
                 About Us
               </Nav.Link>
               <Nav.Link as={Link} to={"/contact-us"} className="navbar_link">
