@@ -108,7 +108,7 @@ function Header() {
                   categoriesPhone.map((row) => (
                     <NavDropdown.Item
                       as={Link}
-                      to={`/products/?categoryName=${row.category_name}`}
+                      to={`/products/?categoryId=${row.category_id}`}
                       key={row.category_id}
                       className="overflow-y-auto"
                     >
@@ -123,7 +123,7 @@ function Header() {
                 id="basic-nav-dropdown"
               >
                 {/* ------------------------------------------------
-                      render categoris-phone into dropdown
+                      render categoris-Accessories into dropdown
                 ---------------------------------------------------- */}
                 {categoriesAccessories.length === 0 ? (
                   <NavDropdown.Item>Not Available</NavDropdown.Item>
@@ -131,7 +131,7 @@ function Header() {
                   categoriesAccessories.map((row) => (
                     <NavDropdown.Item
                       as={Link}
-                      to={`/products/?categoryName=${row.category_name}`}
+                      to={`/products/?categoryId=${row.category_id}`}
                       key={row.category_id}
                     >
                       {row.category_name}

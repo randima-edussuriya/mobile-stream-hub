@@ -19,7 +19,7 @@ function Products() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [sortBy, setSortBy] = useState("created_at DESC");
+  const [sortBy, setSortBy] = useState("created_at_desc");
 
   const { backendUrl } = useContext(AppContext);
 
@@ -32,10 +32,14 @@ function Products() {
       setItems([]);
       setError("");
 
-      const query = searchParams.toString();
+      // Clone existing search params
+      const params = new URLSearchParams(searchParams);
+
+      // Always set sortBy explicitly
+      params.set("sortBy", sortBy);
 
       const { data } = await axios.get(
-        `${backendUrl}/api/customer/items?${query}&sortBy=${sortBy}`
+        `${backendUrl}/api/customer/items?${params.toString()}`
       );
       setItems(data.data);
     } catch (err) {
@@ -90,12 +94,12 @@ function Products() {
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="sell_price ASC">Price: Low to High</option>
-            <option value="sell_price DESC">Price: High to Low</option>
-            <option value="name ASC">Name: A to Z</option>
-            <option value="name DESC">Name: Z to A</option>
-            <option value="created_at ASC">Oldest Arrivals</option>
-            <option value="created_at DESC">Newest Arrivals</option>
+            <option value="sell_price_asc">Price: Low to High</option>
+            <option value="sell_price_desc">Price: High to Low</option>
+            <option value="name_asc">Name: A to Z</option>
+            <option value="name_desc">Name: Z to A</option>
+            <option value="created_at_asc">Oldest Arrivals</option>
+            <option value="created_at_desc">Newest Arrivals</option>
           </Form.Select>
         </Col>
       </Row>
