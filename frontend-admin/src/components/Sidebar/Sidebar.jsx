@@ -64,7 +64,7 @@ function Sidebar() {
           <i className="bi bi-border-all fs-5 me-3"></i>
           <span>Order Management</span>
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to={"/delivery-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
@@ -72,7 +72,7 @@ function Sidebar() {
         >
           <i className="bi bi-truck fs-5 me-3"></i>
           <span>Delivery Management</span>
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to={"/repair-management"}
           className={({ isActive }) =>
@@ -91,7 +91,7 @@ function Sidebar() {
           <i className="bi bi-arrow-clockwise fs-5 me-3"></i>
           <span>Reorder Management</span>
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to={"/day-off-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
@@ -99,8 +99,8 @@ function Sidebar() {
         >
           <i className="bi bi-calendar-day fs-5 me-3"></i>
           <span>Day off Management</span>
-        </NavLink>
-        <NavLink
+        </NavLink> */}
+        {/* <NavLink
           to={"/loyalty-program-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
@@ -108,7 +108,7 @@ function Sidebar() {
         >
           <i className="bi bi-cursor fs-5 me-3"></i>
           <span>Loyalty Program Management</span>
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to={"/feedback-rating-management"}
           className={({ isActive }) =>
@@ -118,7 +118,7 @@ function Sidebar() {
           <i className="bi bi-star fs-5 me-3"></i>
           <span>Feedback and rating Management</span>
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to={"/customer-support-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
@@ -126,7 +126,7 @@ function Sidebar() {
         >
           <i className="bi bi-telephone-forward fs-5 me-3"></i>
           <span>Customer Support Management</span>
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to={"/reports-management"}
           className={({ isActive }) =>
