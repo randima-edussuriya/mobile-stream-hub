@@ -14,6 +14,7 @@ import { PrivateRoute } from "./routes/authRoutes";
 import { useContext } from "react";
 import { AppContext } from "./context/AppContext";
 import ContactUs from "./pages/ContactUs";
+import AboutUs from "./pages/AboutUs";
 
 const Layout = () => {
   return (
@@ -63,6 +64,10 @@ function App() {
         {
           path: "products/:itemId",
           element: <ProductDetails />,
+        },
+        {
+          path: "about-us",
+          element: <AboutUs />,
         },
         {
           path: "contact-us",
