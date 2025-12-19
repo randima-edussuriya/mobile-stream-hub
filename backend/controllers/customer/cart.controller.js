@@ -101,3 +101,27 @@ export const addToCart = async (req, res) => {
     });
   }
 };
+
+export const getCartItems = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+
+    const sqlQuery = `
+                SELECT ci.cart_item_id, ci.item_quantity, ci.item_id, i.image, i.name, i.sell_price, i.discount
+                FROM cart_item ci
+                INNER JOIN item i ON i.item_id=ci.item_id
+                WHERE ci.customer_id=?`;
+    const [cartItems] = await dbPool.query(sqlQuery, [customerId]);
+
+    return res.status(200).json({
+      success: true,
+      data: cartItems,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

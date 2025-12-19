@@ -161,15 +161,6 @@ function Header() {
           <div className="ms-auto d-flex align-items-center gap-3">
             <Link to={"/cart"} className="text-reset position-relative me-3">
               <i className="bi bi-cart3 navbar_icon"></i>
-              {isLoggedIn && (
-                <Badge
-                  pill
-                  bg="danger"
-                  className="position-absolute translate-middle top-0 start-100"
-                >
-                  6
-                </Badge>
-              )}
             </Link>
 
             {isLoggedIn ? (

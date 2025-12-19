@@ -1,6 +1,18 @@
 /* Common style */
 
 /* ----------------------------------------------
+    Action Icons 
+------------------------------------------------- */
+.action_icon {
+  cursor: pointer !important;
+  font-size: 18px !important;
+  transition: opacity 0.3s ease !important;
+}
+.action_icon:hover {
+  opacity: 0.7 !important;
+}
+
+/* ----------------------------------------------
     Buttons 
 ------------------------------------------------- */
 .btn_main_dark {
