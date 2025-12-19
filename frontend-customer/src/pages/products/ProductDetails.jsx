@@ -1,18 +1,28 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Container, Row, Col, Image, Spinner, Badge } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Spinner,
+  Badge,
+  Form,
+} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { AppContext } from "../../context/AppContext";
 import ErrorProvider from "../../components/ErrorProvider";
+import { toast } from "react-toastify";
 
 function ProductDetails() {
   const { itemId } = useParams();
   const [item, setItem] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, isLoggedIn } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -38,6 +48,9 @@ function ProductDetails() {
     }
   };
 
+  /*----------------------------------------------------
+        render price with discount if applicable
+  ------------------------------------------------------ */
   const renderPrice = (sellPrice, discount) => {
     if (discount > 0) {
       const discountedPrice = sellPrice - (sellPrice * discount) / 100;
@@ -58,9 +71,37 @@ function ProductDetails() {
     }
   };
 
+  /*-------------------------------------------------------
+        handle add to cart action
+  --------------------------------------------------------- */
+  const handleAddtoCart = async (e) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/customer/cart/add`, {
+        itemId: item.item_id,
+        quantity: Number(quantity),
+      });
+      toast.success(data.message);
+      navigate("/cart");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchItemDetails();
-  }, [itemId]);
+  }, []);
+
+  // check item stock availability
+  const isInStock = Number(item?.stock_quantity) > 0;
 
   return (
     <Container className="mt-5 py-3 bg_light rounded">
@@ -97,17 +138,62 @@ function ProductDetails() {
               {renderPrice(Number(item.sell_price), Number(item.discount))}
             </div>
 
-            <div className="my-4 d-flex gap-2">
-              <Button variant="none" className="btn_main_dark">
-                <i className="bi bi-cart-plus me-1" /> Add to Cart
-              </Button>
-              <Button
-                variant="outline-secondary"
-                onClick={() => navigate("/products")}
+            {/* -------------------------------------------------------
+                  stock avalabiity section
+            -----------------------------------------------------------*/}
+            <div className="mb-3 d-flex align-items-center gap-2">
+              <span
+                className={`fw-semibold ${
+                  isInStock ? "text-success" : "text-danger"
+                }`}
               >
-                Back to Products
-              </Button>
+                {isInStock ? "In stock" : "Out of stock"}
+              </span>
+              {isInStock && (
+                <span className="text-muted small">
+                  {Number(item.stock_quantity).toLocaleString()} available
+                </span>
+              )}
             </div>
+
+            {/* -------------------------------------------------------
+                  quantity input section
+            -----------------------------------------------------------*/}
+            <Form onSubmit={handleAddtoCart}>
+              <Form.Group className="mb-4 d-flex align-items-center gap-2">
+                <Form.Label>Quantity</Form.Label>
+                <Form.Control
+                  name="quantity"
+                  type="number"
+                  min={1}
+                  max={Number(item.stock_quantity) || 1}
+                  value={quantity}
+                  disabled={!isInStock}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  className="w-auto"
+                />
+              </Form.Group>
+
+              {/* ---------------------------------------
+                  Add to cart, back buttons section
+            ------------------------------------------- */}
+              <div className="my-4 d-flex gap-2">
+                <Button
+                  type="submit"
+                  variant="none"
+                  className="btn_main_dark"
+                  disabled={!isInStock}
+                >
+                  <i className="bi bi-cart-plus me-1" /> Add to Cart
+                </Button>
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => navigate("/products")}
+                >
+                  Back to Products
+                </Button>
+              </div>
+            </Form>
 
             <div>
               <h6>Description</h6>
