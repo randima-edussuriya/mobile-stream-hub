@@ -67,6 +67,14 @@ function Products() {
     }
   };
 
+  const renderStockStatus = (stock) => {
+    if (stock > 0) {
+      return <span className="text-success fw-semibold">In Stock</span>;
+    } else {
+      return <span className="text-danger fw-semibold">Out of Stock</span>;
+    }
+  };
+
   useEffect(() => {
     fetchItems();
   }, [searchParams, sortBy]);
@@ -132,6 +140,8 @@ function Products() {
                 <Card.Subtitle className="text-muted mb-2">
                   {item.brand}
                 </Card.Subtitle>
+
+                {renderStockStatus(Number(item.stock_quantity))}
 
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
