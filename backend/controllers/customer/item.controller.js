@@ -1,14 +1,14 @@
 import dbPool from "../../config/dbConnection.js";
 
 export const getCustomerAllItems = async (req, res) => {
-  const { categoryId, search, sortBy = "created_at DESC" } = req.query;
+  const { categoryId, search, sortBy = "created_at_desc" } = req.query;
 
   const filters = [];
   const values = [];
 
   // filter by category
   if (categoryId) {
-    filters.push("category_id = ?");
+    filters.push("i.category_id = ?");
     values.push(Number(categoryId));
   }
 
@@ -18,26 +18,28 @@ export const getCustomerAllItems = async (req, res) => {
     values.push(`%${search}%`);
   }
 
+  filters.push("c.category_type != 'repair part'");
+
   // construct where clause
-  const whereFields = filters.length > 0 ? `${filters.join(" AND ")}` : "";
+  const whereFields =
+    filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
 
   // construct order by clause
-  const allowedSortFields = [
-    "sell_price DESC",
-    "sell_price ASC",
-    "created_at DESC",
-    "created_at ASC",
-    "name DESC",
-    "name ASC",
-  ];
-  const orderByFields = allowedSortFields.includes(sortBy)
-    ? sortBy
-    : "created_at DESC";
+  const orderField = {
+    sell_price_desc: "i.sell_price DESC",
+    sell_price_asc: "i.sell_price ASC",
+    created_at_desc: "i.created_at DESC",
+    created_at_asc: "i.created_at ASC",
+    name_desc: "i.name DESC",
+    name_asc: "i.name ASC",
+  };
+
+  const orderByFields = orderField[sortBy] || "created_at DESC";
 
   const sql = `
                 SELECT i.* FROM item i
                 INNER JOIN category c ON c.category_id = i.category_id
-                WHERE ${whereFields} c.category_type !='repair part'
+                ${whereFields}
                 ORDER BY ${orderByFields}`;
   try {
     const [items] = await dbPool.query(sql, values);
