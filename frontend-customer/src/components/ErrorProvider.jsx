@@ -2,14 +2,12 @@ import { Alert, Container } from "react-bootstrap";
 
 function ErrorProvider({ errorMessage }) {
   return (
-    <Container className="py-5">
-      <Alert
-        variant="danger"
-        className="d-flex justify-content-between align-items-center"
-      >
-        {errorMessage}
-      </Alert>
-    </Container>
+    <Alert
+      variant="danger"
+      className="d-flex justify-content-between align-items-center mb-0"
+    >
+      {errorMessage}
+    </Alert>
   );
 }
 
