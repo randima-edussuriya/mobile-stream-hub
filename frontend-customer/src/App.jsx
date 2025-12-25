@@ -75,7 +75,11 @@ function App() {
         },
         {
           path: "cart",
-          element: <Cart />,
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <Cart />
+            </PrivateRoute>
+          ),
         },
         {
           path: "coming-soon",
