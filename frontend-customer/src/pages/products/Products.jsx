@@ -13,6 +13,7 @@ import {
 import Button from "react-bootstrap/Button";
 import { AppContext } from "../../context/AppContext";
 import ErrorProvider from "../../components/ErrorProvider";
+import Loader from "../../components/Loader";
 
 function Products() {
   const [searchParams] = useSearchParams();
@@ -81,14 +82,16 @@ function Products() {
 
   useEffect(() => {
     fetchItems();
-  }, [searchParams, sortBy]);
+  }, [sortBy]);
 
   return (
-    <Container className="py-4">
-      <h2 className="mb-3">Products</h2>
+    <Container className="mt-5">
+      <Row className="fw-semibold mb-3">
+        <Col>
+          <h3>Products</h3>
+        </Col>
 
-      <Row className="mb-3 justify-content-end">
-        <Col xs={12} md={3}>
+        <Col xs="auto">
           <Form.Select
             name="sortBy"
             value={sortBy}
@@ -104,13 +107,7 @@ function Products() {
         </Col>
       </Row>
 
-      {loading && (
-        <Container className="text-center mt-5 py-3">
-          <Spinner animation="border" role="status" variant="secondary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </Container>
-      )}
+      {loading && <Loader />}
 
       {!loading && error && <ErrorProvider errorMessage={error} />}
 

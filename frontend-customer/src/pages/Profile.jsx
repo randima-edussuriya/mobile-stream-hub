@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { AppContext } from "../context/AppContext";
 import ErrorProvider from "../components/ErrorProvider";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Profile() {
   const [Loading, setLoading] = useState(true);
@@ -88,13 +89,7 @@ function Profile() {
         Render loading state
   ------------------------------------------------------------------*/
   if (Loading) {
-    return (
-      <Container className="text-center mt-5 py-3">
-        <Spinner animation="border" role="status" variant="secondary">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </Container>
-    );
+    return <Loader />;
   }
 
   /*---------------------------------------------------

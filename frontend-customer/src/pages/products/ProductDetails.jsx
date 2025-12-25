@@ -14,6 +14,7 @@ import Button from "react-bootstrap/Button";
 import { AppContext } from "../../context/AppContext";
 import ErrorProvider from "../../components/ErrorProvider";
 import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
 function ProductDetails() {
   const { itemId } = useParams();
@@ -105,13 +106,7 @@ function ProductDetails() {
 
   return (
     <Container className="mt-5 py-3 bg_light rounded">
-      {loading && (
-        <Container className="text-center">
-          <Spinner animation="border" role="status" variant="secondary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </Container>
-      )}
+      {loading && <Loader />}
 
       {!loading && error && <ErrorProvider errorMessage={error} />}
 

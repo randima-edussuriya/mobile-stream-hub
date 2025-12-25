@@ -74,7 +74,7 @@ export const AppContextProvider = ({ children }) => {
   };
   return (
     <AppContext.Provider value={value}>
-      {authChecked ? children : <Loader />}
+      {authChecked ? children : <Loader fullScreen />}
     </AppContext.Provider>
   );
 };
