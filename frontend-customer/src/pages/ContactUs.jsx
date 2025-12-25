@@ -53,11 +53,11 @@ function ContactUs() {
   };
 
   return (
-    <Container fluid className="mt-5 py-3">
+    <Container fluid  className="mt-5">
       <Container className="col-lg-8 bg_light rounded shadow p-3">
         <Row>
           <Col>
-            <h4>Contact Us</h4>
+            <h3>Contact Us</h3>
           </Col>
           <Col xs="auto">
             <Button

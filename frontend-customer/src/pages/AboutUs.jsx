@@ -2,11 +2,11 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 
 const AboutUs = () => {
   return (
-    <Container className="my-5">
+    <Container className="mt-5">
       {/* Page Title */}
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">About Mobile Stream Hub</h3>
+          <h3 className="fw-semibold">About Mobile Stream Hub</h3>
           <p className="text-muted">
             Your trusted mobile phone sales and repair partner in Colombo 3
           </p>
