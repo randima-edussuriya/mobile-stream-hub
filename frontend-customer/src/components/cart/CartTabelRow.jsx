@@ -9,21 +9,21 @@ function CartTabelRow({ cartItem }) {
   return (
     <tr>
       <td>
-        <div>
-          <Image
-            src={cartItem.image}
-            alt={cartItem.name}
-            width={90}
-            rounded
-            className="object-fit-cover me-2"
-          />
-          <Link
-            to={`/products/${cartItem.item_id}`}
-            className="text-decoration-none fw-medium"
-          >
-            <span>{cartItem.name}</span>
-          </Link>
-        </div>
+        <Image
+          src={cartItem.image}
+          alt={cartItem.name}
+          width={90}
+          rounded
+          className="object-fit-cover"
+        />
+      </td>
+      <td>
+        <Link
+          to={`/products/${cartItem.item_id}`}
+          className="text-decoration-none fw-medium"
+        >
+          <span>{cartItem.name}</span>
+        </Link>
       </td>
       <td className="text-end">
         {calculateDiscountedPrice(

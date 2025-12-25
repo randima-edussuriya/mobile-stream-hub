@@ -1,16 +1,18 @@
 import { Table } from "react-bootstrap";
 import CartTabelRow from "./CartTabelRow";
 
-function CartTable({ cartItems, calculateDiscountedPrice, calculateSubtotal }) {
+function CartTable({ cartItems }) {
   return (
     <div className="border border-body-secondary rounded overflow-hidden shadow-sm">
-      <Table hover size="sm" className="mb-0">
+      <Table responsive hover size="sm" className="mb-0">
         <thead>
           <tr>
-            <th className="ps-3">Product</th>
-            <th className="text-end">Price (Rs.)</th>
-            <th className="text-center">Quantity</th>
-            <th className="text-end pe-3">Subtotal (Rs.)</th>
+            <th colSpan={2} className="fw-medium ps-3">
+              Product
+            </th>
+            <th className="fw-medium text-end">Price (Rs.)</th>
+            <th className="fw-medium text-center">Quantity</th>
+            <th className="fw-medium text-end pe-3">Subtotal (Rs.)</th>
           </tr>
         </thead>
         <tbody>
