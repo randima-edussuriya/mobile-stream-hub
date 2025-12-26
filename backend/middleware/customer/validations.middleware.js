@@ -129,3 +129,34 @@ export const validateSubmitInquiry = (req, res, next) => {
   };
   next();
 };
+
+export const validateAddToCart = (req, res, next) => {
+  const { itemId, quantity } = req.body;
+
+  // validation
+  for (const [key, value] of Object.entries({ itemId, quantity })) {
+    // validate missing fields
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required field: ${key}`,
+      });
+    }
+
+    // validate numeric fields
+    const numValue = Number(value);
+    if (Number.isNaN(numValue) || numValue < 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid value for field: ${key}.`,
+      });
+    }
+
+    req.body[key] = numValue; // convert to number
+  }
+  next();
+};

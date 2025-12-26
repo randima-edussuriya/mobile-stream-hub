@@ -2,40 +2,10 @@ import dbPool from "../../config/dbConnection.js";
 
 export const addToCart = async (req, res) => {
   try {
-    let { itemId, quantity = 1 } = req.body;
-    let customerId = req.user.userId;
+    const { itemId, quantity } = req.body;
+    const customerId = req.user.userId;
 
-    // validation
-    if (!itemId || isNaN(Number(itemId)) || Number(itemId) <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid item id",
-      });
-    }
-
-    if (!customerId || isNaN(Number(customerId)) || Number(customerId) <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid customer id",
-      });
-    }
-
-    if (
-      quantity === undefined ||
-      isNaN(Number(quantity)) ||
-      Number(quantity) <= 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid quantity",
-      });
-    }
-
-    itemId = Number(itemId);
-    customerId = Number(customerId);
-    quantity = Number(quantity);
-
-    // 2️Check item exists
+    // Check item exists
     const [itemRows] = await dbPool.query(
       "SELECT stock_quantity FROM item WHERE item_id = ?",
       [itemId]
@@ -45,6 +15,14 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "Item not found",
+      });
+    }
+
+    // Check stock availability
+    if (itemRows[0].stock_quantity < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient stock available",
       });
     }
 
