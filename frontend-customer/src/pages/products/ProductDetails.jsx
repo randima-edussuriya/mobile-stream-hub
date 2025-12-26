@@ -6,7 +6,6 @@ import {
   Row,
   Col,
   Image,
-  Spinner,
   Badge,
   Form,
 } from "react-bootstrap";
