@@ -1,13 +1,19 @@
 import { Table } from "react-bootstrap";
 import CartTabelRow from "./CartTabelRow";
 
-function CartTable({ cartItems }) {
+function CartTable({
+  cartItems,
+  originalCartItems,
+  fetchCartItems,
+  handleQuantityChange,
+}) {
   return (
     <div className="border border-body-secondary rounded overflow-hidden shadow-sm">
       <Table responsive hover size="sm" className="mb-0">
         <thead>
           <tr>
-            <th colSpan={2} className="fw-medium ps-3">
+            <th></th>
+            <th colSpan={2} className="fw-medium">
               Product
             </th>
             <th className="fw-medium text-end">Price (Rs.)</th>
@@ -17,7 +23,13 @@ function CartTable({ cartItems }) {
         </thead>
         <tbody>
           {cartItems.map((cartItem) => (
-            <CartTabelRow key={cartItem.cart_item_id} cartItem={cartItem} />
+            <CartTabelRow
+              key={cartItem.cart_item_id}
+              cartItem={cartItem}
+              originalCartItems={originalCartItems}
+              fetchCartItems={fetchCartItems}
+              handleQuantityChange={handleQuantityChange}
+            />
           ))}
         </tbody>
       </Table>

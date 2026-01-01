@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 function CartSummary({ total }) {
   return (
     <Card className="p-3 shadow-sm border-body-secondary">
-      <h5 className="fw-bold mb-3">Order Summary</h5>
+      <h5 className="fw-bold mb-3">Cart Summary</h5>
 
       <div className="d-flex justify-content-between mb-2">
         <span>Total</span>
