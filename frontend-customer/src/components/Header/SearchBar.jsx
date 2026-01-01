@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container, Form, InputGroup, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +18,7 @@ function SearchBar() {
       className="p-3 search_container d-flex justify-content-center"
     >
       <Form onSubmit={handleSearch} className="col-10 col-sm-6 ">
-        <InputGroup className="p-1 rounded-3 search_input_group">
+        <InputGroup className="rounded-3 search_input_group">
           <Form.Control
             placeholder="Search products here"
             onChange={(e) => setSearch(e.target.value)}

@@ -37,7 +37,6 @@
   overflow-y: auto !important;
 }
 
-
 /* ----------------------------------------------
     Search Bar
 ------------------------------------------------- */
@@ -47,4 +46,5 @@
 
 .search_input_group {
   background-color: #51a6f5 !important;
+  border: solid 3px #51a6f5 !important;
 }
