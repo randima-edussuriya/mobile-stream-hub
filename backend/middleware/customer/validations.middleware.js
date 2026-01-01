@@ -160,3 +160,70 @@ export const validateAddToCart = (req, res, next) => {
   }
   next();
 };
+
+export const validateId = (req, res, next) => {
+  const { cartItemId } = req.params;
+
+  // validate missing id
+  if (
+    cartItemId === undefined ||
+    cartItemId === null ||
+    (typeof cartItemId === "string" && cartItemId.trim() === "")
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing required field: cartItemId",
+    });
+  }
+
+  // validate numeric id
+  const numValue = Number(cartItemId);
+  if (Number.isNaN(numValue) || numValue < 0) {
+    return res.status(400).json({
+      success: false,
+      message: `Invalid value for field: cartItemId.`,
+    });
+  }
+  req.params.cartItemId = numValue; // convert to number
+  next();
+};
+
+export const validateUpdateCart = (req, res, next) => {
+  const { cartItems } = req.body;
+
+  // validate cartItems is an array
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "cartItems must be a non-empty array",
+    });
+  }
+
+  for (const cartItem of cartItems) {
+    // validate missing fields
+    for (const [key, value] of Object.entries(cartItem)) {
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "string" && value.trim() === "")
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: `Missing required field: ${key}.`,
+        });
+      }
+
+      // validate numeric fields
+      const numValue = Number(value);
+      if (Number.isNaN(numValue) || numValue < 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid value for field: ${key}.`,
+        });
+      }
+      cartItem[key] = numValue; // convert to number
+    }
+  }
+  req.body.cartItems = cartItems;
+  next();
+};
