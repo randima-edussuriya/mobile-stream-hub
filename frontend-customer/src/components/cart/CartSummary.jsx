@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 
 function CartSummary({ total }) {
   return (
@@ -9,6 +9,9 @@ function CartSummary({ total }) {
         <span>Total</span>
         <span className="fw-bold">Rs. {total.toLocaleString()}</span>
       </div>
+      <Button variant="none" className="btn_main_light_outline">
+        Checkout
+      </Button>
     </Card>
   );
 }
