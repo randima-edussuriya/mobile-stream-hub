@@ -73,13 +73,18 @@ function Login() {
             />
           </Form.Group>
 
-          <div className="mb-3">
+          <div>
             <Button
               variant="none"
               className="btn_main_dark w-100 shadow"
               type="submit"
             >
               Log In
+            </Button>
+          </div>
+          <div className="text-center">
+            <Button variant="link" onClick={() => navigate("/")}>
+              Reset Password
             </Button>
           </div>
         </Form>

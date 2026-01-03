@@ -75,17 +75,31 @@ function Login() {
           {/* --------------------------------------------------------------
                                 buttons section
                     ------------------------------------------------------------------- */}
-          <div className="mb-3">
-            <Button
-              variant="none"
-              className="btn_main_dark me-3 shadow"
-              type="submit"
-            >
-              Log In
-            </Button>
-            <Link to={"/signup"} className="btn btn_main_light_outline shadow">
-              Sign Up
-            </Link>
+          <div className="mb-3 d-flex align-items-center justify-content-between">
+            <div>
+              <Button
+                variant="none"
+                className="btn_main_dark me-3 shadow"
+                type="submit"
+              >
+                Log In
+              </Button>
+              <Link
+                to={"/signup"}
+                className="btn btn_main_light_outline shadow"
+              >
+                Sign Up
+              </Link>
+            </div>
+            <div>
+              <Button
+                variant="link"
+                onClick={() => navigate("/login")}
+                className="px-0"
+              >
+                Reset Password
+              </Button>
+            </div>
           </div>
         </Form>
       </Container>
