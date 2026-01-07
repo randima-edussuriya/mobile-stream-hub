@@ -1,55 +1,68 @@
 export const validateSendVerifyOtp = (req, res, next) => {
-  const email = String(req.body.email || "")
-    .trim()
-    .toLocaleLowerCase();
-  const purpose = String(req.body.purpose || "").trim();
+  const { email, purpose } = req.body;
 
-  // validate empty
-  if (!email || !purpose) {
-    return res
-      .status(400)
-      .json({ success: false, message: "All fields are required" });
+  for (const [key, value] of Object.entries({ email, purpose })) {
+    // validate missing fields
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required field: ${key}`,
+      });
+    }
+    // validate email format
+    if (key === "email") {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid email format" });
+      }
+      req.body.email = value.toLocaleLowerCase().trim();
+      continue;
+    }
+    req.body[key] = value.trim();
   }
-  // validate format
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid email format" });
-  }
-  req.body = { email, purpose };
   next();
 };
 
 export const validateVerifyOtp = (req, res, next) => {
-  const email = String(req.body.email || "")
-    .trim()
-    .toLocaleLowerCase();
-  const otp = String(req.body.otp || "").trim();
-  const purpose = String(req.body.purpose || "").trim();
+  const { email, otp, purpose } = req.body;
 
-  // validate empty
-  if (!email || !otp || !purpose) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required",
-    });
+  for (const [key, value] of Object.entries({ email, otp, purpose })) {
+    // validate missing fields
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required field: ${key}`,
+      });
+    }
+
+    // validate email format
+    if (key === "email") {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid email format" });
+      }
+      req.body.email = value.toLocaleLowerCase().trim();
+      continue;
+    }
+
+    // validate otp format
+    if (key === "otp" && !/^\d{6}$/.test(value)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid OTP format" });
+    }
+    req.body[key] = value.trim();
   }
-
-  // validate email format
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid email format" });
-  }
-
-  // validate otp format
-  if (!/^\d{6}$/.test(otp)) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid OTP format" });
-  }
-
-  req.body = { email, otp, purpose };
   next();
 };
 
