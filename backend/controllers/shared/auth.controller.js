@@ -4,19 +4,14 @@ import { sendEmailVerifyEmail } from "../../services/email/sharedEmail.service.j
 const allowedPurposes = [
   "staff_registration",
   "customer_registration",
-  "password_reset",
+  "customer_password_reset",
 ];
-
-// map purposes to email handlers
-const emailHandlers = {
-  staff_registration: sendEmailVerifyEmail,
-  customer_registration: sendEmailVerifyEmail,
-};
 
 // map purposes to db tables
 const purposeToDbTable = {
   staff_registration: "staff",
   customer_registration: "customer",
+  customer_password_reset: "customer",
 };
 
 export const sendVerifyOtp = async (req, res) => {
@@ -30,15 +25,15 @@ export const sendVerifyOtp = async (req, res) => {
         .json({ success: false, message: "Invalid OTP purpose" });
     }
 
+    //check existing user
+    const dbTable = purposeToDbTable[purpose];
+    const sqlUserExist = `SELECT 1 FROM ${dbTable} WHERE email = ? LIMIT 1`;
+    const [existingUser] = await dbPool.query(sqlUserExist, [email]);
     // handle registration purpose verifications
     if (
       purpose === "staff_registration" ||
       purpose === "customer_registration"
     ) {
-      //check existing user
-      const dbTable = purposeToDbTable[purpose];
-      const sqlUserExist = `SELECT 1 FROM ${dbTable} WHERE email = ? LIMIT 1`;
-      const [existingUser] = await dbPool.query(sqlUserExist, [email]);
       if (existingUser.length > 0) {
         return res
           .status(409)
@@ -47,7 +42,12 @@ export const sendVerifyOtp = async (req, res) => {
     }
 
     // handle password reset purpose verifications
-    if (purpose === "password_reset") {
+    if (purpose === "customer_password_reset") {
+      if (existingUser.length === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Email not found" });
+      }
     }
 
     //save otp in db
@@ -62,8 +62,7 @@ export const sendVerifyOtp = async (req, res) => {
     await dbPool.query(insertSql, [email, otp, expiresAt, purpose]);
 
     //send email
-    const emailHandler = emailHandlers[purpose];
-    await emailHandler(email, otp);
+    await sendEmailVerifyEmail(email, otp);
 
     return res
       .status(200)
