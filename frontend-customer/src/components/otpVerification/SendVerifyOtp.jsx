@@ -39,7 +39,7 @@ function Signup({ onEmail, purpose }) {
       className="d-flex justify-content-center align-items-center  mt-5 py-3"
     >
       <Container className="col-10 col-sm-5 p-3 bg_light rounded-2 shadow">
-        <h3 className="text-center">Step 1 - Sign Up</h3>
+        <h3 className="text-center">Step 1 - Request Verification</h3>
         <p className="text-muted mb-3">
           Please enter your email address to receive a verification OTP.
         </p>

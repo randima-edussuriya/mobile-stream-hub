@@ -1,7 +1,7 @@
 import { useState } from "react";
-import SendVerifyOtp from "../components/SignUp/SendVerifyOtp";
-import VerifyOtp from "../components/SignUp/VerifyOtp";
-import Signup from "../components/SignUp/Signup";
+import SendVerifyOtp from "../components/otpVerification/SendVerifyOtp";
+import VerifyOtp from "../components/otpVerification/VerifyOtp";
+import Signup from "../components/Signup";
 
 function SignupFlow() {
   const [email, setEmail] = useState("");

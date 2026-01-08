@@ -87,7 +87,7 @@ function VerifyOtp({ email, purpose, onOtpVerify }) {
       className="d-flex justify-content-center align-items-center  mt-5 py-3"
     >
       <Container className="col-10 col-sm-6 col-md-5 col-lg-4 col-xxl-3 p-3 bg_light rounded-2 shadow">
-        <h3 className="text-center">Step 2 - Sign Up</h3>
+        <h3 className="text-center">Step 2 - Verification</h3>
         <p className="text-muted mb-3">
           Enter the 6-digit code sent to your email.
         </p>
