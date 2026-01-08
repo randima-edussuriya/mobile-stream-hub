@@ -111,3 +111,24 @@ export const logout = async (req, res) => {
     .status(200)
     .json({ success: true, message: "Logged out successfully" });
 };
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    //hash password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    //update password
+    const sqlUpdate = "UPDATE customer SET password = ? WHERE email = ?";
+    await dbPool.query(sqlUpdate, [hashedPassword, email]);
+    return res
+      .status(200)
+      .json({ success: true, message: "Password reset successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

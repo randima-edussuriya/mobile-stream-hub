@@ -227,3 +227,47 @@ export const validateUpdateCart = (req, res, next) => {
   req.body.cartItems = cartItems;
   next();
 };
+
+export const validateResetPassword = (req, res, next) => {
+  const { email, newPassword, purpose } = req.body;
+
+  // validate missing fields
+  for (const [key, value] of Object.entries({ email, newPassword, purpose })) {
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required field: ${key}`,
+      });
+    }
+    // validate email format
+    if (key === "email") {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid email format" });
+      }
+      req.body.email = value.toLocaleLowerCase().trim();
+      continue;
+    }
+
+    // validate password strength
+    if (
+      key === "newPassword" &&
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        value
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password must include at least one lowercase letter, one uppercase letter, one digit, one special character and be at least 8 characters long",
+      });
+    }
+    req.body[key] = value.trim();
+  }
+  next();
+};
