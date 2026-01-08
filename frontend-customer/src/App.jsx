@@ -15,6 +15,7 @@ import { useContext } from "react";
 import { AppContext } from "./context/AppContext";
 import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
+import ResetPassword from "./pages/ResetPasswordFlow";
 
 const Layout = () => {
   return (
@@ -80,6 +81,10 @@ function App() {
               <Cart />
             </PrivateRoute>
           ),
+        },
+        {
+          path: "reset-password",
+          element: <ResetPassword />,
         },
         {
           path: "coming-soon",

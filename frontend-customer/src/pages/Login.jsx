@@ -94,7 +94,7 @@ function Login() {
             <div>
               <Button
                 variant="link"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/reset-password")}
                 className="px-0"
               >
                 Reset Password
