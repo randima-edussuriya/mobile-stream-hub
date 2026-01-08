@@ -13,6 +13,7 @@ export const AppContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   //get user authentication
   const getUserAuthState = async () => {
@@ -60,9 +61,28 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  // fetch cart item count
+  const fetchCartItemCount = async () => {
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/customer/cart/total-items`
+      );
+      setCartItemCount(data.data.totalQuantity);
+    } catch (error) {
+      // Silently fail if user is not logged in or cart is empty
+      setCartItemCount(0);
+    }
+  };
+
   useEffect(() => {
     getUserAuthState();
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchCartItemCount();
+    }
+  }, [isLoggedIn]);
 
   const value = {
     backendUrl,
@@ -71,6 +91,8 @@ export const AppContextProvider = ({ children }) => {
     setIsLoggedIn,
     getUserData,
     setUserData,
+    cartItemCount,
+    fetchCartItemCount,
   };
   return (
     <AppContext.Provider value={value}>

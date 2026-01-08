@@ -6,8 +6,6 @@ import {
   NavDropdown,
   Dropdown,
   Badge,
-  Row,
-  Col,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
@@ -21,7 +19,7 @@ import { toast } from "react-toastify";
 function Header() {
   const [categories, setCategories] = useState([]);
 
-  const { backendUrl, isLoggedIn, setIsLoggedIn, setUserData } =
+  const { backendUrl, isLoggedIn, setIsLoggedIn, setUserData, cartItemCount } =
     useContext(AppContext);
   const navigate = useNavigate();
 
@@ -160,7 +158,12 @@ function Header() {
           ----------------------------------------------------------------------- */}
           <div className="ms-auto d-flex align-items-center gap-3">
             <Link to={"/cart"} className="text-reset position-relative me-3">
-              <i className="bi bi-cart3 navbar_icon"></i>
+              <i className="bi bi-cart3 navbar_icon position-relative"></i>
+              {isLoggedIn && (
+                <Badge bg="danger" className="position-absolute">
+                  {cartItemCount}
+                </Badge>
+              )}
             </Link>
 
             {isLoggedIn ? (

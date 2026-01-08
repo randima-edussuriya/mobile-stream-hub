@@ -17,7 +17,7 @@ const Cart = () => {
   const [originalCartItems, setOriginalCartItems] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false);
 
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, fetchCartItemCount } = useContext(AppContext);
 
   /*-------------------------------------------------
         fetch cart items
@@ -69,6 +69,7 @@ const Cart = () => {
       setIsUpdated(false);
       toast.success(data.message);
       fetchCartItems();
+      fetchCartItemCount(); // Update cart count in header
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||

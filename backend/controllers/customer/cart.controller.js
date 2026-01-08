@@ -225,3 +225,22 @@ export const updateCart = async (req, res) => {
     });
   }
 };
+
+export const getTotalCartItems = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+    const sqlQuery =
+      "SELECT SUM(item_quantity) AS total_quantity FROM cart_item WHERE customer_id=?";
+    const [rows] = await dbPool.query(sqlQuery, [customerId]);
+    return res.status(200).json({
+      success: true,
+      data: { totalQuantity: rows[0].total_quantity || 0 },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

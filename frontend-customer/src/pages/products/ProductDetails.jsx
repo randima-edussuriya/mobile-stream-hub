@@ -1,14 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Image,
-  Badge,
-  Form,
-} from "react-bootstrap";
+import { Container, Row, Col, Image, Badge, Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { AppContext } from "../../context/AppContext";
 import ErrorProvider from "../../components/ErrorProvider";
@@ -22,7 +15,7 @@ function ProductDetails() {
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  const { backendUrl, isLoggedIn } = useContext(AppContext);
+  const { backendUrl, isLoggedIn, fetchCartItemCount } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -86,6 +79,7 @@ function ProductDetails() {
         quantity: Number(quantity),
       });
       toast.success(data.message);
+      fetchCartItemCount(); // Update cart count in header
       navigate("/cart");
     } catch (error) {
       toast.error(
