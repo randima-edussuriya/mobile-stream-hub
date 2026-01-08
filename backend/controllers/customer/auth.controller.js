@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { firstName, lastName, password, email, phoneNo, address } = req.body;
+    const { firstName, lastName, password, email, phoneNo, address, purpose } =
+      req.body;
 
     //check existing user
     const sqlUserExist = "SELECT 1 FROM customer WHERE email = ? LIMIT 1";
@@ -29,6 +30,11 @@ export const register = async (req, res) => {
       phoneNo,
       address,
     ]);
+
+    // delete otp records for registration
+    const deleteSql = "DELETE FROM email_verify WHERE email=? AND purpose=?";
+    await dbPool.query(deleteSql, [email, purpose]);
+
     return res
       .status(201)
       .json({ success: true, message: "Registered successfully" });
@@ -114,13 +120,17 @@ export const logout = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { email, newPassword } = req.body;
+    const { email, newPassword, purpose } = req.body;
 
     //hash password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     //update password
     const sqlUpdate = "UPDATE customer SET password = ? WHERE email = ?";
     await dbPool.query(sqlUpdate, [hashedPassword, email]);
+
+    // delete otp records for password reset
+    const deleteSql = "DELETE FROM email_verify WHERE email=? AND purpose=?";
+    await dbPool.query(deleteSql, [email, purpose]);
     return res
       .status(200)
       .json({ success: true, message: "Password reset successfully" });

@@ -13,6 +13,7 @@ export const register = async (req, res) => {
       nicNo,
       address,
       staffTypeId,
+      purpose,
     } = req.body;
 
     //check existing user
@@ -40,6 +41,11 @@ export const register = async (req, res) => {
       address,
       staffTypeId,
     ]);
+
+    // delete otp records for registration
+    const deleteSql = "DELETE FROM email_verify WHERE email=? AND purpose=?";
+    await dbPool.query(deleteSql, [email, purpose]);
+
     return res
       .status(201)
       .json({ success: true, message: "Registered successfully" });
