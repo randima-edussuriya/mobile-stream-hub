@@ -271,3 +271,22 @@ export const validateResetPassword = (req, res, next) => {
   }
   next();
 };
+
+export const validateGetDeliveryCost = (req, res, next) => {
+  const { district } = req.query;
+
+  // validate missing district
+  if (
+    district === undefined ||
+    district === null ||
+    (typeof district === "string" && district.trim() === "")
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing required field: district",
+    });
+  }
+
+  req.query.district = district.trim();
+  next();
+};
