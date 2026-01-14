@@ -233,11 +233,7 @@ export const validateResetPassword = (req, res, next) => {
 
   // validate missing fields
   for (const [key, value] of Object.entries({ email, newPassword, purpose })) {
-    if (
-      value === undefined ||
-      value === null ||
-      (typeof value === "string" && value.trim() === "")
-    ) {
+    if (typeof value !== "string" && value.trim() === "") {
       return res.status(400).json({
         success: false,
         message: `Missing required field: ${key}`,
@@ -276,11 +272,7 @@ export const validateGetDeliveryCost = (req, res, next) => {
   const { district } = req.query;
 
   // validate missing district
-  if (
-    district === undefined ||
-    district === null ||
-    (typeof district === "string" && district.trim() === "")
-  ) {
+  if (typeof district !== "string" && district.trim() === "") {
     return res.status(400).json({
       success: false,
       message: "Missing required field: district",
