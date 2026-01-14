@@ -16,6 +16,7 @@ import { AppContext } from "./context/AppContext";
 import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
 import ResetPassword from "./pages/ResetPasswordFlow";
+import Checkout from "./pages/Checkout";
 
 const Layout = () => {
   return (
@@ -51,6 +52,10 @@ function App() {
           element: <SignupFlow />,
         },
         {
+          path: "reset-password",
+          element: <ResetPassword />,
+        },
+        {
           path: "profile",
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
@@ -83,8 +88,8 @@ function App() {
           ),
         },
         {
-          path: "reset-password",
-          element: <ResetPassword />,
+          path: "checkout",
+          element: <Checkout />,
         },
         {
           path: "coming-soon",
