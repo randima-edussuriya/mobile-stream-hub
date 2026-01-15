@@ -7,8 +7,15 @@ import { calculateTotal } from "../utils/cartCalculation";
 import OrderSummary from "../components/checkout/OrderSummary";
 import OrderItemTable from "../components/checkout/OrderItemTable";
 import ShippingDetails from "../components/checkout/ShippingDetails";
+import { use } from "react";
 
 const Checkout = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [cartItems, setCartItems] = useState([]);
+
+  const { backendUrl } = useContext(AppContext);
+
   const [shippingData, setShippingData] = useState({
     contactName: "",
     phoneNumber: "",
@@ -20,11 +27,13 @@ const Checkout = () => {
   });
   const [shippingCost, setShippingCost] = useState(0);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [cartItems, setCartItems] = useState([]);
-
-  const { backendUrl } = useContext(AppContext);
+  const [couponData, setCouponData] = useState({
+    applied: false,
+    code: "",
+    discountValue: 0,
+    freeShipping: false,
+    error: "",
+  });
 
   /*-------------------------------------------------
         fetch cart items
@@ -64,14 +73,69 @@ const Checkout = () => {
     }
   };
 
+  /*-------------------------------------------------
+        apply coupon code
+  --------------------------------------------------- */
+  const handleApplyCoupon = async (e) => {
+    e.preventDefault();
+    if (!couponData.code) return;
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/customer/coupons/apply`,
+        {
+          code: couponData.code,
+        }
+      );
+      setCouponData((prev) => ({
+        ...prev,
+        applied: true,
+        discountValue: data.data.discountValue,
+        freeShipping: data.data.freeShipping,
+        error: "",
+      }));
+    } catch (error) {
+      setCouponData((prev) => ({
+        ...prev,
+        discountValue: 0,
+        freeShipping: false,
+        error:
+          error?.response?.data?.message ||
+          "Something went wrong. Please try again later.",
+      }));
+      console.error(error);
+    }
+  };
+
+  /*-------------------------------------------------
+        cancel coupon code
+  --------------------------------------------------- */
+  const handelCancelCoupon = () => {
+    setCouponData((prev) => ({
+      ...prev,
+      applied: false,
+      code: "",
+      discountValue: 0,
+      freeShipping: false,
+      error: "",
+    }));
+  };
+
   useEffect(() => {
     fetchCartItems();
   }, []);
 
   useEffect(() => {
-    if (!shippingData.district) return setShippingCost(0);
+    if (!shippingData.district || couponData.freeShipping)
+      return setShippingCost(0);
     getShippingCost(shippingData.district);
-  }, [shippingData.district]);
+  }, [shippingData.district, couponData.freeShipping]);
+
+  useEffect(() => {
+    // reset shipping cost if free shipping applied
+    if (couponData.freeShipping) {
+      setShippingCost(0);
+    }
+  }, [couponData.freeShipping]);
 
   /*-------------------------------------------------
          render content
@@ -92,10 +156,18 @@ const Checkout = () => {
 
         <Col md={5}>
           <OrderSummary
-            total={calculateTotal(cartItems) + Number(shippingCost)}
+            total={
+              calculateTotal(cartItems) +
+              Number(shippingCost) -
+              Number(couponData.discountValue)
+            }
             loading={loading}
             shippingCost={shippingCost}
             setShippingCost={setShippingCost}
+            couponData={couponData}
+            setCouponData={setCouponData}
+            handleApplyCoupon={handleApplyCoupon}
+            handelCancelCoupon={handelCancelCoupon}
           />
         </Col>
       </Row>

@@ -2,17 +2,15 @@ import { Card, Button, Form, Row, Col } from "react-bootstrap";
 import Loader from "../Loader";
 import { useState } from "react";
 
-function OrderSummary({ total, loading, shippingCost, setShippingCost }) {
-  const [couponCode, setCouponCode] = useState("");
-
-  /*-------------------------------------------------
-        handle apply coupon
-  --------------------------------------------------- */
-  const handelApplyCoupon = (e) => {
-    e.preventDefault();
-    console.log("Apply coupon code:", couponCode);
-  };
-
+function OrderSummary({
+  total,
+  loading,
+  shippingCost,
+  couponData,
+  setCouponData,
+  handleApplyCoupon,
+  handelCancelCoupon,
+}) {
   /*-------------------------------------------------
         render content
   --------------------------------------------------- */
@@ -21,34 +19,64 @@ function OrderSummary({ total, loading, shippingCost, setShippingCost }) {
 
     return (
       <>
-        <Form onSubmit={handelApplyCoupon}>
+        {/* ----------------------------------------------
+            Coupon code apply section
+      -------------------------------------------------- */}
+        <Form onSubmit={handleApplyCoupon}>
           <Row className="mb-3">
             <Col xs="auto" className="my-auto">
               <Form.Control
                 type="text"
+                value={couponData.code}
                 placeholder="Enter coupon code"
-                onChange={(e) => setCouponCode(e.target.value)}
+                disabled={couponData.applied}
+                onChange={(e) =>
+                  setCouponData((prev) => ({
+                    ...prev,
+                    code: e.target.value,
+                  }))
+                }
               />
             </Col>
             <Col className="text-end my-auto">
-              <Button
-                size="sm"
-                type="submit"
-                variant="none"
-                className="btn_main_light_outline"
-              >
-                Apply
-              </Button>
+              {couponData.applied ? (
+                <Button
+                  type="button"
+                  onClick={handelCancelCoupon}
+                  size="sm"
+                  variant="none"
+                  className="btn_main_light_outline"
+                >
+                  Cancel Coupon
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="none"
+                  className="btn_main_light_outline"
+                >
+                  Apply
+                </Button>
+              )}
             </Col>
+            {couponData.error && (
+              <span className="text-danger fw-medium">{couponData.error}</span>
+            )}
           </Row>
         </Form>
-        {/* <span className="text-danger mb-3 text-center">Coupon code not match</span> */}
 
+        {/* --------------------------------------------------------
+              Shipping Cost, Total Amount
+        ------------------------------------------------------------ */}
         <Row className="mb-3">
           <Col>Shipping Cost</Col>
           <Col className="text-end">
-            <span className="fw-bold">Rs. {shippingCost}</span>
-            {/* <span className="fw-bold text-success">Free Shipping</span> */}
+            {couponData.freeShipping ? (
+              <span className="fw-medium text-success">Free Shipping</span>
+            ) : (
+              <span className="fw-bold">Rs. {shippingCost}</span>
+            )}
           </Col>
         </Row>
 
