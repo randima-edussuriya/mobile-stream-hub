@@ -1,6 +1,5 @@
-import { Card, Button, Form, Row, Col } from "react-bootstrap";
+import { Card, Button, Form, Row, Col, Container } from "react-bootstrap";
 import Loader from "../Loader";
-import { useState } from "react";
 
 function OrderSummary({
   total,
@@ -10,6 +9,8 @@ function OrderSummary({
   setCouponData,
   handleApplyCoupon,
   handelCancelCoupon,
+  handlePlaceOrder,
+  setPaymentMethod,
 }) {
   /*-------------------------------------------------
         render content
@@ -65,6 +66,16 @@ function OrderSummary({
             )}
           </Row>
         </Form>
+        {couponData.discountValue > 0 && (
+          <Row className="mb-3">
+            <Col>Coupon Discount</Col>
+            <Col className="text-end">
+              <span className="fw-bold text-success">
+                - Rs. {couponData.discountValue}
+              </span>
+            </Col>
+          </Row>
+        )}
 
         {/* --------------------------------------------------------
               Shipping Cost, Total Amount
@@ -87,7 +98,46 @@ function OrderSummary({
           </Col>
         </Row>
 
-        <Button variant="dark">Place Order</Button>
+        {/* --------------------------------------------------------
+              Payment Method Selection
+        ------------------------------------------------------------ */}
+        <h6 className="fw-bold">Payment Method</h6>
+        <Row className="mb-3 mx-auto">
+          <Col xs="auto">
+            <Form.Check
+              name="paymentMethod"
+              id="payment_online"
+              type="radio"
+              value="online"
+              label="Online"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+          </Col>
+          <Col xs="auto">
+            <Form.Check
+              name="paymentMethod"
+              id="payment_cod"
+              type="radio"
+              value="cod"
+              label="Cash on Delivery (COD)"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+          </Col>
+          <Col xs="auto">
+            <Form.Check
+              name="paymentMethod"
+              id="payment_pickup"
+              type="radio"
+              value="pickup"
+              label="Pickup"
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+          </Col>
+        </Row>
+
+        <Button onClick={handlePlaceOrder} variant="dark">
+          Place Order
+        </Button>
       </>
     );
   };

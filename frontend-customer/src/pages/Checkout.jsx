@@ -7,7 +7,7 @@ import { calculateTotal } from "../utils/cartCalculation";
 import OrderSummary from "../components/checkout/OrderSummary";
 import OrderItemTable from "../components/checkout/OrderItemTable";
 import ShippingDetails from "../components/checkout/ShippingDetails";
-import { use } from "react";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
   const [loading, setLoading] = useState(false);
@@ -34,6 +34,8 @@ const Checkout = () => {
     freeShipping: false,
     error: "",
   });
+
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   /*-------------------------------------------------
         fetch cart items
@@ -120,6 +122,26 @@ const Checkout = () => {
     }));
   };
 
+  /*-------------------------------------------------
+        handle place order
+  --------------------------------------------------- */
+  const handlePlaceOrder = () => {
+    try {
+      const { data } = axios.post(`${backendUrl}/api/customer/orders`, {
+        ...shippingData,
+        couponCode: couponData.applied ? couponData.code : null,
+        paymentMethod,
+      });
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchCartItems();
   }, []);
@@ -168,6 +190,8 @@ const Checkout = () => {
             setCouponData={setCouponData}
             handleApplyCoupon={handleApplyCoupon}
             handelCancelCoupon={handelCancelCoupon}
+            handlePlaceOrder={handlePlaceOrder}
+            setPaymentMethod={setPaymentMethod}
           />
         </Col>
       </Row>
