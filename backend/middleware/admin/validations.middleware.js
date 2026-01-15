@@ -325,8 +325,7 @@ export const validateUpdateItem = (req, res, next) => {
   item.itemId = itemId;
 
   // validate string fields
-  const stringFields = ["name", "brand", "description"];
-  for (const field of stringFields) {
+  for (const field of ["name", "brand", "description"]) {
     if (typeof item[field] !== "string" || item[field].trim() === "") {
       return res.status(400).json({
         success: false,
@@ -348,7 +347,7 @@ export const validateUpdateItem = (req, res, next) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: `${key} is required.`,
+        message: `Missing value for ${key}`,
       });
     }
 
@@ -363,5 +362,56 @@ export const validateUpdateItem = (req, res, next) => {
     item[key] = numValue;
   }
   req.body.itemData = item;
+  // next();
+};
+
+export const validateCreateCoupon = (req, res, next) => {
+  const {
+    code,
+    discountType,
+    discountValue,
+    expiryDate,
+    usageLimit,
+    userGroup,
+  } = req.body;
+
+  // validate string fields
+  for (const [key, value] of Object.entries({
+    code,
+    discountType,
+    expiryDate,
+    userGroup,
+  })) {
+    if (typeof value !== "string" || value.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: `Missing or invalid value for field: ${key}`,
+      });
+    }
+    req.body[key] = value.trim();
+  }
+
+  // validate numeric fields
+  for (const [key, value] of Object.entries({ discountValue, usageLimit })) {
+    if (
+      value === undefined ||
+      value === null ||
+      (typeof value === "string" && value.trim() === "")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing value for field: ${key}`,
+      });
+    }
+
+    const numValue = Number(value);
+    if (Number.isNaN(numValue) || numValue < 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid value for field: ${key}`,
+      });
+    }
+    req.body[key] = numValue;
+  }
   next();
 };
