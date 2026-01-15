@@ -282,3 +282,17 @@ export const validateGetDeliveryCost = (req, res, next) => {
   req.query.district = district.trim();
   next();
 };
+
+export const validateApplyCoupon = (req, res, next) => {
+  const { code } = req.body;
+
+  // validate missing code
+  if (typeof code !== "string" || code.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Missing or invalid value for field: code",
+    });
+  }
+  req.body.code = code.trim();
+  next();
+};
