@@ -18,6 +18,13 @@ export const applyCoupon = async (req, res) => {
 
     const coupon = rows[0];
 
+    // check coupon code
+    if (coupon.coupon_code !== code) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Coupon code not found" });
+    }
+
     // check coupon expiry
     if (new Date(coupon.expiry_date) < new Date()) {
       return res
