@@ -11,6 +11,16 @@ export const createCoupon = async (req, res) => {
       userGroup,
     } = req.body;
     const { userId } = req.user;
+
+    // check if coupon code already exists
+    const checkSql = "SELECT 1 FROM coupon_code WHERE coupon_code=? LIMIT 1";
+    const [existingRows] = await dbPool.query(checkSql, [code]);
+    if (existingRows.length > 0) {
+      return res
+        .status(409)
+        .json({ success: false, message: "Coupon code already exists" });
+    }
+
     const insertSql = `INSERT INTO coupon_code 
                 (coupon_code, discount_type, discount_value, expiry_date, usage_limit, user_group, staff_id)
                 VALUES (?,?,?,?,?,?,?)`;
