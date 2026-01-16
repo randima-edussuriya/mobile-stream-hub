@@ -102,38 +102,35 @@ function OrderSummary({
               Payment Method Selection
         ------------------------------------------------------------ */}
         <h6 className="fw-bold">Payment Method</h6>
-        <Row className="mb-3 mx-auto">
-          <Col xs="auto">
-            <Form.Check
-              name="paymentMethod"
-              id="payment_online"
-              type="radio"
-              value="online"
-              label="Online"
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-          </Col>
-          <Col xs="auto">
-            <Form.Check
-              name="paymentMethod"
-              id="payment_cod"
-              type="radio"
-              value="cod"
-              label="Cash on Delivery (COD)"
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-          </Col>
-          <Col xs="auto">
-            <Form.Check
-              name="paymentMethod"
-              id="payment_pickup"
-              type="radio"
-              value="pickup"
-              label="Pickup"
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-          </Col>
-        </Row>
+        <div className="mx-auto mb-3">
+          <Form.Check
+            name="paymentMethod"
+            id="payment_online"
+            type="radio"
+            value="online"
+            label="Online"
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            inline
+          />
+          <Form.Check
+            name="paymentMethod"
+            id="payment_cod"
+            type="radio"
+            value="cod"
+            label="Cash on Delivery (COD)"
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            inline
+          />
+          <Form.Check
+            name="paymentMethod"
+            id="payment_pickup"
+            type="radio"
+            value="pickup"
+            label="Pickup"
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            inline
+          />
+        </div>
 
         <Button onClick={handlePlaceOrder} variant="dark">
           Place Order
