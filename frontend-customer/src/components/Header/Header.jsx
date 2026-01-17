@@ -176,8 +176,11 @@ function Header() {
                   <i className="bi bi-person-circle navbar_icon"></i>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu-end">
-                  <Dropdown.Item onClick={() => navigate("/profile")}>
+                  <Dropdown.Item as={Link} to="/profile">
                     My Profle
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/my-orders">
+                    My Orders
                   </Dropdown.Item>
                   <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>

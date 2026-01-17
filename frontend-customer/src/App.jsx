@@ -17,6 +17,7 @@ import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
 import ResetPassword from "./pages/ResetPasswordFlow";
 import Checkout from "./pages/Checkout";
+import MyOrders from "./pages/MyOrders";
 
 const Layout = () => {
   return (
@@ -89,7 +90,19 @@ function App() {
         },
         {
           path: "checkout",
-          element: <Checkout />,
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <Checkout />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "my-orders",
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <MyOrders />
+            </PrivateRoute>
+          ),
         },
         {
           path: "coming-soon",
