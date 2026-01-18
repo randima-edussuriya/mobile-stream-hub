@@ -53,7 +53,7 @@ export const login = async (req, res) => {
 
     //check user exist
     const sql = `
-            SELECT customer_id, password, is_active FROM customer
+            SELECT customer_id, email, password, is_active FROM customer
             WHERE email=? LIMIT 1;
         `;
     const [user] = await dbPool.query(sql, [email]);
@@ -77,7 +77,7 @@ export const login = async (req, res) => {
 
     //create jwt
     const token = jwt.sign(
-      { userId: user[0].customer_id },
+      { userId: user[0].customer_id, email: user[0].email },
       process.env.JWT_SECRET,
       { expiresIn: "8h" }
     );
