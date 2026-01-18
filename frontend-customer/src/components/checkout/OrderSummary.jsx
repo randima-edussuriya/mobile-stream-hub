@@ -25,7 +25,7 @@ function OrderSummary({
       -------------------------------------------------- */}
         <Form onSubmit={handleApplyCoupon}>
           <Row className="mb-3">
-            <Col xs="auto" className="my-auto">
+            <Col className="my-auto">
               <Form.Control
                 type="text"
                 value={couponData.code}
@@ -39,7 +39,7 @@ function OrderSummary({
                 }
               />
             </Col>
-            <Col className="text-end my-auto">
+            <Col xs="auto" className="text-end my-auto">
               {couponData.applied ? (
                 <Button
                   type="button"
@@ -55,6 +55,7 @@ function OrderSummary({
                   type="submit"
                   size="sm"
                   variant="none"
+                  disabled={!couponData.code.trim()}
                   className="btn_main_light_outline"
                 >
                   Apply
