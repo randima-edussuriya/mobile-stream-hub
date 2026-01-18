@@ -5,7 +5,11 @@ import {
   placeOrder,
   getDeliveryCost,
 } from "../../controllers/customer/order.controller.js";
-import { validateGetDeliveryCost } from "../../middleware/customer/validations.middleware.js";
+import {
+  validateGetDeliveryCost,
+  validatePlaceOrder,
+} from "../../middleware/customer/validations.middleware.js";
+import { authenticateUser } from "../../middleware/customer/auth.middleware.js";
 
 const router = express.Router();
 
@@ -14,6 +18,6 @@ const router = express.Router();
 router.get("/", getCustomerOrders);
 router.get("/delivery-cost", validateGetDeliveryCost, getDeliveryCost);
 router.get("/:id", getCustomerOrder);
-router.post("/", placeOrder);
+router.post("/", authenticateUser, validatePlaceOrder, placeOrder);
 
 export default router;

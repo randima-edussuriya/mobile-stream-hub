@@ -296,3 +296,40 @@ export const validateApplyCoupon = (req, res, next) => {
   req.body.code = code.trim();
   next();
 };
+
+export const validatePlaceOrder = (req, res, next) => {
+  // divide required and optional fields
+  const { couponCode, ...requiredFields } = req.body;
+
+  // validate required fields
+  for (const [key, value] of Object.entries(requiredFields)) {
+    if (typeof value !== "string" || value.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: `Missing or invalid value for field: ${key}`,
+      });
+    }
+    req.body[key] = value.trim();
+  }
+
+  // validate optional fields
+  if (couponCode !== null) {
+    if (typeof couponCode !== "string" || couponCode.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid value for field: couponCode`,
+      });
+    }
+    req.body.couponCode = couponCode.trim();
+  }
+
+  const { paymentMethod } = req.body;
+  if (!["online", "cod", "pickup"].includes(paymentMethod)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid payment method selected",
+    });
+  }
+
+  next();
+};

@@ -8,6 +8,7 @@ import OrderSummary from "../components/checkout/OrderSummary";
 import OrderItemTable from "../components/checkout/OrderItemTable";
 import ShippingDetails from "../components/checkout/ShippingDetails";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,8 @@ const Checkout = () => {
 
   const [paymentMethod, setPaymentMethod] = useState("");
 
+  const navigate = useNavigate();
+
   /*-------------------------------------------------
         fetch cart items
   --------------------------------------------------- */
@@ -49,7 +52,7 @@ const Checkout = () => {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     } finally {
@@ -63,13 +66,13 @@ const Checkout = () => {
   const getShippingCost = async (district) => {
     try {
       const { data } = await axios.get(
-        `${backendUrl}/api/customer/orders/delivery-cost?district=${district}`
+        `${backendUrl}/api/customer/orders/delivery-cost?district=${district}`,
       );
       setShippingCost(data.data.shipping_cost);
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -86,7 +89,7 @@ const Checkout = () => {
         `${backendUrl}/api/customer/coupons/apply`,
         {
           code: couponData.code,
-        }
+        },
       );
       setCouponData((prev) => ({
         ...prev,
@@ -125,18 +128,25 @@ const Checkout = () => {
   /*-------------------------------------------------
         handle place order
   --------------------------------------------------- */
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     try {
-      const { data } = axios.post(`${backendUrl}/api/customer/orders`, {
+      const { data } = await axios.post(`${backendUrl}/api/customer/orders`, {
         ...shippingData,
         couponCode: couponData.applied ? couponData.code : null,
         paymentMethod,
       });
-      toast.success(data.message);
+
+      // redirect to payment if required
+      if (data.isPaymentRequired && data.url) {
+        window.location.replace(data.url);
+      } else {
+        toast.success(data.message);
+        navigate("/my-orders", { replace: true });
+      }
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -173,7 +183,10 @@ const Checkout = () => {
       <Row className="g-3">
         <Col md={7}>
           <ShippingDetails setShippingData={setShippingData} />
-          <OrderItemTable cartItems={cartItems} loading={loading} />
+          <OrderItemTable
+            cartItems={cartItems}
+            loading={loading}
+          />
         </Col>
 
         <Col md={5}>
