@@ -6,6 +6,11 @@ function OrderItemTable({ cartItems, loading }) {
   const renderContent = () => {
     if (loading) return <Loader />;
 
+    // handle empty cart
+    if (cartItems.length === 0) {
+      return <p className="text-danger fw-medium">Your cart is empty.</p>;
+    }
+
     return (
       <Table responsive hover size="sm" className="mb-0">
         <thead>
