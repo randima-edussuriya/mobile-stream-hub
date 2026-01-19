@@ -15,7 +15,7 @@ const Checkout = () => {
   const [error, setError] = useState("");
   const [cartItems, setCartItems] = useState([]);
 
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, fetchCartItemCount } = useContext(AppContext);
 
   const [shippingData, setShippingData] = useState({
     contactName: "",
@@ -136,6 +136,8 @@ const Checkout = () => {
         paymentMethod,
       });
 
+      fetchCartItemCount(); // Update cart count in header
+
       // redirect to payment if required
       if (data.isPaymentRequired && data.url) {
         window.location.replace(data.url);
@@ -183,10 +185,7 @@ const Checkout = () => {
       <Row className="g-3">
         <Col md={7}>
           <ShippingDetails setShippingData={setShippingData} />
-          <OrderItemTable
-            cartItems={cartItems}
-            loading={loading}
-          />
+          <OrderItemTable cartItems={cartItems} loading={loading} />
         </Col>
 
         <Col md={5}>
