@@ -61,7 +61,11 @@ export const placeOrder = async (req, res) => {
     /*----------------------------------------------------
           apply coupon if available
     ------------------------------------------------------ */
-    let couponDiscountValue = 0;
+    const couponApplied = {
+      success: false,
+      discountValue: 0,
+      couponId: null,
+    };
     if (couponCode) {
       const couponQuery =
         "SELECT * FROM coupon_code WHERE coupon_code=? AND is_active=TRUE LIMIT 1";
@@ -126,8 +130,11 @@ export const placeOrder = async (req, res) => {
         }
       }
 
+      couponApplied.success = true;
+      couponApplied.couponId = coupon.coupon_code_id;
+
       // apply coupon discount
-      couponDiscountValue = Number(coupon.discount_value);
+      couponApplied.discountValue = Number(coupon.discount_value);
 
       // apply coupon free shipping if applicable
       if (coupon.discount_type === "free shipping") {
@@ -138,10 +145,11 @@ export const placeOrder = async (req, res) => {
     /*----------------------------------------------------
           finalize order total
     ------------------------------------------------------ */
-    const orderTotal = cartItemTotal + shippingCost - couponDiscountValue;
+    const orderTotal =
+      cartItemTotal + shippingCost - couponApplied.discountValue;
 
     /*----------------------------------------------------------
-          insert order, order items, shipping details records
+          insert order related records in the database
     ------------------------------------------------------------ */
     const insertOrderSql =
       "INSERT INTO order_table (total, payment_method, customer_id) VALUES (?, ?, ?)";
@@ -179,6 +187,31 @@ export const placeOrder = async (req, res) => {
       orderId,
     ]);
 
+    // insert payment record with pending status
+    const insertPaymentSql =
+      "INSERT INTO payment (amount, service_type, order_id) VALUES (?, 'order', ?);";
+    await dbPool.query(insertPaymentSql, [orderTotal, orderId]);
+
+    // handle coupon usage record and update used count if coupon applied
+    if (couponApplied.success) {
+      const insertUsageSql =
+        "INSERT INTO coupon_usage (coupon_code_id, order_id, customer_id) VALUES (?, ?, ?)";
+      await dbPool.query(insertUsageSql, [
+        couponApplied.couponId,
+        orderId,
+        userId,
+      ]);
+
+      // update coupon used count
+      const updateCouponSql =
+        "UPDATE coupon_code SET used_count = used_count + 1 WHERE coupon_code_id=?";
+      await dbPool.query(updateCouponSql, [couponApplied.couponId]);
+    }
+
+    // clear user cart
+    const clearCartSql = "DELETE FROM cart_item WHERE customer_id=?";
+    await dbPool.query(clearCartSql, [userId]);
+
     /*----------------------------------------------------
           handle payment method cod, pickup
     ------------------------------------------------------ */
@@ -215,9 +248,9 @@ export const placeOrder = async (req, res) => {
 
       // create coupon in stripe if applicable
       let coupon = null;
-      if (couponCode && couponDiscountValue > 0) {
+      if (couponApplied.success && couponApplied.discountValue > 0) {
         coupon = await stripeInstance.coupons.create({
-          amount_off: Math.round(couponDiscountValue * 100), // in cents
+          amount_off: Math.round(couponApplied.discountValue * 100), // in cents
           currency: "lkr",
           duration: "once",
         });
