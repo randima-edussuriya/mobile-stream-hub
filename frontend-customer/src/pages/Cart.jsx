@@ -32,7 +32,7 @@ const Cart = () => {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     } finally {
@@ -48,8 +48,8 @@ const Cart = () => {
       prev.map((cartItem) =>
         cartItem.cart_item_id === cartItemId
           ? { ...cartItem, item_quantity: Number(newQuantity) }
-          : cartItem
-      )
+          : cartItem,
+      ),
     );
     setIsUpdated(true);
   };
@@ -73,7 +73,7 @@ const Cart = () => {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
