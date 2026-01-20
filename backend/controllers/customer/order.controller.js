@@ -1,8 +1,86 @@
 import dbPool from "../../config/dbConnection.js";
 import stripe from "stripe";
 
-export const getCustomerOrders = async (req, res) => {};
-export const getCustomerOrder = async (req, res) => {};
+// Get all orders for a customer
+export const getCustomerOrders = async (req, res) => {
+  try {
+    const { userId } = req.user;
+
+    const sql = "SELECT * FROM order_table WHERE customer_id=?";
+
+    const [orders] = await dbPool.query(sql, [userId]);
+
+    return res.status(200).json({
+      success: true,
+      data: orders,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+// Get single order by ID
+export const getCustomerOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { userId } = req.user;
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID is required",
+      });
+    }
+
+    // Get order details
+    const orderSql = `
+      SELECT ot.*, d.*, p.payment_date as payment_date, p.status as payment_status
+      FROM order_table ot
+      INNER JOIN delivering d ON d.order_id=ot.order_id
+      INNER JOIN payment p ON p.order_id=ot.order_id
+      WHERE ot.order_id=? LIMIT 1;
+    `;
+
+    const [orderRows] = await dbPool.query(orderSql, [orderId]);
+
+    if (orderRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    const order = orderRows[0];
+
+    // Get order items
+    const itemsSql = `
+      SELECT i.item_id, i.name, oi.item_price, oi.item_quantity, oi.discount
+      FROM order_item oi
+      INNER JOIN item i ON oi.item_id=i.item_id
+      WHERE oi.order_id=?;
+    `;
+
+    const [items] = await dbPool.query(itemsSql, [orderId]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        ...order,
+        items,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
 
 export const placeOrder = async (req, res) => {
   try {
@@ -143,10 +221,86 @@ export const placeOrder = async (req, res) => {
     }
 
     /*----------------------------------------------------
+          Apply loyalty Program
+    ------------------------------------------------------ */
+    // get loyalty settings
+    const [loyaltySettingsRows] = await dbPool.query(`
+                        SELECT setting_name, setting_value FROM loyalty_setting
+                        WHERE setting_name IN (
+                            'earning_points_ratio',
+                            'redeem_points_value',
+                            'max_redemption_percentage',
+                            'min_redeem_threshold',
+                            'silver_points_threshold',
+                            'gold_points_threshold',
+                            'platinum_points_threshold'
+                        )`);
+
+    // create settings object
+    const loyaltySettings = {};
+    for (const row of loyaltySettingsRows) {
+      loyaltySettings[row.setting_name] = Number(row.setting_value);
+    }
+
+    const requiredSettings = [
+      "earning_points_ratio",
+      "redeem_points_value",
+      "max_redemption_percentage",
+      "min_redeem_threshold",
+      "silver_points_threshold",
+      "gold_points_threshold",
+      "platinum_points_threshold",
+    ];
+
+    // validate if all required settings are present
+    for (const key of requiredSettings) {
+      if (loyaltySettings[key] === undefined) {
+        return res.status(500).json({
+          success: false,
+          message:
+            "Loyalty program settings are misconfigured. Please contact support.",
+        });
+      }
+    }
+
+    // get customer's loyalty points
+    const [loyaltyPointsRows] = await dbPool.query(
+      "SELECT total_points, current_points FROM loyalty_program WHERE customer_id=? LIMIT 1",
+      [userId],
+    );
+    const userLoyaltyInfo = {
+      totalPoints: Number(loyaltyPointsRows[0]?.total_points || 0),
+      currentPoints: Number(loyaltyPointsRows[0]?.current_points || 0),
+    };
+
+    // calculate loyalty discount if applicable
+    let pointsToRedeem = 0;
+    let loyaltyDiscountAmount = 0;
+    if (
+      userLoyaltyInfo.currentPoints > 0 &&
+      userLoyaltyInfo.currentPoints >= loyaltySettings.min_redeem_threshold
+    ) {
+      const maxRedeemableAmount =
+        (cartItemTotal * loyaltySettings.max_redemption_percentage) / 100;
+      const maxRedeemablePoints =
+        maxRedeemableAmount / loyaltySettings.redeem_points_value;
+      pointsToRedeem =
+        Math.min(
+          userLoyaltyInfo.currentPoints,
+          Math.floor(maxRedeemablePoints),
+        ) || 0;
+      loyaltyDiscountAmount =
+        pointsToRedeem * loyaltySettings.redeem_points_value || 0;
+    }
+
+    /*----------------------------------------------------
           finalize order total
     ------------------------------------------------------ */
     const orderTotal =
-      cartItemTotal + shippingCost - couponApplied.discountValue;
+      cartItemTotal +
+      shippingCost -
+      couponApplied.discountValue -
+      loyaltyDiscountAmount;
 
     /*----------------------------------------------------------
           insert order related records in the database
@@ -175,12 +329,13 @@ export const placeOrder = async (req, res) => {
 
     // insert shipping details
     const insertShippingSql = `INSERT INTO delivering 
-                        (contact_name, street_address, province, city, zip_code, phone_number, order_id) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                        (contact_name, street_address, province, district, city, zip_code, phone_number, order_id) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
     await dbPool.query(insertShippingSql, [
       contactName,
       streetAddress,
       province,
+      district,
       city,
       zipCode,
       phoneNumber,
@@ -192,6 +347,9 @@ export const placeOrder = async (req, res) => {
       "INSERT INTO payment (amount, service_type, order_id) VALUES (?, 'order', ?);";
     await dbPool.query(insertPaymentSql, [orderTotal, orderId]);
 
+    /*----------------------------------------------------------
+          insert coupon related records in the database
+    ------------------------------------------------------------ */
     // handle coupon usage record and update used count if coupon applied
     if (couponApplied.success) {
       const insertUsageSql =
@@ -208,7 +366,77 @@ export const placeOrder = async (req, res) => {
       await dbPool.query(updateCouponSql, [couponApplied.couponId]);
     }
 
-    // clear user cart
+    /*----------------------------------------------------------
+          insert loyalty related records in the database
+    ------------------------------------------------------------ */
+    // deduct loyalty points if applicable
+    if (pointsToRedeem > 0) {
+      const updateLoyaltySql = `
+                          UPDATE loyalty_program SET
+                          points_redeemed=points_redeemed+?,
+                          current_points=current_points-?
+                          WHERE customer_id=?`;
+      await dbPool.query(updateLoyaltySql, [
+        pointsToRedeem,
+        pointsToRedeem,
+        userId,
+      ]);
+    }
+
+    // insert earned loyalty points if applicable
+    const pointsEarned =
+      Math.floor(orderTotal / loyaltySettings.earning_points_ratio) || 0;
+    if (pointsEarned > 0) {
+      const userNewTotalPoints = userLoyaltyInfo.totalPoints + pointsEarned;
+      // determine badge
+      let newBadge = null;
+      if (
+        userNewTotalPoints >= loyaltySettings.platinum_points_threshold ||
+        pointsEarned >= loyaltySettings.platinum_points_threshold
+      ) {
+        newBadge = "platinum";
+      } else if (
+        userNewTotalPoints >= loyaltySettings.gold_points_threshold ||
+        pointsEarned >= loyaltySettings.gold_points_threshold
+      ) {
+        newBadge = "gold";
+      } else if (
+        userNewTotalPoints >= loyaltySettings.silver_points_threshold ||
+        pointsEarned >= loyaltySettings.silver_points_threshold
+      ) {
+        newBadge = "silver";
+      }
+
+      if (userLoyaltyInfo.totalPoints === 0) {
+        // insert new loyalty program record
+        const insertLoyaltySql = `
+                      INSERT INTO loyalty_program (total_points, current_points, customer_id) 
+                      VALUES (?, ?, ?)`;
+        await dbPool.query(insertLoyaltySql, [
+          pointsEarned,
+          pointsEarned,
+          userId,
+        ]);
+      } else {
+        // update existing loyalty program record
+        const updateLoyaltySql = `
+                          UPDATE loyalty_program SET
+                          total_points=?, 
+                          current_points=current_points+?,
+                          badge=?
+                          WHERE customer_id=?`;
+        await dbPool.query(updateLoyaltySql, [
+          userNewTotalPoints,
+          pointsEarned,
+          newBadge,
+          userId,
+        ]);
+      }
+    }
+
+    /*----------------------------------------------------
+          clear user cart
+    ------------------------------------------------------ */
     const clearCartSql = "DELETE FROM cart_item WHERE customer_id=?";
     await dbPool.query(clearCartSql, [userId]);
 
@@ -230,36 +458,23 @@ export const placeOrder = async (req, res) => {
     if (paymentMethod === "online") {
       const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
 
-      const line_items = cartItems.map((item) => {
-        const itemDiscountedPrice =
-          Number(item.sell_price) -
-          (Number(item.sell_price) * Number(item.discount)) / 100;
-        return {
+      const line_items = [
+        {
           price_data: {
             currency: "lkr",
             product_data: {
-              name: item.name,
+              name: `User Order #${orderId}`,
             },
-            unit_amount: Math.round(itemDiscountedPrice * 100), // in cents
+            unit_amount: Math.round((orderTotal - shippingCost) * 100), // in cents
           },
-          quantity: item.item_quantity,
-        };
-      });
+          quantity: 1,
+        },
+      ];
 
-      // create coupon in stripe if applicable
-      let coupon = null;
-      if (couponApplied.success && couponApplied.discountValue > 0) {
-        coupon = await stripeInstance.coupons.create({
-          amount_off: Math.round(couponApplied.discountValue * 100), // in cents
-          currency: "lkr",
-          duration: "once",
-        });
-      }
       // create session
       const session = await stripeInstance.checkout.sessions.create({
         line_items,
         mode: "payment",
-        discounts: coupon ? [{ coupon: coupon.id }] : [],
         shipping_options: [
           {
             shipping_rate_data: {
@@ -321,7 +536,7 @@ export const getDeliveryCost = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: rows[0],
     });

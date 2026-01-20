@@ -17,7 +17,8 @@ import ContactUs from "./pages/ContactUs";
 import AboutUs from "./pages/AboutUs";
 import ResetPassword from "./pages/ResetPasswordFlow";
 import Checkout from "./pages/Checkout";
-import MyOrders from "./pages/MyOrders";
+import MyOrders from "./pages/orders/MyOrders";
+import OrderDetails from "./pages/orders/OrderDetails";
 
 const Layout = () => {
   return (
@@ -101,6 +102,14 @@ function App() {
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
               <MyOrders />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "my-orders/:orderId",
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <OrderDetails />
             </PrivateRoute>
           ),
         },

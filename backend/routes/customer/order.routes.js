@@ -15,9 +15,9 @@ const router = express.Router();
 
 // base: /api/customer/orders
 
-router.get("/", getCustomerOrders);
 router.get("/delivery-cost", validateGetDeliveryCost, getDeliveryCost);
-router.get("/:id", getCustomerOrder);
 router.post("/", authenticateUser, validatePlaceOrder, placeOrder);
+router.get("/", authenticateUser, getCustomerOrders);
+router.get("/:orderId", authenticateUser, getCustomerOrder);
 
 export default router;
