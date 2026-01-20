@@ -82,6 +82,94 @@ export const getCustomerOrder = async (req, res) => {
   }
 };
 
+export const cancelCustomerOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+    const { userId } = req.user;
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID is required",
+      });
+    }
+
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Cancellation reason is required",
+      });
+    }
+
+    const [orderRows] = await dbPool.query(
+      "SELECT status, payment_method FROM order_table WHERE order_id = ? LIMIT 1",
+      [orderId],
+    );
+
+    if (orderRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    const order = orderRows[0];
+
+    if (order.status !== "pending") {
+      return res.status(400).json({
+        success: false,
+        message: "Only pending orders can be cancelled",
+      });
+    }
+
+    if (order.payment_method === "online") {
+      return res.status(400).json({
+        success: false,
+        message: "Online payment orders cannot be cancelled here",
+      });
+    }
+
+    //  Insert cancellation record
+    await dbPool.query(
+      `INSERT INTO cancellation (reason, status, user_type, order_id, customer_id)
+         VALUES (?, 'cancelled', 'customer', ?, ?)`,
+      [reason.trim(), orderId, userId],
+    );
+
+    // Update order status to cancelled
+    await dbPool.query(
+      "UPDATE order_table SET status = 'cancelled' WHERE order_id = ?",
+      [orderId],
+    );
+
+    // Get order items to restore stock
+    const [orderItemsRows] = await dbPool.query(
+      "SELECT item_id, item_quantity FROM order_item WHERE order_id = ?",
+      [orderId],
+    );
+
+    // Restore stock for each item
+    for (const item of orderItemsRows) {
+      await dbPool.query(
+        "UPDATE item SET stock_quantity = stock_quantity + ? WHERE item_id = ?",
+        [item.item_quantity, item.item_id],
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Order cancelled successfully and stock restored",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const placeOrder = async (req, res) => {
   try {
     const {

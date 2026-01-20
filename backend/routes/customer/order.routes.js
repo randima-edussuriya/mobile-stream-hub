@@ -4,6 +4,7 @@ import {
   getCustomerOrders,
   placeOrder,
   getDeliveryCost,
+  cancelCustomerOrder,
 } from "../../controllers/customer/order.controller.js";
 import {
   validateGetDeliveryCost,
@@ -19,5 +20,6 @@ router.get("/delivery-cost", validateGetDeliveryCost, getDeliveryCost);
 router.post("/", authenticateUser, validatePlaceOrder, placeOrder);
 router.get("/", authenticateUser, getCustomerOrders);
 router.get("/:orderId", authenticateUser, getCustomerOrder);
+router.put("/:orderId/cancel", authenticateUser, cancelCustomerOrder);
 
 export default router;

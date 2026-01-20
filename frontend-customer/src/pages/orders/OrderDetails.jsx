@@ -9,16 +9,19 @@ import {
   Table,
   Badge,
   Button,
+  Form,
 } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import ErrorProvider from "../../components/ErrorProvider";
 import Loader from "../../components/Loader";
 import dayjs from "dayjs";
+import { confirmAction } from "../../utils/confirmAction";
 
 const OrderDetails = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [orderData, setOrderData] = useState(null);
+  const [cancelReason, setCancelReason] = useState("");
 
   const { backendUrl } = useContext(AppContext);
   const { orderId } = useParams();
@@ -76,9 +79,32 @@ const OrderDetails = () => {
     if (error) return <ErrorProvider errorMessage={error} />;
     if (!orderData) return null;
 
+    const isPending = orderData.status === "pending";
+    const isOnlinePayment = orderData.payment_method === "online";
+
+    const handleCancel = async () => {
+      const result = await confirmAction();
+      if (!result.isConfirmed) return;
+      try {
+        setError("");
+        await axios.put(`${backendUrl}/api/customer/orders/${orderId}/cancel`, {
+          reason: cancelReason.trim(),
+        });
+        fetchOrderDetails();
+      } catch (err) {
+        setError(
+          err?.response?.data?.message ||
+            "Something went wrong. Please try again later.",
+        );
+        console.error(err);
+      }
+    };
+
     return (
       <Row className="g-3">
-        {/* Order Summary */}
+        {/* --------------------------------------
+              Order Summary
+        ------------------------------------------ */}
         <Col md={12}>
           <Card>
             <Card.Header className="bg-light d-flex justify-content-between align-items-center">
@@ -129,7 +155,9 @@ const OrderDetails = () => {
           </Card>
         </Col>
 
-        {/* Delivery Information */}
+        {/* --------------------------------------
+              Delivery Information
+        ------------------------------------------ */}
         <Col md={12}>
           <Card>
             <Card.Header className="bg-light">
@@ -165,7 +193,9 @@ const OrderDetails = () => {
           </Card>
         </Col>
 
-        {/* Order Items */}
+        {/* --------------------------------------
+              Order Items
+        ------------------------------------------ */}
         <Col md={12}>
           <Card>
             <Card.Header className="bg-light">
@@ -203,16 +233,56 @@ const OrderDetails = () => {
           </Card>
         </Col>
 
-        {/* Back Button */}
-        <Col md={12}>
-          <Button
-            variant="none"
-            className="btn_main_dark"
-            onClick={() => navigate("/my-orders")}
-          >
-            Back to Orders
-          </Button>
-        </Col>
+        {/* --------------------------------------
+              Order cancellation
+        ------------------------------------------ */}
+        {orderData.status !== "cancelled" && (
+          <Col md={12}>
+            <Card>
+              <Card.Header className="bg-danger-subtle d-flex justify-content-between align-items-center">
+                <h5 className="mb-0">Order Cancellation</h5>
+              </Card.Header>
+              <Card.Body>
+                {isOnlinePayment || !isPending ? (
+                  <>
+                    <div className="text-danger mt-1">
+                      Only pending orders can be cancelled. Online payment
+                      orders cannot be cancelled here. Please contact support
+                      for assistance.
+                    </div>
+                    <div className="text-danger mt-1">
+                      Online payment orders cannot be cancelled here. Please
+                      contact support for assistance.
+                    </div>
+                  </>
+                ) : (
+                  <Form className="d-flex flex-column gap-3">
+                    <Form.Group controlId="cancelReason">
+                      <Form.Label>Reason for cancellation</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Describe why you want to cancel this order"
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                      />
+                    </Form.Group>
+
+                    <div className="d-flex justify-content-end">
+                      <Button
+                        variant="danger"
+                        disabled={!cancelReason.trim()}
+                        onClick={handleCancel}
+                      >
+                        Cancel Order
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
       </Row>
     );
   };
@@ -222,6 +292,16 @@ const OrderDetails = () => {
       <Row className="mb-3">
         <Col>
           <h3 className="fw-semibold">Order Details</h3>
+        </Col>
+        {/* Back Button */}
+        <Col xs="auto">
+          <Button
+            variant="none"
+            className="btn_main_dark"
+            onClick={() => navigate("/my-orders")}
+          >
+            Back to Orders
+          </Button>
         </Col>
       </Row>
 
