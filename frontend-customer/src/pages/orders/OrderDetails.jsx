@@ -51,9 +51,11 @@ const OrderDetails = () => {
   --------------------------------------------------- */
   const getStatusBadge = (status) => {
     const statusMap = {
-      pending: "warning",
-      processing: "info",
-      shipped: "primary",
+      pending: "dark",
+      "packaging in progress": "secondary",
+      "ready for pickup": "primary",
+      "ready for delivery": "primary",
+      dispatched: "warning",
       delivered: "success",
       cancelled: "danger",
     };
