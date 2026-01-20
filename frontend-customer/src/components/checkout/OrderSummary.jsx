@@ -1,9 +1,10 @@
-import { Card, Button, Form, Row, Col, Container } from "react-bootstrap";
+import { Card, Button, Form, Row, Col } from "react-bootstrap";
 import Loader from "../Loader";
 
 function OrderSummary({
   total,
   loading,
+  loadingOrderSummary,
   shippingCost,
   couponData,
   setCouponData,
@@ -11,12 +12,13 @@ function OrderSummary({
   handelCancelCoupon,
   handlePlaceOrder,
   setPaymentMethod,
+  loyaltyUsage,
 }) {
   /*-------------------------------------------------
         render content
   --------------------------------------------------- */
   const renderContent = () => {
-    if (loading) return <Loader />;
+    if (loading || loadingOrderSummary) return <Loader />;
 
     return (
       <>
@@ -79,7 +81,7 @@ function OrderSummary({
         )}
 
         {/* --------------------------------------------------------
-              Shipping Cost, Total Amount
+              Shipping Cost, Loyalty Points Usage, Total
         ------------------------------------------------------------ */}
         <Row className="mb-3">
           <Col>Shipping Cost</Col>
@@ -87,10 +89,23 @@ function OrderSummary({
             {couponData.freeShipping ? (
               <span className="fw-medium text-success">Free Shipping</span>
             ) : (
-              <span className="fw-bold">Rs. {shippingCost}</span>
+              <span className="fw-bold">
+                Rs. {shippingCost.toLocaleString()}
+              </span>
             )}
           </Col>
         </Row>
+
+        {loyaltyUsage.applied && (
+          <Row className="mb-3">
+            <Col>{`Redeemed ${loyaltyUsage.pointsToRedeem} points`}</Col>
+            <Col className="text-end">
+              <span className="fw-bold text-success">
+                - Rs. {loyaltyUsage.discountAmount.toLocaleString()}
+              </span>
+            </Col>
+          </Row>
+        )}
 
         <Row className="mb-3">
           <Col>Total</Col>

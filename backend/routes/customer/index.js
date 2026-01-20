@@ -7,6 +7,7 @@ import inquiryRoutes from "./inquiry.routes.js";
 import itemRoutes from "./item.routes.js";
 import cartRoutes from "./cart.routes.js";
 import couponRoutes from "./coupon.routes.js";
+import loyaltyRoutes from "./loyalty.routes.js";
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/inquiries", inquiryRoutes);
 router.use("/items", itemRoutes);
 router.use("/cart", cartRoutes);
 router.use("/coupons", couponRoutes);
+router.use("/loyalty", loyaltyRoutes);
 
 export default router;
