@@ -6,7 +6,8 @@ export const getCustomerOrders = async (req, res) => {
   try {
     const { userId } = req.user;
 
-    const sql = "SELECT * FROM order_table WHERE customer_id=? ORDER BY order_date DESC";
+    const sql =
+      "SELECT * FROM order_table WHERE customer_id=? ORDER BY order_date DESC";
 
     const [orders] = await dbPool.query(sql, [userId]);
 
@@ -27,7 +28,6 @@ export const getCustomerOrders = async (req, res) => {
 export const getCustomerOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { userId } = req.user;
 
     if (!orderId) {
       return res.status(400).json({
