@@ -11,9 +11,9 @@ export const calculateTotal = (cartItems) => {
     return (
       total +
       calculateSubtotal(
-        cartItem.sell_price,
-        cartItem.discount,
-        cartItem.item_quantity
+        Number(cartItem.sell_price),
+        Number(cartItem.discount),
+        Number(cartItem.item_quantity),
       )
     );
   }, 0);
