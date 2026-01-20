@@ -14,6 +14,7 @@ import {
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import { confirmAction } from "../../utils/confirmAction";
 
 const OrderProfile = () => {
   const { backendUrl } = useContext(AppContext);
@@ -25,6 +26,7 @@ const OrderProfile = () => {
   const [orderData, setOrderData] = useState(null);
   const [paymentDateValue, setPaymentDateValue] = useState("");
   const [paymentTokenValue, setPaymentTokenValue] = useState("");
+  const [cancellationReason, setCancellationReason] = useState("");
 
   /*-------------------------------------------------
         fetch order details
@@ -81,6 +83,12 @@ const OrderProfile = () => {
         update order status
   --------------------------------------------------- */
   const updateOrderStatus = async (newStatus) => {
+    if (newStatus === "cancelled") {
+      toast.warning(
+        "Please use the cancellation section below to cancel the order",
+      );
+      return;
+    }
     try {
       await axios.put(`${backendUrl}/api/admin/orders/${orderId}/status`, {
         status: newStatus,
@@ -116,6 +124,33 @@ const OrderProfile = () => {
     }
   };
 
+  /*-------------------------------------------------
+        cancel order
+  --------------------------------------------------- */
+  const cancelOrder = async () => {
+    if (!cancellationReason.trim()) {
+      toast.error("Please enter a cancellation reason");
+      return;
+    }
+
+    const result = await confirmAction(
+      "Are you sure you want to cancel this order?",
+    );
+    if (!result.isConfirmed) return;
+
+    try {
+      await axios.put(`${backendUrl}/api/admin/orders/${orderId}/cancel`, {
+        reason: cancellationReason,
+      });
+      toast.success("Order cancelled successfully");
+      setCancellationReason("");
+      fetchOrderDetails();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to cancel order");
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchOrderDetails();
   }, [orderId]);
@@ -127,9 +162,10 @@ const OrderProfile = () => {
     "ready for delivery",
     "dispatched",
     "delivered",
+    "cancelled",
   ];
 
-  const paymentOptions = ["pending", "paid", "failed", "refunded"];
+  const paymentOptions = ["pending", "completed", "failed", "refunded"];
 
   /*-------------------------------------------------
         content render helpers
@@ -342,6 +378,53 @@ const OrderProfile = () => {
             </Card.Body>
           </Card>
         </Col>
+
+        {/* ------------------------------------------------
+                    Order Cancellation
+        ---------------------------------------------------- */}
+        {orderData.status !== "cancelled" && (
+          <Col md={12}>
+            <Card className="shadow-sm">
+              <Card.Header className="bg-danger-subtle fw-semibold">
+                Order Cancellation
+              </Card.Header>
+              <Card.Body>
+                <Row className="g-3 align-items-end">
+                  <Col md={9}>
+                    <Form.Group controlId="cancellationReason">
+                      <Form.Label className="fw-semibold">
+                        Reason for Cancellation
+                      </Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={2}
+                        placeholder="Enter reason for cancelling this order..."
+                        value={cancellationReason}
+                        onChange={(e) => setCancellationReason(e.target.value)}
+                        disabled={orderData.status !== "pending"}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={3}>
+                    <Button
+                      variant="danger"
+                      className="w-100"
+                      onClick={cancelOrder}
+                      disabled={orderData.status !== "pending"}
+                    >
+                      Cancel Order
+                    </Button>
+                  </Col>
+                </Row>
+                {orderData.status !== "pending" && (
+                  <div className="text-muted small mt-2">
+                    Only pending orders can be cancelled
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
       </Row>
     </Container>
   );

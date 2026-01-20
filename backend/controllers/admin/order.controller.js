@@ -181,3 +181,83 @@ export const updatePayment = async (req, res) => {
     });
   }
 };
+
+export const cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+    const { userId } = req.user;
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID is required",
+      });
+    }
+
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Cancellation reason is required",
+      });
+    }
+
+    // Check if order exists and is pending
+    const [orderRows] = await dbPool.query(
+      "SELECT status FROM order_table WHERE order_id = ?",
+      [orderId],
+    );
+
+    if (orderRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    if (orderRows[0].status !== "pending") {
+      return res.status(400).json({
+        success: false,
+        message: "Only pending orders can be cancelled",
+      });
+    }
+
+    // Insert cancellation record
+    await dbPool.query(
+      `INSERT INTO cancellation (reason, status, user_type, order_id, staff_id) 
+         VALUES (?, 'cancelled', 'staff', ?, ?)`,
+      [reason.trim(), orderId, userId],
+    );
+
+    // Update order status to cancelled
+    await dbPool.query(
+      "UPDATE order_table SET status = 'cancelled' WHERE order_id = ?",
+      [orderId],
+    );
+
+    // Get order items to restore stock
+    const [orderItemsRows] = await dbPool.query(
+      "SELECT item_id, item_quantity FROM order_item WHERE order_id = ?",
+      [orderId],
+    );
+
+    // Restore stock for each item
+    for (const item of orderItemsRows) {
+      await dbPool.query(
+        "UPDATE item SET stock_quantity = stock_quantity + ? WHERE item_id = ?",
+        [item.item_quantity, item.item_id],
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Order cancelled successfully and stock restored",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
