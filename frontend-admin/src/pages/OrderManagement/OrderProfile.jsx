@@ -139,7 +139,6 @@ const OrderProfile = () => {
     "ready for delivery",
     "dispatched",
     "delivered",
-    "cancelled",
   ];
 
   const paymentOptions = ["pending", "paid", "failed", "refunded"];
