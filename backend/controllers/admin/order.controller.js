@@ -261,3 +261,33 @@ export const cancelOrder = async (req, res) => {
     });
   }
 };
+
+export const getCancellations = async (req, res) => {
+  try {
+    const sql = `
+      SELECT 
+        cancel_id,
+        cancel_date,
+        reason,
+        status,
+        user_type,
+        order_id,
+        COALESCE(staff_id, customer_id) as user_id
+      FROM cancellation
+      ORDER BY cancel_date DESC
+    `;
+
+    const [cancellations] = await dbPool.query(sql);
+
+    return res.status(200).json({
+      success: true,
+      data: cancellations,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

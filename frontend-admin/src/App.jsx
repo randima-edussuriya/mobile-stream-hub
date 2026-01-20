@@ -29,6 +29,7 @@ import ItemManagement from "./pages/ItemManagement/ItemManagement";
 import ItemProfile from "./pages/ItemManagement/ItemProfile";
 import ItemAdd from "./pages/ItemManagement/ItemAdd";
 import OrderProfile from "./pages/OrderManagement/OrderProfile";
+import OrderCancellation from "./pages/OrderCancellation";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -243,6 +244,17 @@ function App() {
               element: <OrderProfile />,
             },
           ],
+        },
+        /*--------------------------------------------------------
+              order-cancellation routes
+        ---------------------------------------------------------- */
+        {
+          path: "order-cancellation",
+          element: (
+            <RoleRoute userData={userData} allowedRoles={["admin", "cashier"]}>
+              <OrderCancellation />
+            </RoleRoute>
+          ),
         },
         /*--------------------------------------------------------
               delivery-management routes

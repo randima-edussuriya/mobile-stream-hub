@@ -64,6 +64,15 @@ function Sidebar() {
           <i className="bi bi-border-all fs-5 me-3"></i>
           <span>Order Management</span>
         </NavLink>
+        <NavLink
+          to={"/order-cancellation"}
+          className={({ isActive }) =>
+            `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
+          }
+        >
+          <i className="bi-x-octagon fs-5 me-3"></i>
+          <span>Order Cancellation</span>
+        </NavLink>
         {/* <NavLink
           to={"/delivery-management"}
           className={({ isActive }) =>

@@ -238,7 +238,7 @@ const OrderProfile = () => {
                           onChange={(e) => {
                             updateOrderStatus(e.target.value);
                           }}
-                          disabled={loading}
+                          disabled={orderData.status === "cancelled"}
                         >
                           {statusOptions.map((status) => (
                             <option key={status} value={status}>

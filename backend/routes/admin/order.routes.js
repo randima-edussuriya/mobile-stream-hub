@@ -6,6 +6,7 @@ import {
   updatePaymentStatus,
   updatePayment,
   cancelOrder,
+  getCancellations,
 } from "../../controllers/admin/order.controller.js";
 import { authenticateUser } from "../../middleware/admin/auth.middleware.js";
 import { authorizeRoles } from "../../middleware/admin/auth.middleware.js";
@@ -48,6 +49,12 @@ router.put(
   authenticateUser,
   authorizeRoles(["admin", "cashier"]),
   cancelOrder,
+);
+router.get(
+  "/cancellations/list",
+  authenticateUser,
+  authorizeRoles(["admin", "cashier"]),
+  getCancellations,
 );
 
 export default router;
