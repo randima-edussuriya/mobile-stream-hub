@@ -8,7 +8,7 @@ import StaffManagement from "./pages/StaffManagement/StaffManagement";
 import { PrivateRoute, RoleRoute } from "./routes/authRoutes";
 import Login from "./pages/Login";
 import CustomerManagement from "./pages/CustomerManagement";
-import OrderManagement from "./pages/OrderManagement";
+import OrderManagement from "./pages/OrderManagement/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
 import ReorderManagement from "./pages/ReorderManagement";
 import DayOffManagement from "./pages/DayOffManagement";
@@ -28,6 +28,7 @@ import CategoryAdd from "./pages/CategoryManagement/CategoryAdd";
 import ItemManagement from "./pages/ItemManagement/ItemManagement";
 import ItemProfile from "./pages/ItemManagement/ItemProfile";
 import ItemAdd from "./pages/ItemManagement/ItemAdd";
+import OrderProfile from "./pages/OrderManagement/OrderProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -228,10 +229,20 @@ function App() {
         {
           path: "order-management",
           element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <OrderManagement />
+            <RoleRoute userData={userData} allowedRoles={["admin", "cashier"]}>
+              <Outlet />
             </RoleRoute>
           ),
+          children: [
+            {
+              path: "",
+              element: <OrderManagement />,
+            },
+            {
+              path: "profile/:orderId",
+              element: <OrderProfile />,
+            },
+          ],
         },
         /*--------------------------------------------------------
               delivery-management routes
