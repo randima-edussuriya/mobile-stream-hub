@@ -24,6 +24,7 @@ const OrderProfile = () => {
   const [error, setError] = useState("");
   const [orderData, setOrderData] = useState(null);
   const [paymentDateValue, setPaymentDateValue] = useState("");
+  const [paymentTokenValue, setPaymentTokenValue] = useState("");
 
   /*-------------------------------------------------
         fetch order details
@@ -39,7 +40,7 @@ const OrderProfile = () => {
       setOrderData(data.data);
       setPaymentDateValue(
         data.data.payment_date
-          ? dayjs(data.data.payment_date).format("YYYY-MM-DD HH:mm:ss")
+          ? dayjs(data.data.payment_date).format("YYYY-MM-DDTHH:mm:ss")
           : "",
       );
     } catch (err) {
@@ -58,28 +59,21 @@ const OrderProfile = () => {
   --------------------------------------------------- */
   const updateOrderPaymentDate = async () => {
     // Validate payment date
-    if (!paymentDateValue) {
-      toast.error("Please select a payment date");
+    if (!paymentDateValue || !paymentTokenValue) {
+      toast.error("Please fill in both payment date and payment token");
       return;
     }
 
     try {
-      setLoading(true);
-      await axios.put(
-        `${backendUrl}/api/admin/orders/${orderId}/payment-date`,
-        {
-          paymentDate: paymentDateValue,
-        },
-      );
-      toast.success("Payment date updated successfully");
+      await axios.put(`${backendUrl}/api/admin/orders/${orderId}/payment`, {
+        paymentDate: paymentDateValue,
+        paymentToken: paymentTokenValue,
+      });
+      toast.success("Payment updated successfully");
       fetchOrderDetails();
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Failed to update payment date",
-      );
+      toast.error(err?.response?.data?.message || "Failed to update payment");
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -88,7 +82,6 @@ const OrderProfile = () => {
   --------------------------------------------------- */
   const updateOrderStatus = async (newStatus) => {
     try {
-      setLoading(true);
       await axios.put(`${backendUrl}/api/admin/orders/${orderId}/status`, {
         status: newStatus,
       });
@@ -99,8 +92,6 @@ const OrderProfile = () => {
         err?.response?.data?.message || "Failed to update order status",
       );
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -109,7 +100,6 @@ const OrderProfile = () => {
   --------------------------------------------------- */
   const updatePaymentStatus = async (newPaymentStatus) => {
     try {
-      setLoading(true);
       await axios.put(
         `${backendUrl}/api/admin/orders/${orderId}/payment-status`,
         {
@@ -123,8 +113,6 @@ const OrderProfile = () => {
         err?.response?.data?.message || "Failed to update payment status",
       );
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -256,12 +244,15 @@ const OrderProfile = () => {
                         type="datetime-local"
                         step="1"
                         value={paymentDateValue}
-                        onChange={(e) =>
-                          setPaymentDateValue(
-                            dayjs(e.target.value).format("YYYY-MM-DD HH:mm:ss"),
-                          )
-                        }
-                        disabled={loading}
+                        onChange={(e) => setPaymentDateValue(e.target.value)}
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        placeholder="Payment Token"
+                        value={paymentTokenValue}
+                        onChange={(e) => setPaymentTokenValue(e.target.value)}
                       />
                     </Col>
                     <Col xs="auto">
@@ -270,9 +261,8 @@ const OrderProfile = () => {
                         size="sm"
                         className="btn_main_dark"
                         onClick={() => updateOrderPaymentDate()}
-                        disabled={loading}
                       >
-                        Update Payment Date
+                        Update Payment
                       </Button>
                     </Col>
                   </Row>

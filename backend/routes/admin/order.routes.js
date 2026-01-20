@@ -4,7 +4,7 @@ import {
   getOrder,
   updateOrderStatus,
   updatePaymentStatus,
-  updatePaymentDate,
+  updatePayment,
 } from "../../controllers/admin/order.controller.js";
 import { authenticateUser } from "../../middleware/admin/auth.middleware.js";
 import { authorizeRoles } from "../../middleware/admin/auth.middleware.js";
@@ -37,10 +37,10 @@ router.put(
   updatePaymentStatus,
 );
 router.put(
-  "/:orderId/payment-date",
+  "/:orderId/payment",
   authenticateUser,
   authorizeRoles(["admin", "cashier"]),
-  updatePaymentDate,
+  updatePayment,
 );
 
 export default router;

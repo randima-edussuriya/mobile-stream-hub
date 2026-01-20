@@ -147,10 +147,10 @@ export const updatePaymentStatus = async (req, res) => {
   }
 };
 
-export const updatePaymentDate = async (req, res) => {
+export const updatePayment = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { paymentDate } = req.body;
+    const { paymentDate, paymentToken } = req.body;
 
     if (!orderId) {
       return res.status(400).json({
@@ -159,20 +159,19 @@ export const updatePaymentDate = async (req, res) => {
       });
     }
 
-    if (!paymentDate) {
+    if (!paymentDate && !paymentToken) {
       return res.status(400).json({
         success: false,
-        message: "Payment date is required",
+        message: "Either payment date or payment token is required",
       });
     }
 
-    // Update payment date
-    const updateSql = "UPDATE payment SET payment_date = ? WHERE order_id = ?";
-    await dbPool.query(updateSql, [paymentDate, orderId]);
+    const updateSql = `UPDATE payment SET token=?, payment_date=? WHERE order_id = ?`;
+    await dbPool.query(updateSql, [paymentToken, paymentDate, orderId]);
 
     return res.status(200).json({
       success: true,
-      message: "Payment date updated successfully",
+      message: "Payment details updated successfully",
     });
   } catch (error) {
     console.error(error);
