@@ -14,7 +14,7 @@ import { AppContext } from "../../context/AppContext";
 import Loader from "../Loader";
 
 function RevenueByOrderChart() {
-  const [data, setData] = useState([]);
+  const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
 
@@ -22,11 +22,10 @@ function RevenueByOrderChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/revenue-by-order`,
-          { withCredentials: true },
         );
-        setData(response.data.data);
+        setOrderData(data.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -40,9 +39,10 @@ function RevenueByOrderChart() {
 
   return (
     <div className="bg-white p-4 rounded shadow-sm">
-      <h5 className="mb-3">Monthly Revenue Trend from Last 6 Months</h5>
+      <span className="h5">Monthly Revenue Trend </span>
+      <span className="text-muted h5">(Last 6 Months)</span>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+        <BarChart data={orderData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />

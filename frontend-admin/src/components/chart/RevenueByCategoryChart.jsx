@@ -14,7 +14,7 @@ import { AppContext } from "../../context/AppContext";
 import Loader from "../Loader";
 
 function RevenueByCategoryChart() {
-  const [data, setData] = useState([]);
+  const [catRevenueData, setCatRevenueData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
 
@@ -22,10 +22,10 @@ function RevenueByCategoryChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/revenue-by-category`,
         );
-        setData(response.data.data);
+        setCatRevenueData(data.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -39,9 +39,10 @@ function RevenueByCategoryChart() {
 
   return (
     <div className="bg-white p-4 rounded shadow-sm">
-      <h5 className="mb-3">Revenue by Category</h5>
+      <span className="h5">Revenue by Category </span>
+      <span className="text-muted h5">(Last 6 Months)</span>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+        <BarChart data={catRevenueData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
           <YAxis />
