@@ -146,13 +146,20 @@ export const getRevenueByOrder = async (req, res) => {
 export const getRevenueByCategory = async (req, res) => {
   try {
     const sql = `
-      SELECT c.category_name as name, COALESCE(SUM(ot.total), 0) as value
-      FROM category c
-      LEFT JOIN item i ON c.category_id = i.category_id
-      LEFT JOIN order_item oi ON i.item_id = oi.item_id
-      LEFT JOIN order_table ot ON oi.order_id = ot.order_id
-      GROUP BY c.category_id, c.category_name
-      ORDER BY value DESC
+        SELECT 
+        	c.category_name AS name,
+            SUM(
+                (oi.item_price-(oi.item_price*oi.discount/100))*oi.item_quantity
+            ) AS value
+        FROM category c
+        INNER JOIN item i ON c.category_id=i.category_id
+        INNER JOIN order_item oi ON i.item_id=oi.item_id
+        INNER JOIN order_table ot ON oi.order_id=ot.order_id
+        INNER JOIN payment p ON ot.order_id=p.order_id
+        WHERE p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        	AND p.status="completed"
+        GROUP BY name
+        ORDER BY VALUE ASC;
     `;
 
     const [data] = await dbPool.query(sql);
