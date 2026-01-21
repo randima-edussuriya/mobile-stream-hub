@@ -39,7 +39,7 @@ function RevenueByOrderChart() {
 
   return (
     <div className="bg-white p-4 rounded shadow-sm">
-      <span className="h5">Monthly Revenue Trend </span>
+      <span className="h5">Monthly Revenue Trend of Orders </span>
       <span className="text-muted h5">(Last 6 Months)</span>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={orderData}>
