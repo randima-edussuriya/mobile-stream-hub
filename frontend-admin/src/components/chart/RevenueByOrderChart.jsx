@@ -10,8 +10,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { AppContext } from "../context/AppContext";
-import Loader from "./Loader";
+import { AppContext } from "../../context/AppContext";
+import Loader from "../Loader";
 
 function RevenueByOrderChart() {
   const [data, setData] = useState([]);
@@ -40,7 +40,7 @@ function RevenueByOrderChart() {
 
   return (
     <div className="bg-white p-4 rounded shadow-sm">
-      <h5 className="mb-3">Monthly Revenue Trend</h5>
+      <h5 className="mb-3">Monthly Revenue Trend from Last 6 Months</h5>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />

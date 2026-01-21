@@ -8,13 +8,20 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { AppContext } from "../context/AppContext";
-import Loader from "./Loader";
+import { AppContext } from "../../context/AppContext";
+import Loader from "../Loader";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#8884D8",
+  "#82ca9d",
+];
 
 function OrderStatusChart() {
-  const [data, setData] = useState([]);
+  const [orderStatusData, setOrderStatusData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
 
@@ -22,11 +29,10 @@ function OrderStatusChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/order-status`,
-          { withCredentials: true },
         );
-        setData(response.data.data);
+        setOrderStatusData(data.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -39,12 +45,13 @@ function OrderStatusChart() {
   if (loading) return <Loader />;
 
   return (
-    <div className="bg-white p-4 rounded shadow-sm">
-      <h5 className="mb-3">Order Status Distribution</h5>
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="bg-white p-3 rounded shadow-sm">
+      <span className="h5">Order Status </span>
+      <span className="text-muted h5">(Last 30 Days)</span>
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
-            data={data}
+            data={orderStatusData}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -53,7 +60,7 @@ function OrderStatusChart() {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {orderStatusData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
@@ -61,7 +68,6 @@ function OrderStatusChart() {
             ))}
           </Pie>
           <Tooltip />
-          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>

@@ -8,13 +8,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { AppContext } from "../context/AppContext";
-import Loader from "./Loader";
+import { AppContext } from "../../context/AppContext";
+import Loader from "../Loader";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
 function PaymentMethodChart() {
-  const [data, setData] = useState([]);
+  const [paymentMethodData, setPaymentMethodData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
 
@@ -22,11 +22,10 @@ function PaymentMethodChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
+        const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/payment-methods`,
-          { withCredentials: true },
         );
-        setData(response.data.data);
+        setPaymentMethodData(data.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -39,12 +38,13 @@ function PaymentMethodChart() {
   if (loading) return <Loader />;
 
   return (
-    <div className="bg-white p-4 rounded shadow-sm">
-      <h5 className="mb-3">Payment Methods</h5>
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="bg-white p-3 rounded shadow-sm">
+      <span className="h5">Order Pay Methods </span>
+      <span className="text-muted h5">(Last 30 Days)</span>
+      <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
-            data={data}
+            data={paymentMethodData}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -53,7 +53,7 @@ function PaymentMethodChart() {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {paymentMethodData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
@@ -61,7 +61,6 @@ function PaymentMethodChart() {
             ))}
           </Pie>
           <Tooltip />
-          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>

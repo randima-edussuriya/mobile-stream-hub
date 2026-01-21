@@ -33,7 +33,7 @@ export const getDashboardStats = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });
@@ -43,11 +43,11 @@ export const getDashboardStats = async (req, res) => {
 export const getOrderStatusDistribution = async (req, res) => {
   try {
     const sql = `
-      SELECT status as name, COUNT(order_id) as value
-      FROM order_table
-      GROUP BY status
-      ORDER BY value DESC
-    `;
+            SELECT ot.status as name, COUNT(ot.order_id) as value
+            FROM order_table ot
+            WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            GROUP BY ot.status
+            ORDER BY value DESC`;
 
     const [data] = await dbPool.query(sql);
 
@@ -57,7 +57,7 @@ export const getOrderStatusDistribution = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });
@@ -67,10 +67,11 @@ export const getOrderStatusDistribution = async (req, res) => {
 export const getPaymentMethodDistribution = async (req, res) => {
   try {
     const sql = `
-      SELECT payment_method as name, COUNT(order_id) as value
-      FROM order_table
-      GROUP BY payment_method
-      ORDER BY value DESC
+                SELECT ot.payment_method AS name, COUNT(ot.order_id) AS value
+                FROM order_table ot
+                WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                GROUP BY ot.payment_method
+                ORDER BY value DESC;
     `;
 
     const [data] = await dbPool.query(sql);
@@ -81,7 +82,33 @@ export const getPaymentMethodDistribution = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getOrderDistrictDistribution = async (req, res) => {
+  try {
+    const sql = `
+            SELECT d.district AS name, COUNT(ot.order_id) as value
+            FROM delivering d
+            INNER JOIN order_table ot ON d.order_id=ot.order_id
+            WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            GROUP BY d.district
+            ORDER BY value DESC;
+    `;
+
+    const [data] = await dbPool.query(sql);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });
@@ -108,7 +135,34 @@ export const getRevenueByOrder = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getRevenueByCategory = async (req, res) => {
+  try {
+    const sql = `
+      SELECT c.category_name as name, COALESCE(SUM(ot.total), 0) as value
+      FROM category c
+      LEFT JOIN item i ON c.category_id = i.category_id
+      LEFT JOIN order_item oi ON i.item_id = oi.item_id
+      LEFT JOIN order_table ot ON oi.order_id = ot.order_id
+      GROUP BY c.category_id, c.category_name
+      ORDER BY value DESC
+    `;
+
+    const [data] = await dbPool.query(sql);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });
