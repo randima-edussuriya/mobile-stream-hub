@@ -96,6 +96,7 @@ export const getOrderDistrictDistribution = async (req, res) => {
             FROM delivering d
             INNER JOIN order_table ot ON d.order_id=ot.order_id
             WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            	AND ot.status NOT IN ("cancelled")
             GROUP BY d.district
             ORDER BY value DESC;
     `;
@@ -118,13 +119,13 @@ export const getOrderDistrictDistribution = async (req, res) => {
 export const getRevenueByOrder = async (req, res) => {
   try {
     const sql = `
-      SELECT 
-        DATE_FORMAT(order_date, '%Y-%m') as name,
-        SUM(total) as value
-      FROM order_table
-      WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
-      GROUP BY DATE_FORMAT(order_date, '%Y-%m')
-      ORDER BY name ASC
+        SELECT DATE_FORMAT(ot.order_date, '%Y-%m') AS name, SUM(ot.total) AS value
+        FROM order_table ot
+        INNER JOIN payment p ON ot.order_id=p.order_id
+        WHERE p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+        	AND p.status = "completed"
+        GROUP BY name
+        ORDER BY value ASC;
     `;
 
     const [data] = await dbPool.query(sql);
