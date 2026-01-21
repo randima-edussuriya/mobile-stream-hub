@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import Chart1 from "../components/Chart1";
 import { AppContext } from "../context/AppContext";
 import Loader from "../components/Loader";
+import OrderStatusChart from "../components/OrderStatusChart";
+import PaymentMethodChart from "../components/PaymentMethodChart";
+import RevenueByOrderChart from "../components/RevenueByOrderChart";
 
 function Home() {
   const [stats, setStats] = useState({
@@ -76,8 +78,17 @@ function Home() {
           </div>
         </div>
 
-        <div className="bg-body-tertiary rounded mt-4 shadow">
-          <Chart1 />
+        {/* Charts Section */}
+        <div className="row g-3 mt-3">
+          <div className="col-12 col-lg-6">
+            <OrderStatusChart />
+          </div>
+          <div className="col-12 col-lg-6">
+            <PaymentMethodChart />
+          </div>
+          <div className="col-12">
+            <RevenueByOrderChart />
+          </div>
         </div>
       </div>
     </div>
