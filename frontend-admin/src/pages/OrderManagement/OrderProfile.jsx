@@ -15,9 +15,10 @@ import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { confirmAction } from "../../utils/confirmAction";
+import { hasPermission } from "../../utils/permissions";
 
 const OrderProfile = () => {
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, userData } = useContext(AppContext);
   const { orderId } = useParams();
   const navigate = useNavigate();
 
@@ -155,17 +156,31 @@ const OrderProfile = () => {
     fetchOrderDetails();
   }, [orderId]);
 
-  const statusOptions = [
-    "pending",
-    "packaging in progress",
-    "ready for pickup",
-    "ready for delivery",
-    "dispatched",
-    "delivered",
-    "cancelled",
-  ];
+  const statusOptions = {
+    admin: [
+      "pending",
+      "packaging in progress",
+      "ready for pickup",
+      "ready for delivery",
+      "dispatched",
+      "delivered",
+      "cancelled",
+    ],
+    cashier: [
+      "pending",
+      "packaging in progress",
+      "ready for pickup",
+      "ready for delivery",
+      "cancelled",
+    ],
+    "deliver person": ["ready for delivery", "dispatched", "delivered"],
+  };
 
-  const paymentOptions = ["pending", "completed", "failed", "refunded"];
+  const paymentOptions = {
+    admin: ["pending", "completed", "failed", "refunded"],
+    cashier: ["pending", "completed", "failed", "refunded"],
+    "deliver person": ["pending", "completed", "failed"],
+  };
 
   /*-------------------------------------------------
         content render helpers
@@ -240,7 +255,7 @@ const OrderProfile = () => {
                           }}
                           disabled={orderData.status === "cancelled"}
                         >
-                          {statusOptions.map((status) => (
+                          {statusOptions[userData.userRole].map((status) => (
                             <option key={status} value={status}>
                               {status}
                             </option>
@@ -260,7 +275,7 @@ const OrderProfile = () => {
                           }}
                           disabled={loading}
                         >
-                          {paymentOptions.map((status) => (
+                          {paymentOptions[userData.userRole].map((status) => (
                             <option key={status} value={status}>
                               {status}
                             </option>
@@ -283,24 +298,30 @@ const OrderProfile = () => {
                         onChange={(e) => setPaymentDateValue(e.target.value)}
                       />
                     </Col>
-                    <Col>
-                      <Form.Control
-                        type="text"
-                        placeholder="Payment Token"
-                        value={paymentTokenValue}
-                        onChange={(e) => setPaymentTokenValue(e.target.value)}
-                      />
-                    </Col>
-                    <Col xs="auto">
-                      <Button
-                        variant="none"
-                        size="sm"
-                        className="btn_main_dark"
-                        onClick={() => updateOrderPaymentDate()}
-                      >
-                        Update Payment
-                      </Button>
-                    </Col>
+                    {orderData.payment_method === "online" && (
+                      <>
+                        <Col>
+                          <Form.Control
+                            type="text"
+                            placeholder="Payment Token"
+                            value={paymentTokenValue}
+                            onChange={(e) =>
+                              setPaymentTokenValue(e.target.value)
+                            }
+                          />
+                        </Col>
+                        <Col xs="auto">
+                          <Button
+                            variant="none"
+                            size="sm"
+                            className="btn_main_dark"
+                            onClick={() => updateOrderPaymentDate()}
+                          >
+                            Update Payment
+                          </Button>
+                        </Col>
+                      </>
+                    )}
                   </Row>
                 </Col>
               </Row>
@@ -382,49 +403,52 @@ const OrderProfile = () => {
         {/* ------------------------------------------------
                     Order Cancellation
         ---------------------------------------------------- */}
-        {orderData.status !== "cancelled" && (
-          <Col md={12}>
-            <Card className="shadow-sm">
-              <Card.Header className="bg-danger-subtle fw-semibold">
-                Order Cancellation
-              </Card.Header>
-              <Card.Body>
-                <Row className="g-3 align-items-end">
-                  <Col md={9}>
-                    <Form.Group controlId="cancellationReason">
-                      <Form.Label className="fw-semibold">
-                        Reason for Cancellation
-                      </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={2}
-                        placeholder="Enter reason for cancelling this order..."
-                        value={cancellationReason}
-                        onChange={(e) => setCancellationReason(e.target.value)}
+        {hasPermission(userData.userRole, "order:cancel") &&
+          orderData.status !== "cancelled" && (
+            <Col md={12}>
+              <Card className="shadow-sm">
+                <Card.Header className="bg-danger-subtle fw-semibold">
+                  Order Cancellation
+                </Card.Header>
+                <Card.Body>
+                  <Row className="g-3 align-items-end">
+                    <Col md={9}>
+                      <Form.Group controlId="cancellationReason">
+                        <Form.Label className="fw-semibold">
+                          Reason for Cancellation
+                        </Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          rows={2}
+                          placeholder="Enter reason for cancelling this order..."
+                          value={cancellationReason}
+                          onChange={(e) =>
+                            setCancellationReason(e.target.value)
+                          }
+                          disabled={orderData.status !== "pending"}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={3}>
+                      <Button
+                        variant="danger"
+                        className="w-100"
+                        onClick={cancelOrder}
                         disabled={orderData.status !== "pending"}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={3}>
-                    <Button
-                      variant="danger"
-                      className="w-100"
-                      onClick={cancelOrder}
-                      disabled={orderData.status !== "pending"}
-                    >
-                      Cancel Order
-                    </Button>
-                  </Col>
-                </Row>
-                {orderData.status !== "pending" && (
-                  <div className="text-muted small mt-2">
-                    Only pending orders can be cancelled
-                  </div>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
+                      >
+                        Cancel Order
+                      </Button>
+                    </Col>
+                  </Row>
+                  {orderData.status !== "pending" && (
+                    <div className="text-muted small mt-2">
+                      Only pending orders can be cancelled
+                    </div>
+                  )}
+                </Card.Body>
+              </Card>
+            </Col>
+          )}
       </Row>
     </Container>
   );
