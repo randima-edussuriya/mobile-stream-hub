@@ -2,9 +2,34 @@ import dbPool from "../../config/dbConnection.js";
 
 export const getAllOrders = async (req, res) => {
   try {
-    const [orders] = await dbPool.query(
-      "SELECT * FROM order_table ORDER BY order_date DESC",
-    );
+    const { district, status } = req.query;
+
+    const filters = [];
+    const conditions = [];
+
+    if (district && district.trim()) {
+      conditions.push(`d.district = ?`);
+      filters.push(district.trim());
+    }
+
+    if (status && status.trim()) {
+      conditions.push(`ot.status = ?`);
+      filters.push(status.trim());
+    }
+
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    const orderSql = `
+          SELECT ot.*, d.district 
+          FROM order_table ot
+          INNER JOIN delivering d ON ot.order_id=d.order_id
+          ${whereClause}
+          ORDER BY order_date DESC
+          `;
+
+    const [orders] = await dbPool.query(orderSql, filters);
+    console.log(orderSql);
 
     res.status(200).json({
       success: true,
@@ -133,6 +158,13 @@ export const updatePaymentStatus = async (req, res) => {
     // Update payment status
     const updateSql = "UPDATE payment SET status = ? WHERE order_id = ?";
     await dbPool.query(updateSql, [paymentStatus, orderId]);
+
+    // update payment date for 'completed' status
+    if (paymentStatus === "completed") {
+      const paymentDateSql =
+        "UPDATE payment SET payment_date = NOW() WHERE order_id = ?";
+      await dbPool.query(paymentDateSql, [orderId]);
+    }
 
     return res.status(200).json({
       success: true,
@@ -286,6 +318,40 @@ export const getCancellations = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getOrderDistricts = async (req, res) => {
+  try {
+    const sql = `SELECT DISTINCT district FROM delivering ORDER BY district ASC`;
+    const [rows] = await dbPool.query(sql);
+    return res.status(200).json({
+      success: true,
+      data: rows.map((r) => r.district),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getOrderStatuses = async (req, res) => {
+  try {
+    const sql = `SELECT DISTINCT status FROM order_table ORDER BY status ASC`;
+    const [rows] = await dbPool.query(sql);
+    return res.status(200).json({
+      success: true,
+      data: rows.map((r) => r.status),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });

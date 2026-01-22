@@ -230,7 +230,7 @@ function App() {
         {
           path: "order-management",
           element: (
-            <RoleRoute userData={userData} allowedRoles={["admin", "cashier"]}>
+            <RoleRoute userData={userData} allowedRoles={["admin", "cashier", "deliver person"]}>
               <Outlet />
             </RoleRoute>
           ),
