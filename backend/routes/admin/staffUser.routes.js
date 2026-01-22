@@ -24,25 +24,39 @@ const router = express.Router();
 router.get("/me/basic", authenticateUser, getMeBasicData);
 router.get("/me", authenticateUser, getMe);
 router.get("/", authenticateUser, authorizeRoles(["admin"]), getAllUsers);
-router.put(
-  "/:staffId/status",
-  authenticateUser,
-  authorizeRoles(["admin"]),
-  validateUpdateUserStatus,
-  updateUserStatus
-);
 router.get(
   "/staff-types",
   authenticateUser,
   authorizeRoles(["admin"]),
-  getStaffTypes
+  getStaffTypes,
 );
 router.get(
   "/:staffId",
   authenticateUser,
   authorizeRoles(["admin"]),
   validateStaffUserId,
-  getStaffUser
+  getStaffUser,
+);
+
+router.get(
+  "/staff-types",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  getStaffTypes,
+);
+router.get(
+  "/:staffId",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  validateStaffUserId,
+  getStaffUser,
+);
+router.put(
+  "/:staffId/status",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  validateUpdateUserStatus,
+  updateUserStatus,
 );
 
 router.put(
@@ -50,7 +64,7 @@ router.put(
   authenticateUser,
   authorizeRoles(["admin"]),
   validateUpdateStaffUser,
-  updateStaffUser
+  updateStaffUser,
 );
 
 export default router;
