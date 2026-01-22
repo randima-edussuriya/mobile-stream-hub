@@ -42,7 +42,7 @@ function OrderStatusChart() {
     fetchData();
   }, [backendUrl]);
 
-  if (loading) return <Loader />;
+  if (loading) return <Loader type="chart" />;
 
   return (
     <div className="bg-white p-3 rounded shadow-sm">

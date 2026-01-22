@@ -1,11 +1,17 @@
-import React from "react";
 import { Container, Spinner } from "react-bootstrap";
 
-function Loader() {
+function Loader({ type }) {
+  const wrapperClasses = [
+    type === "chart" && "py-5 h-100 rounded opacity-75 bg-primary-subtle",
+    type === "fullpage" && "min-vh-100 bg-primary-subtle",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <Container
       fluid
-      className="d-flex justify-content-center align-items-center min-vh-100 bg-primary-subtle"
+      className={`d-flex justify-content-center align-items-center  ${wrapperClasses}`}
     >
       <Spinner
         className="p-4"

@@ -3,7 +3,7 @@ import Loader from "../components/Loader";
 
 export const PrivateRoute = ({ authChecked, isLoggedIn, children }) => {
   if (!authChecked) {
-    return <Loader />;
+    return <Loader type="fullpage" />;
   }
   return isLoggedIn ? children : <Navigate to={"/"} replace />;
 };
