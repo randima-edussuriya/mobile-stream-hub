@@ -1,0 +1,311 @@
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import {
+  Container,
+  Form,
+  Button,
+  Card,
+  Spinner,
+  Row,
+  Col,
+  Alert,
+} from "react-bootstrap";
+import { toast } from "react-toastify";
+import { AppContext } from "../../context/AppContext";
+
+function RequestRepair() {
+  const [technicians, setTechnicians] = useState([]);
+  const [loadingTechs, setLoadingTechs] = useState(true);
+  const [selectedTechnician, setSelectedTechnician] = useState("");
+  const [appointmentDate, setAppointmentDate] = useState("");
+  const [issueDescription, setIssueDescription] = useState("");
+  const [deviceInfo, setDeviceInfo] = useState("");
+  const [isAvailable, setIsAvailable] = useState(null);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [availabilityMessage, setAvailabilityMessage] = useState("");
+
+  const { backendUrl } = useContext(AppContext);
+
+  /* -----------------------------------------------------------------
+        Fetch technicians on component mount
+  --------------------------------------------------------------------*/
+  useEffect(() => {
+    fetchTechnicians();
+  }, []);
+
+  const fetchTechnicians = async () => {
+    setLoadingTechs(true);
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/customer/repair/technicians`,
+      );
+      setTechnicians(data.data || []);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to fetch technicians. Please try again.",
+      );
+      console.error(error);
+    } finally {
+      setLoadingTechs(false);
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Check technician availability when tech or date changes
+  --------------------------------------------------------------------*/
+  useEffect(() => {
+    if (selectedTechnician && appointmentDate) {
+      checkAvailability();
+    } else {
+      setIsAvailable(null);
+      setAvailabilityMessage("");
+    }
+  }, [selectedTechnician, appointmentDate]);
+
+  const checkAvailability = async () => {
+    setCheckingAvailability(true);
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/customer/repair/availability`,
+        {
+          params: {
+            technicianId: selectedTechnician,
+            appointmentDate: appointmentDate,
+          },
+        },
+      );
+
+      setIsAvailable(data.data.isAvailable);
+
+      if (data.data.isAvailable) {
+        setAvailabilityMessage(
+          `✓ Available! (${data.data.maxAppointmentsPerDay - data.data.appointmentCount} slots remaining)`,
+        );
+      } else {
+        setAvailabilityMessage(
+          `✗ Not available. Maximum ${data.data.maxAppointmentsPerDay} appointments per day reached.`,
+        );
+      }
+    } catch (error) {
+      toast.error("Failed to check availability. Please try again.");
+      console.error(error);
+      setIsAvailable(null);
+      setAvailabilityMessage("");
+    } finally {
+      setCheckingAvailability(false);
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Handle form submission
+  --------------------------------------------------------------------*/
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate
+    if (!selectedTechnician) {
+      toast.error("Please select a technician");
+      return;
+    }
+
+    if (!issueDescription.trim()) {
+      toast.error("Please enter issue description");
+      return;
+    }
+
+    if (!deviceInfo.trim()) {
+      toast.error("Please enter device information");
+      return;
+    }
+
+    if (!appointmentDate) {
+      toast.error("Please select appointment date");
+      return;
+    }
+
+    if (isAvailable === false) {
+      toast.error("Selected technician is not available on this date");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/customer/repair/requests`,
+        {
+          technicianId: selectedTechnician,
+          issueDescription: issueDescription.trim(),
+          deviceInfo: deviceInfo.trim(),
+          appointmentDate: appointmentDate,
+        },
+      );
+
+      if (data.success) {
+        toast.success("Repair request submitted successfully!");
+        // Reset form
+        setSelectedTechnician("");
+        setAppointmentDate("");
+        setIssueDescription("");
+        setDeviceInfo("");
+        setIsAvailable(null);
+        setAvailabilityMessage("");
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to submit repair request. Please try again.",
+      );
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Get minimum date (today + 1 day)
+  const getMinDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
+  };
+
+  return (
+    <Container className="py-4">
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <Card className="shadow">
+            <Card.Body className="p-4">
+              <Card.Title className="mb-4">
+                <h3>Request Repair Service</h3>
+              </Card.Title>
+
+              <Form onSubmit={handleSubmit}>
+                {/* Technician Selection */}
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">
+                    Select Technician <span className="text-danger">*</span>
+                  </Form.Label>
+                  {loadingTechs ? (
+                    <div className="text-center py-3">
+                      <Spinner animation="border" size="sm" />
+                    </div>
+                  ) : (
+                    <Form.Select
+                      value={selectedTechnician}
+                      onChange={(e) => setSelectedTechnician(e.target.value)}
+                      disabled={submitting}
+                    >
+                      <option value="">-- Choose Technician --</option>
+                      {technicians.map((tech) => (
+                        <option key={tech.staff_id} value={tech.staff_id}>
+                          {tech.first_name} {tech.last_name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  )}
+                </Form.Group>
+
+                {/* Appointment Date */}
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">
+                    Appointment Date <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="datetime-local"
+                    value={appointmentDate}
+                    onChange={(e) => setAppointmentDate(e.target.value)}
+                    min={getMinDate() + "T08:00"}
+                    disabled={submitting || !selectedTechnician}
+                  />
+                  <Form.Text className="text-muted">
+                    Select a date at least one day from now
+                  </Form.Text>
+                </Form.Group>
+
+                {/* Availability Status */}
+                {checkingAvailability && (
+                  <div className="text-center mb-3">
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    <span>Checking availability...</span>
+                  </div>
+                )}
+
+                {availabilityMessage && !checkingAvailability && (
+                  <Alert
+                    variant={isAvailable ? "success" : "danger"}
+                    className="mb-3"
+                  >
+                    {availabilityMessage}
+                  </Alert>
+                )}
+
+                {/* Issue Description */}
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">
+                    Issue Description <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={issueDescription}
+                    onChange={(e) => setIssueDescription(e.target.value)}
+                    placeholder="Describe the issue with your device..."
+                    disabled={submitting}
+                  />
+                </Form.Group>
+
+                {/* Device Information */}
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold">
+                    Device Information <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    value={deviceInfo}
+                    onChange={(e) => setDeviceInfo(e.target.value)}
+                    placeholder="Enter device model, brand, specifications, etc..."
+                    disabled={submitting}
+                  />
+                </Form.Group>
+
+                {/* Submit Button */}
+                <div className="d-grid gap-2">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    size="lg"
+                    disabled={
+                      submitting ||
+                      loadingTechs ||
+                      isAvailable === false ||
+                      !selectedTechnician ||
+                      !appointmentDate
+                    }
+                  >
+                    {submitting ? (
+                      <>
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          className="me-2"
+                        />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Submit Repair Request"
+                    )}
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+}
+
+export default RequestRepair;

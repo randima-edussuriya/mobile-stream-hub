@@ -141,7 +141,7 @@ function Header() {
               <Nav.Link as={Link} to={"/products"} className="navbar_link">
                 Products
               </Nav.Link>
-              <Nav.Link as={Link} to={"/coming-soon"} className="navbar_link">
+              <Nav.Link as={Link} to={"/repairs-request"} className="navbar_link">
                 Repairs
               </Nav.Link>
               <Nav.Link as={Link} to={"/about-us"} className="navbar_link">

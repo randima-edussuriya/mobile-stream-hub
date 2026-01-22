@@ -19,6 +19,7 @@ import ResetPassword from "./pages/ResetPasswordFlow";
 import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/orders/MyOrders";
 import OrderDetails from "./pages/orders/OrderDetails";
+import RequestRepair from "./pages/repair/RequestRepair";
 
 const Layout = () => {
   return (
@@ -110,6 +111,14 @@ function App() {
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
               <OrderDetails />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "repairs-request",
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <RequestRepair />
             </PrivateRoute>
           ),
         },
