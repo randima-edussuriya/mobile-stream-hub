@@ -12,7 +12,6 @@ import {
 } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
 
 function RepairRequestProfile() {
   const { requestId } = useParams();
@@ -41,7 +40,6 @@ function RepairRequestProfile() {
         error?.response?.data?.message ||
         "Failed to fetch repair request details. Please try again later.";
       setError(message);
-      toast.error(message);
       console.error(error);
     } finally {
       setLoading(false);
@@ -108,7 +106,9 @@ function RepairRequestProfile() {
       </Row>
 
       <Row className="g-3">
-        {/* Repair Request Details */}
+        {/* ------------------------------------------------------
+                    Repair Request Details
+        ---------------------------------------------------------- */}
         <Col md={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
@@ -129,7 +129,8 @@ function RepairRequestProfile() {
                     <strong className="text-muted">Status</strong>
                     <p className="mb-0">
                       <Badge bg={getStatusBadge(repair.status)}>
-                        {repair.status}
+                        {repair.status.charAt(0).toUpperCase() +
+                          repair.status.slice(1)}
                       </Badge>
                     </p>
                   </div>
@@ -142,7 +143,7 @@ function RepairRequestProfile() {
                     <strong className="text-muted">Appointment Date</strong>
                     <p className="mb-0 fw-semibold">
                       {dayjs(repair.appointment_date).format(
-                        "YYYY-MM-DD HH:mm:ss",
+                        "YYYY-MM-DD HH:mm",
                       )}
                     </p>
                   </div>
@@ -183,7 +184,9 @@ function RepairRequestProfile() {
           </Card>
         </Col>
 
-        {/* Customer Details */}
+        {/* -------------------------------------------------------
+                    Customer Details
+        ----------------------------------------------------------- */}
         <Col md={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
@@ -200,9 +203,7 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Customer Name</strong>
-                    <p className="mb-0 fw-semibold">
-                      {repair.customer_name || "—"}
-                    </p>
+                    <p className="mb-0 fw-semibold">{repair.customer_name}</p>
                   </div>
                 </Col>
               </Row>
@@ -211,17 +212,13 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Email</strong>
-                    <p className="mb-0 fw-semibold">
-                      {repair.customer_email || "—"}
-                    </p>
+                    <p className="mb-0 fw-semibold">{repair.customer_email}</p>
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Phone</strong>
-                    <p className="mb-0 fw-semibold">
-                      {repair.customer_phone || "—"}
-                    </p>
+                    <p className="mb-0 fw-semibold">{repair.customer_phone}</p>
                   </div>
                 </Col>
               </Row>
@@ -229,7 +226,9 @@ function RepairRequestProfile() {
           </Card>
         </Col>
 
-        {/* Technician Details */}
+        {/* ----------------------------------------------------
+                    Technician Details
+        -------------------------------------------------------- */}
         <Col md={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
@@ -246,9 +245,7 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Technician Name</strong>
-                    <p className="mb-0 fw-semibold">
-                      {repair.technician_name || "—"}
-                    </p>
+                    <p className="mb-0 fw-semibold">{repair.technician_name}</p>
                   </div>
                 </Col>
               </Row>
@@ -258,7 +255,7 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Email</strong>
                     <p className="mb-0 fw-semibold">
-                      {repair.technician_email || "—"}
+                      {repair.technician_email}
                     </p>
                   </div>
                 </Col>
@@ -266,7 +263,7 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Phone</strong>
                     <p className="mb-0 fw-semibold">
-                      {repair.technician_phone || "—"}
+                      {repair.technician_phone}
                     </p>
                   </div>
                 </Col>

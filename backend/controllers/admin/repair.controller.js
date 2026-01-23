@@ -64,8 +64,8 @@ export const getRepairRequestDetail = async (req, res) => {
         s.email AS technician_email,
         s.phone_number AS technician_phone
       FROM repair_request rr
-      LEFT JOIN customer c ON rr.customer_id = c.customer_id
-      LEFT JOIN staff s ON rr.technician_id = s.staff_id
+      INNER JOIN customer c ON rr.customer_id = c.customer_id
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
       WHERE rr.repair_requests_id = ?
     `;
 
