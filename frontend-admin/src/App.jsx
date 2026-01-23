@@ -16,7 +16,7 @@ import LoyaltyProgramManagement from "./pages/LoyaltyProgramManagement";
 import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
 import CustomerSupportManagement from "./pages/CustomerSupportManagement";
 import ReportsManagement from "./pages/ReportsManagement";
-import RepairManagement from "./pages/RepairManagement";
+import RepairManagement from "./pages/RepairManagement/RepairManagement";
 import CategoryManagement from "./pages/CategoryManagement/CategoryManagement";
 import { AppContext } from "./context/AppContext";
 import StaffRegisterFlow from "./pages/StaffManagement/StaffRegisterFlow";
@@ -30,6 +30,7 @@ import ItemProfile from "./pages/ItemManagement/ItemProfile";
 import ItemAdd from "./pages/ItemManagement/ItemAdd";
 import OrderProfile from "./pages/OrderManagement/OrderProfile";
 import OrderCancellation from "./pages/OrderCancellation";
+import RepairRequestProfile from "./pages/RepairManagement/RepairRequestProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -230,7 +231,10 @@ function App() {
         {
           path: "order-management",
           element: (
-            <RoleRoute userData={userData} allowedRoles={["admin", "cashier", "deliver person"]}>
+            <RoleRoute
+              userData={userData}
+              allowedRoles={["admin", "cashier", "deliver person"]}
+            >
               <Outlet />
             </RoleRoute>
           ),
@@ -272,11 +276,31 @@ function App() {
         ---------------------------------------------------------- */
         {
           path: "repair-management",
-          element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <RepairManagement />
-            </RoleRoute>
-          ),
+          element: <Outlet />,
+          children: [
+            {
+              path: "",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={["admin", "technician"]}
+                >
+                  <RepairManagement />
+                </RoleRoute>
+              ),
+            },
+            {
+              path: "profile/:requestId",
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={["admin", "technician"]}
+                >
+                  <RepairRequestProfile />
+                </RoleRoute>
+              ),
+            },
+          ],
         },
         /*--------------------------------------------------------
               reorder-management routes

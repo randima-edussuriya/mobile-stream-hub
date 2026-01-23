@@ -9,6 +9,7 @@ import supplierRoutes from "./supplier.routes.js";
 import couponRoutes from "./coupon.routes.js";
 import dashboardRoutes from "./dashboard.routes.js";
 import deliveryRoutes from "./delivery.routes.js";
+import repairRoutes from "./repair.routes.js";
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use("/suppliers", supplierRoutes);
 router.use("/coupons", couponRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/deliveries", deliveryRoutes);
+router.use("/repairs", repairRoutes);
 
 export default router;
