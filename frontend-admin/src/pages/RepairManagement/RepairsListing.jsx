@@ -1,14 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Container, Table, Spinner, Badge, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 
-function RepairManagement() {
+function RepairsListing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [repairs, setRepairs] = useState([]);
@@ -17,7 +14,7 @@ function RepairManagement() {
   const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
-        Fetch all repair requests from API
+        Fetch all repairs from API
   --------------------------------------------------------------------*/
   const fetchRepairs = async () => {
     try {
@@ -25,14 +22,15 @@ function RepairManagement() {
       setError("");
       setRepairs([]);
 
-      const { data } = await axios.get(`${backendUrl}/api/admin/repairs`);
+      const { data } = await axios.get(
+        `${backendUrl}/api/admin/repairs/records`,
+      );
       setRepairs(data.data);
     } catch (error) {
       const message =
         error?.response?.data?.message ||
-        "Failed to fetch repair requests. Please try again later.";
+        "Failed to fetch repairs. Please try again later.";
       setError(message);
-      toast.error(message);
       console.error(error);
     } finally {
       setLoading(false);
@@ -40,13 +38,13 @@ function RepairManagement() {
   };
 
   /* -----------------------------------------------------------------
-        Get badge variant based on status
+        Get badge variant based on repair status
   --------------------------------------------------- */
   const getStatusBadge = (status) => {
     const statusMap = {
-      pending: "warning",
-      accepted: "success",
-      rejected: "danger",
+      "diagnostics completed": "primary",
+      "repair in progress": "warning",
+      "repair completed": "success",
     };
     return statusMap[status] || "secondary";
   };
@@ -62,7 +60,7 @@ function RepairManagement() {
     if (loading) {
       return (
         <tr>
-          <td colSpan={7} className="text-center py-3">
+          <td colSpan={6} className="text-center py-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -74,7 +72,7 @@ function RepairManagement() {
     if (error) {
       return (
         <tr>
-          <td colSpan={7} className="text-danger text-center">
+          <td colSpan={6} className="text-danger text-center">
             {error}
           </td>
         </tr>
@@ -84,29 +82,31 @@ function RepairManagement() {
     if (repairs.length === 0) {
       return (
         <tr>
-          <td colSpan={7} className="text-danger text-center">
-            No repair requests found
+          <td colSpan={6} className="text-danger text-center">
+            No repairs found
           </td>
         </tr>
       );
     }
 
     return repairs.map((repair) => (
-      <tr key={repair.repair_requests_id}>
-        <td className="fw-bold">{repair.repair_requests_id}</td>
+      <tr key={repair.repair_id}>
+        <td className="fw-bold">{repair.repair_id}</td>
+        <td className="fw-semibold">{repair.repair_requests_id}</td>
+        <td>
+          <Badge bg={getStatusBadge(repair.repair_status)}>
+            {repair.repair_status}
+          </Badge>
+        </td>
+        <td className="fw-semibold">
+          Rs. {Number(repair.total_cost).toLocaleString()}
+        </td>
+        <td>{repair.technician_name}</td>
         <td className="text-muted">
           {dayjs(repair.appointment_date).format("YYYY-MM-DD HH:mm")}
         </td>
-        <td>{repair.issue_description}</td>
-        <td className="text-muted">{repair.device_info}</td>
-        <td className="fw-medium">{repair.technician_name}</td>
         <td>
-          <Badge bg={getStatusBadge(repair.status)}>
-            {repair.status.charAt(0).toUpperCase() + repair.status.slice(1)}
-          </Badge>
-        </td>
-        <td>
-          <Link to={`request-profile/${repair.repair_requests_id}`}>
+          <Link to={`../repair-profile/${repair.repair_id}`}>
             <i
               role="button"
               className="bi-arrow-up-right-square text-primary action_icon"
@@ -123,14 +123,14 @@ function RepairManagement() {
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="mb-3">
           <div className="d-flex align-items-center justify-content-between">
-            <h4 className="mb-0">Repair Requests</h4>
+            <h4 className="mb-0">Repairs</h4>
             <Button
               variant="none"
-              onClick={() => navigate("repairs-listing")}
+              onClick={() => navigate("/repair-management")}
               className="btn_main_light_outline"
             >
               <i className="bi bi-caret-right-square-fill me-1"></i>
-              Go to Repairs
+              Go to Repair Requests
             </Button>
           </div>
         </Container>
@@ -138,12 +138,12 @@ function RepairManagement() {
           <Table hover striped size="sm" className="shadow">
             <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
+                <th>Repair ID</th>
                 <th>Request ID</th>
-                <th>Appointment Date</th>
-                <th>Issue Description</th>
-                <th>Device</th>
-                <th>Technician</th>
                 <th>Status</th>
+                <th>Total Cost</th>
+                <th>Technician</th>
+                <th>Appointment</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -155,4 +155,4 @@ function RepairManagement() {
   );
 }
 
-export default RepairManagement;
+export default RepairsListing;

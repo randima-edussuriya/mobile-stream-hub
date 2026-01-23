@@ -127,6 +127,97 @@ export const updateRepairRequestStatus = async (req, res) => {
 };
 
 /**
+ * GET /api/admin/repairs/records
+ * List all repairs (after acceptance)
+ */
+export const getAllRepairs = async (req, res) => {
+  try {
+    const { userId, userRole } = req.user;
+
+    let query = `
+      SELECT
+        r.repair_id,
+        r.status AS repair_status,
+        r.total_cost,
+        r.repair_requests_id,
+        rr.appointment_date,
+        CONCAT(s.first_name, ' ', s.last_name) AS technician_name
+      FROM repair r
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+    `;
+
+    const params = [];
+    if (userRole === "technician") {
+      query += " WHERE rr.technician_id = ?";
+      params.push(userId);
+    }
+
+    query += " ORDER BY rr.appointment_date DESC";
+
+    const [rows] = await dbPool.query(query, params);
+    return res.status(200).json({ data: rows });
+  } catch (error) {
+    console.error("Error fetching repairs:", error);
+    return res.status(500).json({
+      message: "Failed to fetch repairs. Please try again later.",
+    });
+  }
+};
+
+/**
+ * GET /api/admin/repairs/records/:repairId
+ * Get detailed information for a specific repair
+ */
+export const getRepairDetail = async (req, res) => {
+  try {
+    const { repairId } = req.params;
+
+    const query = `
+      SELECT
+        r.repair_id,
+        r.status AS repair_status,
+        r.total_cost,
+        r.identified_issue,
+        r.identified_device,
+        r.repair_requests_id,
+        rr.issue_description,
+        rr.device_info,
+        rr.appointment_date,
+        rr.status AS request_status,
+        rr.customer_id,
+        CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+        c.email AS customer_email,
+        c.phone_number AS customer_phone,
+        rr.technician_id,
+        CONCAT(s.first_name, ' ', s.last_name) AS technician_name,
+        s.email AS technician_email,
+        s.phone_number AS technician_phone,
+        rr.created_at AS request_created_at,
+        rr.updated_at AS request_updated_at
+      FROM repair r
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      INNER JOIN customer c ON rr.customer_id = c.customer_id
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+      WHERE r.repair_id = ?
+    `;
+
+    const [rows] = await dbPool.query(query, [repairId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Repair not found." });
+    }
+
+    return res.status(200).json({ data: rows[0] });
+  } catch (error) {
+    console.error("Error fetching repair detail:", error);
+    return res.status(500).json({
+      message: "Failed to fetch repair detail. Please try again later.",
+    });
+  }
+};
+
+/**
  * POST /api/admin/accept-repairs
  * Create a repair record when accepting a repair request
  */

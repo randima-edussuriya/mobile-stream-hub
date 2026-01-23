@@ -33,6 +33,7 @@ import OrderCancellation from "./pages/OrderCancellation";
 import RepairRequestProfile from "./pages/RepairManagement/RepairRequestProfile";
 import AcceptRequest from "./pages/RepairManagement/AcceptRequest";
 import RepairsListing from "./pages/RepairManagement/RepairsListing";
+import RepairProfile from "./pages/RepairManagement/RepairProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -292,7 +293,7 @@ function App() {
               element: <RepairManagement />,
             },
             {
-              path: "profile/:requestId", // base path: /repair-management/profile/:requestId
+              path: "request-profile/:requestId", // base path: /repair-management/profile/:requestId
               element: <RepairRequestProfile />,
             },
             {
@@ -302,6 +303,10 @@ function App() {
             {
               path: "repairs-listing",  // base path: /repair-management/repairs-listing
               element: <RepairsListing />,
+            },
+            {
+              path:"repair-profile/:repairId", // base path: /repair-management/repair-profile/:repairId
+              element:<RepairProfile />
             },
           ],
         },

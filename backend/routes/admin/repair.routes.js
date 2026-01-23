@@ -3,6 +3,8 @@ import {
   createRepairAcceptance,
   getAllRepairRequests,
   getRepairRequestDetail,
+  getAllRepairs,
+  getRepairDetail,
   updateRepairRequestStatus,
 } from "../../controllers/admin/repair.controller.js";
 import {
@@ -13,6 +15,22 @@ import {
 const router = express.Router();
 
 // base: /api/admin/repairs
+
+// GET /records – List all repairs
+router.get(
+  "/records",
+  authenticateUser,
+  authorizeRoles(["admin", "technician"]),
+  getAllRepairs,
+);
+
+// GET /records/:repairId – Get repair detail by ID
+router.get(
+  "/records/:repairId",
+  authenticateUser,
+  authorizeRoles(["admin", "technician"]),
+  getRepairDetail,
+);
 
 // GET / – List all customer repair requests
 router.get(
