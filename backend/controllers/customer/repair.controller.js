@@ -49,7 +49,7 @@ export const checkTechnicianAvailability = async (req, res) => {
       appointmentDateObj.getFullYear(),
       appointmentDateObj.getMonth(),
       appointmentDateObj.getDate(),
-      0,
+      9,
       0,
       0,
     );
@@ -57,11 +57,12 @@ export const checkTechnicianAvailability = async (req, res) => {
       appointmentDateObj.getFullYear(),
       appointmentDateObj.getMonth(),
       appointmentDateObj.getDate(),
-      23,
+      16,
       59,
       59,
     );
 
+    // 9:00 AM and 04:59 PM are counted
     const sql = `
       SELECT COUNT(*) as appointment_count
       FROM repair_request
@@ -77,14 +78,15 @@ export const checkTechnicianAvailability = async (req, res) => {
     ]);
 
     const appointmentCount = result[0].appointment_count;
-    const isAvailable = appointmentCount < 3; // Allow max 3 appointments per day
+    console.log("appointmentCount:", appointmentCount);
+    const isAvailable = appointmentCount < 6; // Allow max 6 appointments per day
 
     return res.status(200).json({
       success: true,
       data: {
         isAvailable,
         appointmentCount,
-        maxAppointmentsPerDay: 3,
+        maxAppointmentsPerDay: 6,
       },
     });
   } catch (error) {
@@ -99,7 +101,7 @@ export const checkTechnicianAvailability = async (req, res) => {
 // Create repair request
 export const createRepairRequest = async (req, res) => {
   try {
-    const { customerId } = req.user;
+    const customerId = req.user.userId;
     const { technicianId, issueDescription, deviceInfo, appointmentDate } =
       req.body;
 
@@ -163,7 +165,7 @@ export const createRepairRequest = async (req, res) => {
       appointmentDateObj.getFullYear(),
       appointmentDateObj.getMonth(),
       appointmentDateObj.getDate(),
-      0,
+      9,
       0,
       0,
     );
@@ -171,7 +173,7 @@ export const createRepairRequest = async (req, res) => {
       appointmentDateObj.getFullYear(),
       appointmentDateObj.getMonth(),
       appointmentDateObj.getDate(),
-      23,
+      16,
       59,
       59,
     );
@@ -185,19 +187,19 @@ export const createRepairRequest = async (req, res) => {
       [technicianId, startOfDay, endOfDay],
     );
 
-    if (availabilityResult[0].appointment_count >= 3) {
+    if (availabilityResult[0].appointment_count >= 6) {
       return res.status(400).json({
         success: false,
         message:
-          "Technician is not available for this date. Maximum 3 appointments per day.",
+          "Technician is not available for this date. Maximum 6 appointments per day.",
       });
     }
 
     // Create repair request
     const sql = `
       INSERT INTO repair_request 
-        (issue_description, device_info, appointment_date, technician_id, customer_id, status)
-      VALUES (?, ?, ?, ?, ?, 'pending')
+        (issue_description, device_info, appointment_date, technician_id, customer_id)
+      VALUES (?, ?, ?, ?, ?)
     `;
 
     const [result] = await dbPool.query(sql, [

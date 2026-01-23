@@ -24,6 +24,7 @@ function RequestRepair() {
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [availabilityMessage, setAvailabilityMessage] = useState("");
+  const [timeValidationError, setTimeValidationError] = useState("");
 
   const { backendUrl } = useContext(AppContext);
 
@@ -57,10 +58,23 @@ function RequestRepair() {
   --------------------------------------------------------------------*/
   useEffect(() => {
     if (selectedTechnician && appointmentDate) {
-      checkAvailability();
+      const appointmentDateObj = new Date(appointmentDate);
+      const hour = appointmentDateObj.getHours();
+      // Check if time is between 9:00 AM (9) and 5:00 PM (17)
+      if (hour < 9 || hour >= 17) {
+        setTimeValidationError(
+          "Appointments can only be scheduled from 9:00 AM to 5:00 PM",
+        );
+        setIsAvailable(null);
+        setAvailabilityMessage("");
+      } else {
+        setTimeValidationError("");
+        checkAvailability();
+      }
     } else {
       setIsAvailable(null);
       setAvailabilityMessage("");
+      setTimeValidationError("");
     }
   }, [selectedTechnician, appointmentDate]);
 
@@ -164,7 +178,9 @@ function RequestRepair() {
     }
   };
 
-  // Get minimum date (today + 1 day)
+  /* -----------------------------------------------------------------
+        Get minimum date for appointment (tomorrow)
+  --------------------------------------------------------------------*/
   const getMinDate = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -216,12 +232,20 @@ function RequestRepair() {
                     type="datetime-local"
                     value={appointmentDate}
                     onChange={(e) => setAppointmentDate(e.target.value)}
-                    min={getMinDate() + "T08:00"}
+                    min={getMinDate() + "T09:00"}
                     disabled={submitting || !selectedTechnician}
                   />
-                  <Form.Text className="text-muted">
-                    Select a date at least one day from now
-                  </Form.Text>
+                  {timeValidationError && (
+                    <Alert variant="danger" className="mt-2 mb-2 py-2">
+                      {timeValidationError}
+                    </Alert>
+                  )}
+                  {!timeValidationError && !appointmentDate && (
+                    <Form.Text className="text-muted">
+                      Note: Appointments can be scheduled from 9:00 AM to 5:00
+                      PM.
+                    </Form.Text>
+                  )}
                 </Form.Group>
 
                 {/* Availability Status */}
@@ -274,9 +298,8 @@ function RequestRepair() {
                 {/* Submit Button */}
                 <div className="d-grid gap-2">
                   <Button
-                    variant="primary"
+                    variant="none"
                     type="submit"
-                    size="lg"
                     disabled={
                       submitting ||
                       loadingTechs ||
@@ -284,6 +307,7 @@ function RequestRepair() {
                       !selectedTechnician ||
                       !appointmentDate
                     }
+                    className="btn_main_light_outline"
                   >
                     {submitting ? (
                       <>
