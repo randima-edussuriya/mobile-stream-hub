@@ -6,6 +6,8 @@ import {
   getAllRepairs,
   getRepairDetail,
   updateRepairRequestStatus,
+  updateRepairStatus,
+  updateRepairDetails,
 } from "../../controllers/admin/repair.controller.js";
 import {
   authenticateUser,
@@ -30,6 +32,22 @@ router.get(
   authenticateUser,
   authorizeRoles(["admin", "technician"]),
   getRepairDetail,
+);
+
+// PUT /records/:repairId – Update repair details (total_cost, identified_issue, identified_device)
+router.put(
+  "/records/:repairId",
+  authenticateUser,
+  authorizeRoles(["admin", "technician"]),
+  updateRepairDetails,
+);
+
+// PUT /records/:repairId/status – Update repair status
+router.put(
+  "/records/:repairId/status",
+  authenticateUser,
+  authorizeRoles(["admin", "technician"]),
+  updateRepairStatus,
 );
 
 // GET / – List all customer repair requests

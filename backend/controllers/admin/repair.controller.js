@@ -218,6 +218,101 @@ export const getRepairDetail = async (req, res) => {
 };
 
 /**
+ * PUT /api/admin/repairs/records/:repairId
+ * Update repair details (total_cost, identified_issue, identified_device)
+ */
+export const updateRepairDetails = async (req, res) => {
+  try {
+    const { repairId } = req.params;
+    const { totalCost, identifiedIssue, identifiedDevice } = req.body;
+
+    // Validate required fields
+    if (!totalCost && !identifiedIssue && !identifiedDevice) {
+      return res.status(400).json({
+        message: "At least one field must be provided to update.",
+      });
+    }
+
+    if (totalCost !== undefined) {
+      if (Number.isNaN(Number(totalCost)) || Number(totalCost) < 0) {
+        return res.status(400).json({
+          message: "Total cost must be a valid positive number.",
+        });
+      }
+    }
+
+    const query = `
+                UPDATE repair 
+                SET total_cost = ?, identified_issue = ?, identified_device = ? 
+                WHERE repair_id = ?`;
+    const [result] = await dbPool.query(query, [
+      totalCost,
+      identifiedIssue,
+      identifiedDevice,
+      repairId,
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Repair not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Repair details updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating repair details:", error);
+    return res.status(500).json({
+      message: "Failed to update repair details. Please try again later.",
+    });
+  }
+};
+
+/**
+ * PUT /api/admin/repairs/records/:repairId/status
+ * Update repair status
+ */
+export const updateRepairStatus = async (req, res) => {
+  try {
+    const { repairId } = req.params;
+    const { status } = req.body;
+
+    // Validate status
+    const validStatuses = [
+      "diagnostics completed",
+      "repair in progress",
+      "repair completed",
+    ];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        message: `Invalid status. Must be: ${validStatuses.join(", ")}.`,
+      });
+    }
+
+    const query = `UPDATE repair SET status = ? WHERE repair_id = ?`;
+    const [result] = await dbPool.query(query, [status, repairId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        message: "Repair not found.",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Repair status updated successfully.",
+      data: { repair_id: repairId, status },
+    });
+  } catch (error) {
+    console.error("Error updating repair status:", error);
+    return res.status(500).json({
+      message: "Failed to update repair status. Please try again later.",
+    });
+  }
+};
+
+/**
  * POST /api/admin/accept-repairs
  * Create a repair record when accepting a repair request
  */

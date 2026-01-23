@@ -7,11 +7,12 @@ import {
   Row,
   Col,
   Spinner,
-  Badge,
   Button,
+  Form,
 } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 function RepairProfile() {
   const { repairId } = useParams();
@@ -21,6 +22,13 @@ function RepairProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [repair, setRepair] = useState(null);
+  const [updating, setUpdating] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editedValues, setEditedValues] = useState({
+    totalCost: "",
+    identifiedIssue: "",
+    identifiedDevice: "",
+  });
 
   /* -----------------------------------------------------------------
         Fetch repair detail
@@ -33,6 +41,11 @@ function RepairProfile() {
         `${backendUrl}/api/admin/repairs/records/${repairId}`,
       );
       setRepair(data.data);
+      setEditedValues({
+        totalCost: data.data.total_cost,
+        identifiedIssue: data.data.identified_issue,
+        identifiedDevice: data.data.identified_device,
+      });
     } catch (error) {
       const message =
         error?.response?.data?.message ||
@@ -44,13 +57,88 @@ function RepairProfile() {
     }
   };
 
-  const getStatusBadge = (status) => {
-    const map = {
-      "diagnostics completed": "primary",
-      "repair in progress": "warning",
-      "repair completed": "success",
+  /* -----------------------------------------------------------------
+        Get badge variant based on repair status
+  --------------------------------------------------- */
+  const getRepairStatusBadge = (status) => {
+    const statusMap = {
+      "diagnostics completed": "bg-primary-subtle",
+      "repair in progress": "bg-warning-subtle",
+      "repair completed": "bg-success-subtle",
     };
-    return map[status] || "secondary";
+    return statusMap[status] || "";
+  };
+
+  /* -----------------------------------------------------------------
+        Repair status options
+  --------------------------------------------------------------------*/
+  const repairStatuses = [
+    "diagnostics completed",
+    "repair in progress",
+    "repair completed",
+  ];
+  /* -----------------------------------------------------------------
+        Update repair status
+  --------------------------------------------------------------------*/
+  const handleStatusChange = async (newStatus) => {
+    try {
+      setUpdating(true);
+      await axios.put(
+        `${backendUrl}/api/admin/repairs/records/${repairId}/status`,
+        { status: newStatus },
+      );
+      setRepair({ ...repair, repair_status: newStatus });
+      toast.success("Repair status updated successfully.");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to update repair status. Please try again later.";
+      toast.error(message);
+      console.error(error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Save repair details
+  --------------------------------------------------------------------*/
+  const handleSaveDetails = async () => {
+    try {
+      setUpdating(true);
+      await axios.put(
+        `${backendUrl}/api/admin/repairs/records/${repairId}`,
+        editedValues,
+      );
+      setRepair({
+        ...repair,
+        total_cost: editedValues.totalCost,
+        identified_issue: editedValues.identifiedIssue,
+        identified_device: editedValues.identifiedDevice,
+      });
+      setEditing(false);
+      toast.success("Repair details updated successfully.");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to update repair details. Please try again later.";
+      toast.error(message);
+      console.error(error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Cancel editing
+  --------------------------------------------------------------------*/
+  const handleCancelEdit = () => {
+    setEditedValues({
+      totalCost: repair.total_cost,
+      identifiedIssue: repair.identified_issue,
+      identifiedDevice: repair.identified_device,
+    });
+    setEditing(false);
   };
 
   useEffect(() => {
@@ -116,16 +204,45 @@ function RepairProfile() {
                   </p>
                 </Col>
                 <Col md={4}>
-                  <p className="mb-2">
-                    <strong>Status:</strong>{" "}
-                    <Badge bg={getStatusBadge(repair.repair_status)}>
-                      {repair.repair_status}
-                    </Badge>
-                  </p>
-                  <p className="mb-2">
-                    <strong>Total Cost:</strong> Rs.{" "}
-                    {Number(repair.total_cost).toLocaleString()}
-                  </p>
+                  <div className="mb-2">
+                    <strong>Status:</strong>
+                    <Form.Select
+                      size="sm"
+                      value={repair.repair_status}
+                      onChange={(e) => handleStatusChange(e.target.value)}
+                      disabled={updating}
+                      className={`mt-1 fw-bold ${getRepairStatusBadge(repair.repair_status)}`}
+                    >
+                      {repairStatuses.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Total Cost:</strong>
+                    {editing ? (
+                      <Form.Control
+                        type="number"
+                        size="sm"
+                        value={editedValues.totalCost}
+                        onChange={(e) =>
+                          setEditedValues({
+                            ...editedValues,
+                            totalCost: e.target.value,
+                          })
+                        }
+                        className="mt-1"
+                        min="0"
+                        step="0.01"
+                      />
+                    ) : (
+                      <span className="ms-2">
+                        Rs. {Number(repair.total_cost).toLocaleString()}
+                      </span>
+                    )}
+                  </div>
                 </Col>
                 <Col md={4}>
                   <p className="mb-2">
@@ -133,26 +250,95 @@ function RepairProfile() {
                     {dayjs(repair.appointment_date).format("YYYY-MM-DD HH:mm")}
                   </p>
                   <p className="mb-2">
-                    <strong>Request Status:</strong> {repair.request_status}
+                    <strong>Request Status:</strong>{" "}
+                    {repair.request_status.charAt(0).toUpperCase() +
+                      repair.request_status.slice(1)}
                   </p>
                 </Col>
               </Row>
               <hr />
               <Row>
+                <Col md={12} className="mb-2">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span className="text-muted">Repair Details</span>
+                    {!editing ? (
+                      <Button
+                        variant="none"
+                        size="sm"
+                        onClick={() => setEditing(true)}
+                        disabled={updating}
+                        className="btn_main_light_outline"
+                      >
+                        Edit Details
+                      </Button>
+                    ) : (
+                      <div>
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={handleSaveDetails}
+                          disabled={updating}
+                          className="me-2"
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={handleCancelEdit}
+                          disabled={updating}
+                          className="fw-bold"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Identified Issue</strong>
-                    <p className="mb-0 fw-semibold">
-                      {repair.identified_issue}
-                    </p>
+                    {editing ? (
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={editedValues.identifiedIssue}
+                        onChange={(e) =>
+                          setEditedValues({
+                            ...editedValues,
+                            identifiedIssue: e.target.value,
+                          })
+                        }
+                        className="mt-2"
+                      />
+                    ) : (
+                      <p className="mb-0 fw-semibold">
+                        {repair.identified_issue}
+                      </p>
+                    )}
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Identified Device</strong>
-                    <p className="mb-0 fw-semibold">
-                      {repair.identified_device}
-                    </p>
+                    {editing ? (
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={editedValues.identifiedDevice}
+                        onChange={(e) =>
+                          setEditedValues({
+                            ...editedValues,
+                            identifiedDevice: e.target.value,
+                          })
+                        }
+                        className="mt-2"
+                      />
+                    ) : (
+                      <p className="mb-0 fw-semibold">
+                        {repair.identified_device}
+                      </p>
+                    )}
                   </div>
                 </Col>
               </Row>
