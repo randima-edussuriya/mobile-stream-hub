@@ -10,7 +10,6 @@ export const getMyRepairRequests = async (req, res) => {
         rr.repair_requests_id,
         rr.status,
         rr.appointment_date,
-        rr.technician_id,
         CONCAT(s.first_name, ' ', s.last_name) as technician_name
       FROM repair_request rr
       INNER JOIN staff s ON rr.technician_id = s.staff_id
