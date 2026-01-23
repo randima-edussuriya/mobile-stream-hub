@@ -7,11 +7,12 @@ import {
   Row,
   Col,
   Spinner,
-  Badge,
   Button,
+  Form,
 } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 function RepairRequestProfile() {
   const { requestId } = useParams();
@@ -20,7 +21,7 @@ function RepairRequestProfile() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [repair, setRepair] = useState(null);
+  const [repairRequest, setRepairRequest] = useState(null);
 
   /* -----------------------------------------------------------------
         Fetch repair request details from API
@@ -29,12 +30,12 @@ function RepairRequestProfile() {
     try {
       setLoading(true);
       setError("");
-      setRepair(null);
+      setRepairRequest(null);
 
       const { data } = await axios.get(
         `${backendUrl}/api/admin/repairs/${requestId}`,
       );
-      setRepair(data.data);
+      setRepairRequest(data.data);
     } catch (error) {
       const message =
         error?.response?.data?.message ||
@@ -47,15 +48,21 @@ function RepairRequestProfile() {
   };
 
   /* -----------------------------------------------------------------
-        Get badge variant based on status
+        Handle status change
   -------------------------------------------------------*/
-  const getStatusBadge = (status) => {
-    const statusMap = {
-      pending: "warning",
-      accepted: "success",
-      rejected: "danger",
-    };
-    return statusMap[status] || "secondary";
+  const handleStatusChange = async (newStatus) => {
+    try {
+      await axios.put(`${backendUrl}/api/admin/repairs/${requestId}/status`, {
+        status: newStatus,
+      });
+      toast.success("Status updated successfully.");
+      fetchRepairDetails();
+    } catch (error) {
+      const message =
+        error?.response?.data?.message || "Failed to update status.";
+      toast.error(message);
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -75,7 +82,7 @@ function RepairRequestProfile() {
     );
   }
 
-  if (error || !repair) {
+  if (error || !repairRequest) {
     return (
       <Container className="mt-5">
         <Card className="border-danger">
@@ -95,7 +102,7 @@ function RepairRequestProfile() {
       <Row className="mb-3">
         <Col>
           <h4 className="text-white">
-            Repair Request #{repair.repair_requests_id}
+            Repair Request #{repairRequest.repair_requests_id}
           </h4>
         </Col>
         <Col className="text-end">
@@ -111,8 +118,17 @@ function RepairRequestProfile() {
         ---------------------------------------------------------- */}
         <Col md={12}>
           <Card className="shadow-sm">
-            <Card.Header className="bg-secondary-subtle fw-semibold">
-              Repair Request Details
+            <Card.Header className="bg-secondary-subtle fw-semibold d-flex justify-content-between align-items-center">
+              <span>Repair Request Details</span>
+              <Button
+                variant="success"
+                disabled={repairRequest.status === "accepted"}
+                onClick={() =>
+                  navigate(`/repair-management/accept-request/${requestId}`)
+                }
+              >
+                Make Accept
+              </Button>
             </Card.Header>
             <Card.Body>
               <Row>
@@ -120,19 +136,21 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Request ID</strong>
                     <p className="mb-0 fw-semibold">
-                      {repair.repair_requests_id}
+                      {repairRequest.repair_requests_id}
                     </p>
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Status</strong>
-                    <p className="mb-0">
-                      <Badge bg={getStatusBadge(repair.status)}>
-                        {repair.status.charAt(0).toUpperCase() +
-                          repair.status.slice(1)}
-                      </Badge>
-                    </p>
+                    <Form.Select
+                      value={repairRequest.status}
+                      disabled={repairRequest.status === "accepted"}
+                      onChange={(e) => handleStatusChange(e.target.value)}
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="rejected">Rejected</option>
+                    </Form.Select>
                   </div>
                 </Col>
               </Row>
@@ -142,7 +160,7 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Appointment Date</strong>
                     <p className="mb-0 fw-semibold">
-                      {dayjs(repair.appointment_date).format(
+                      {dayjs(repairRequest.appointment_date).format(
                         "YYYY-MM-DD HH:mm",
                       )}
                     </p>
@@ -152,7 +170,9 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Created Date</strong>
                     <p className="mb-0 fw-semibold">
-                      {dayjs(repair.created_at).format("YYYY-MM-DD HH:mm:ss")}
+                      {dayjs(repairRequest.created_at).format(
+                        "YYYY-MM-DD HH:mm:ss",
+                      )}
                     </p>
                   </div>
                 </Col>
@@ -163,7 +183,9 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Updated Date</strong>
                     <p className="mb-0 fw-semibold">
-                      {dayjs(repair.updated_at).format("YYYY-MM-DD HH:mm:ss")}
+                      {dayjs(repairRequest.updated_at).format(
+                        "YYYY-MM-DD HH:mm:ss",
+                      )}
                     </p>
                   </div>
                 </Col>
@@ -173,12 +195,14 @@ function RepairRequestProfile() {
 
               <div className="mb-3">
                 <strong className="text-muted">Device Information</strong>
-                <p className="mb-0 fw-semibold">{repair.device_info}</p>
+                <p className="mb-0 fw-semibold">{repairRequest.device_info}</p>
               </div>
 
               <div className="mb-3">
                 <strong className="text-muted">Issue Description</strong>
-                <p className="mb-0 fw-semibold">{repair.issue_description}</p>
+                <p className="mb-0 fw-semibold">
+                  {repairRequest.issue_description}
+                </p>
               </div>
             </Card.Body>
           </Card>
@@ -197,13 +221,17 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Customer ID</strong>
-                    <p className="mb-0 fw-semibold">{repair.customer_id}</p>
+                    <p className="mb-0 fw-semibold">
+                      {repairRequest.customer_id}
+                    </p>
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Customer Name</strong>
-                    <p className="mb-0 fw-semibold">{repair.customer_name}</p>
+                    <p className="mb-0 fw-semibold">
+                      {repairRequest.customer_name}
+                    </p>
                   </div>
                 </Col>
               </Row>
@@ -212,13 +240,17 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Email</strong>
-                    <p className="mb-0 fw-semibold">{repair.customer_email}</p>
+                    <p className="mb-0 fw-semibold">
+                      {repairRequest.customer_email}
+                    </p>
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Phone</strong>
-                    <p className="mb-0 fw-semibold">{repair.customer_phone}</p>
+                    <p className="mb-0 fw-semibold">
+                      {repairRequest.customer_phone}
+                    </p>
                   </div>
                 </Col>
               </Row>
@@ -239,13 +271,17 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Technician ID</strong>
-                    <p className="mb-0 fw-semibold">{repair.technician_id}</p>
+                    <p className="mb-0 fw-semibold">
+                      {repairRequest.technician_id}
+                    </p>
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
                     <strong className="text-muted">Technician Name</strong>
-                    <p className="mb-0 fw-semibold">{repair.technician_name}</p>
+                    <p className="mb-0 fw-semibold">
+                      {repairRequest.technician_name}
+                    </p>
                   </div>
                 </Col>
               </Row>
@@ -255,7 +291,7 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Email</strong>
                     <p className="mb-0 fw-semibold">
-                      {repair.technician_email}
+                      {repairRequest.technician_email}
                     </p>
                   </div>
                 </Col>
@@ -263,7 +299,7 @@ function RepairRequestProfile() {
                   <div className="mb-3">
                     <strong className="text-muted">Phone</strong>
                     <p className="mb-0 fw-semibold">
-                      {repair.technician_phone}
+                      {repairRequest.technician_phone}
                     </p>
                   </div>
                 </Col>

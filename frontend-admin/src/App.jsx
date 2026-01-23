@@ -31,6 +31,8 @@ import ItemAdd from "./pages/ItemManagement/ItemAdd";
 import OrderProfile from "./pages/OrderManagement/OrderProfile";
 import OrderCancellation from "./pages/OrderCancellation";
 import RepairRequestProfile from "./pages/RepairManagement/RepairRequestProfile";
+import AcceptRequest from "./pages/RepairManagement/AcceptRequest";
+import RepairsListing from "./pages/RepairManagement/RepairsListing";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -276,29 +278,30 @@ function App() {
         ---------------------------------------------------------- */
         {
           path: "repair-management",
-          element: <Outlet />,
+          element: (
+            <RoleRoute
+              userData={userData}
+              allowedRoles={["admin", "technician"]}
+            >
+              <Outlet />
+            </RoleRoute>
+          ),
           children: [
             {
-              path: "",
-              element: (
-                <RoleRoute
-                  userData={userData}
-                  allowedRoles={["admin", "technician"]}
-                >
-                  <RepairManagement />
-                </RoleRoute>
-              ),
+              path: "", // base path: /repair-management
+              element: <RepairManagement />,
             },
             {
-              path: "profile/:requestId",
-              element: (
-                <RoleRoute
-                  userData={userData}
-                  allowedRoles={["admin", "technician"]}
-                >
-                  <RepairRequestProfile />
-                </RoleRoute>
-              ),
+              path: "profile/:requestId", // base path: /repair-management/profile/:requestId
+              element: <RepairRequestProfile />,
+            },
+            {
+              path: "accept-request/:requestId", // base path: /repair-management/accept-request/:requestId
+              element: <AcceptRequest />,
+            },
+            {
+              path: "repairs-listing",  // base path: /repair-management/repairs-listing
+              element: <RepairsListing />,
             },
           ],
         },
