@@ -6,6 +6,7 @@ import { validateApplyCoupon } from "../../middleware/customer/validations.middl
 const router = express.Router();
 
 // base: /api/customer/coupons
+// POST /apply – Apply a coupon to the current cart
 router.post("/apply", authenticateUser, validateApplyCoupon, applyCoupon);
 
 export default router;

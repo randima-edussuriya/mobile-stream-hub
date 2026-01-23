@@ -21,6 +21,7 @@ import multerErrorHandler from "../../middleware/admin/multerErrorHandler.middle
 const router = express.Router();
 
 // base: /api/admin/items
+// POST / – Create a new item (with image upload)
 router.post(
   "/",
   authenticateUser,
@@ -28,8 +29,9 @@ router.post(
   uploadImage.single("image"),
   multerErrorHandler,
   validateAddItem,
-  addItem
+  addItem,
 );
+// PUT /:itemId – Update an item's details (with optional image upload)
 router.put(
   "/:itemId",
   authenticateUser,
@@ -37,29 +39,32 @@ router.put(
   uploadImage.single("image"),
   multerErrorHandler,
   validateUpdateItem,
-  updateItem
+  updateItem,
 );
+// GET / – List all items
 router.get(
   "/",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
-  getAllItems
+  getAllItems,
 );
 
+// DELETE /:itemId – Delete an item by ID
 router.delete(
   "/:itemId",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager"]),
   validateItemId,
-  deleteItem
+  deleteItem,
 );
 
+// GET /:itemId – Get item details by ID
 router.get(
   "/:itemId",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
   validateItemId,
-  getItem
+  getItem,
 );
 
 export default router;

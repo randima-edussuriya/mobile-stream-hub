@@ -19,41 +19,46 @@ import {
 const router = express.Router();
 
 // base: /api/admin/categories
+// GET / – List all categories
 router.get(
   "/",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
-  getCategories
+  getCategories,
 );
+// DELETE /:categoryId – Delete a category by ID
 router.delete(
   "/:categoryId",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager"]),
   validateCategoryId,
-  deleteCategory
+  deleteCategory,
 );
+// GET /:categoryId – Get category details by ID
 router.get(
   "/:categoryId",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
   validateCategoryId,
-  getCategory
+  getCategory,
 );
 
+// PUT /:categoryId – Update category
 router.put(
   "/:categoryId",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager"]),
   validateUpdateCategory,
-  updateCategory
+  updateCategory,
 );
 
+// POST / – Create a new category
 router.post(
   "",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager"]),
   validateAddCategory,
-  addCategory
+  addCategory,
 );
 
 export default router;

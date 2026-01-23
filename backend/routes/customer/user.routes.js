@@ -10,8 +10,11 @@ import { validateUpdateMe } from "../../middleware/customer/validations.middlewa
 const router = express.Router();
 
 // base: /api/customer/users
+// GET /me/basic – Get basic profile data for the current customer
 router.get("/me/basic", authenticateUser, getMeBasicData);
+// GET /me – Get full profile for the current customer
 router.get("/me", authenticateUser, getMe);
+// PUT /me – Update the current customer's profile
 router.put("/me", authenticateUser, validateUpdateMe, updateMe);
 
 export default router;

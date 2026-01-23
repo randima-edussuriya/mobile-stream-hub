@@ -8,11 +8,12 @@ import { getAllSuppliers } from "../../controllers/admin/supplier.controller.js"
 const router = express.Router();
 
 // base: /api/admin/suppliers
+// GET / – List all suppliers
 router.get(
   "/",
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
-  getAllSuppliers
+  getAllSuppliers,
 );
 
 export default router;

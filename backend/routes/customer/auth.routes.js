@@ -17,15 +17,20 @@ import { authenticateUser } from "../../middleware/customer/auth.middleware.js";
 const router = express.Router();
 
 // base: /api/customer/auth
+// POST /register – Register a new customer
 router.post("/register", validateRegister, isVerifiedOtp, register);
+// POST /login – Customer login
 router.post("/login", validateLogin, login);
+// GET /is-authenticated – Check customer authentication status
 router.get("/is-authenticated", authenticateUser, isAuthenticated);
+// POST /logout – Customer logout
 router.post("/logout", logout);
+// PUT /reset-password – Reset customer password after OTP verification
 router.put(
   "/reset-password",
   validateResetPassword,
   isVerifiedOtp,
-  resetPassword
+  resetPassword,
 );
 
 export default router;

@@ -14,6 +14,7 @@ import {
 const router = express.Router();
 
 // base: /api/admin/deliveries
+// GET /area-assigned – Get delivery areas assigned to staff (deliver person view)
 router.get(
   "/area-assigned",
   authenticateUser,
@@ -21,7 +22,7 @@ router.get(
   getAreaAssigned,
 );
 
-// Get all delivery areas with staff details
+// GET /areas – Get all delivery areas with staff details
 router.get(
   "/areas",
   authenticateUser,
@@ -29,7 +30,7 @@ router.get(
   getDeliveryAreas,
 );
 
-// Update delivery area cost
+// PUT /areas/:areaId – Update delivery area cost
 router.put(
   "/areas/:areaId",
   authenticateUser,
@@ -37,7 +38,7 @@ router.put(
   updateDeliveryAreaCost,
 );
 
-// Get all deliver person staff
+// GET /staff – Get all deliver person staff
 router.get(
   "/staff",
   authenticateUser,
@@ -45,7 +46,7 @@ router.get(
   getDeliverPersons,
 );
 
-// Update staff's assigned delivery area
+// PUT /staff/:staffId/area – Update staff's assigned delivery area
 router.put(
   "/staff/:staffId/area",
   authenticateUser,

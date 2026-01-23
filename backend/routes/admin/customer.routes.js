@@ -12,13 +12,15 @@ import { validateUpdateCustomerStatus } from "../../middleware/admin/validations
 const router = express.Router();
 
 // bass: api/admin/customers
+// GET / – List all customers
 router.get("/", authenticateUser, authorizeRoles(["admin"]), getAllCustomers);
+// PUT /:customerId/status – Update a customer's status (activate/deactivate)
 router.put(
   "/:customerId/status",
   authenticateUser,
   authorizeRoles(["admin"]),
   validateUpdateCustomerStatus,
-  updateCustomerStatus
+  updateCustomerStatus,
 );
 
 export default router;

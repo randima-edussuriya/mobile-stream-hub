@@ -21,15 +21,20 @@ import {
 const router = express.Router();
 
 // base: /api/admin/staff-users
+// GET /me/basic – Get current staff user's basic data
 router.get("/me/basic", authenticateUser, getMeBasicData);
+// GET /me – Get current staff user's profile
 router.get("/me", authenticateUser, getMe);
+// GET / – List all staff users
 router.get("/", authenticateUser, authorizeRoles(["admin"]), getAllUsers);
+// GET /staff-types – Get list of staff types
 router.get(
   "/staff-types",
   authenticateUser,
   authorizeRoles(["admin"]),
   getStaffTypes,
 );
+// GET /:staffId – Get staff user details by ID
 router.get(
   "/:staffId",
   authenticateUser,
@@ -44,6 +49,7 @@ router.get(
   authorizeRoles(["admin"]),
   getStaffTypes,
 );
+// GET /:staffId – Get staff user details by ID
 router.get(
   "/:staffId",
   authenticateUser,
@@ -51,6 +57,7 @@ router.get(
   validateStaffUserId,
   getStaffUser,
 );
+// PUT /:staffId/status – Update staff user's status (activate/deactivate)
 router.put(
   "/:staffId/status",
   authenticateUser,
@@ -59,6 +66,7 @@ router.put(
   updateUserStatus,
 );
 
+// PUT /:staffId – Update staff user's profile
 router.put(
   "/:staffId",
   authenticateUser,

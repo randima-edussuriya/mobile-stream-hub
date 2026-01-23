@@ -9,12 +9,13 @@ import { validateCreateCoupon } from "../../middleware/admin/validations.middlew
 const router = express.Router();
 
 // base: api/admin/coupons
+// POST /create – Create a new coupon
 router.post(
   "/create",
   authenticateUser,
   authorizeRoles(["admin"]),
   validateCreateCoupon,
-  createCoupon
+  createCoupon,
 );
 
 export default router;
