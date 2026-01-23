@@ -83,7 +83,7 @@ function RepairRequestProfile() {
         <Card className="border-danger">
           <Card.Body className="text-danger text-center">
             <p className="mb-3">{error || "Repair request not found"}</p>
-            <Button variant="secondary" onClick={() => navigate("/repairs")}>
+            <Button variant="secondary" onClick={() => navigate(-1)}>
               Back to Repairs
             </Button>
           </Card.Body>
@@ -101,7 +101,7 @@ function RepairRequestProfile() {
           </h4>
         </Col>
         <Col className="text-end">
-          <Button variant="dark" onClick={() => navigate("/repairs")}>
+          <Button variant="dark" onClick={() => navigate(-1)}>
             Back
           </Button>
         </Col>
