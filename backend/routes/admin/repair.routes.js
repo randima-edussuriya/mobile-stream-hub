@@ -16,7 +16,7 @@ const router = express.Router();
 router.get(
   "/",
   authenticateUser,
-  authorizeRoles(["admin"]),
+  authorizeRoles(["admin", "technician"]),
   getAllRepairRequests,
 );
 

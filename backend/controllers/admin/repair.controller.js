@@ -6,25 +6,29 @@ import dbPool from "../../config/dbConnection.js";
  */
 export const getAllRepairRequests = async (req, res) => {
   try {
-    const query = `
+    const { userId, userRole } = req.user;
+
+    let query = `
       SELECT 
         rr.repair_requests_id,
         rr.issue_description,
         rr.device_info,
         rr.status,
         rr.appointment_date,
-        rr.created_at,
-        rr.customer_id,
-        CONCAT(s.first_name, ' ', s.last_name) AS technician_name,
-        c.phone_number,
-        c.email
+        CONCAT(s.first_name, ' ', s.last_name) AS technician_name
       FROM repair_request rr
-      LEFT JOIN staff s ON rr.technician_id = s.staff_id
-      LEFT JOIN customer c ON rr.customer_id = c.customer_id
-      ORDER BY rr.appointment_date DESC
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
     `;
 
-    const [requests] = await dbPool.query(query);
+    // Filter based on user role
+    if (userRole === "technician") {
+      query += ` WHERE rr.technician_id = ?`;
+    }
+
+    query += ` ORDER BY rr.appointment_date DESC`;
+
+    const params = userRole === "technician" ? [userId] : [];
+    const [requests] = await dbPool.query(query, params);
     return res.status(200).json({ data: requests });
   } catch (error) {
     console.error("Error fetching repair requests:", error);
