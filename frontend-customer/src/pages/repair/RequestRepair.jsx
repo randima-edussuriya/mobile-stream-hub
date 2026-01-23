@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { AppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 function RequestRepair() {
   const [technicians, setTechnicians] = useState([]);
@@ -27,6 +28,8 @@ function RequestRepair() {
   const [timeValidationError, setTimeValidationError] = useState("");
 
   const { backendUrl } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
         Fetch technicians on component mount
@@ -166,6 +169,7 @@ function RequestRepair() {
         setDeviceInfo("");
         setIsAvailable(null);
         setAvailabilityMessage("");
+        navigate("/repair/my-requests");
       }
     } catch (error) {
       toast.error(

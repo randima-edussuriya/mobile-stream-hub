@@ -1,5 +1,91 @@
 import dbPool from "../../config/dbConnection.js";
 
+// Get all repair requests for logged-in customer
+export const getMyRepairRequests = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+
+    const sql = `
+      SELECT 
+        rr.repair_requests_id,
+        rr.status,
+        rr.appointment_date,
+        rr.technician_id,
+        CONCAT(s.first_name, ' ', s.last_name) as technician_name
+      FROM repair_request rr
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+      WHERE rr.customer_id = ?
+      ORDER BY rr.appointment_date DESC
+    `;
+
+    const [requests] = await dbPool.query(sql, [customerId]);
+
+    return res.status(200).json({
+      success: true,
+      data: requests,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+// Get repair request details by ID
+export const getRepairRequestDetail = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+    const { requestId } = req.params;
+
+    if (!requestId) {
+      return res.status(400).json({
+        success: false,
+        message: "Request ID is required",
+      });
+    }
+
+    const sql = `
+      SELECT 
+        rr.repair_requests_id,
+        rr.issue_description,
+        rr.status,
+        rr.device_info,
+        rr.appointment_date,
+        rr.created_at,
+        rr.updated_at,
+        rr.technician_id,
+        CONCAT(s.first_name, ' ', s.last_name) as technician_name,
+        s.email as technician_email,
+        s.phone_number as technician_phone
+      FROM repair_request rr
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+      WHERE rr.repair_requests_id = ? AND rr.customer_id = ?
+    `;
+
+    const [requests] = await dbPool.query(sql, [requestId, customerId]);
+
+    if (requests.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Repair request not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: requests[0],
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 // Get all active technician staff
 export const getTechnicians = async (req, res) => {
   try {

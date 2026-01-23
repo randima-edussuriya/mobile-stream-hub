@@ -1,6 +1,8 @@
 import express from "express";
 import { authenticateUser } from "../../middleware/customer/auth.middleware.js";
 import {
+  getMyRepairRequests,
+  getRepairRequestDetail,
   getTechnicians,
   checkTechnicianAvailability,
   createRepairRequest,
@@ -9,6 +11,12 @@ import {
 const router = express.Router();
 
 // base: /api/customer/repair
+
+// Get my repair requests
+router.get("/my-requests", authenticateUser, getMyRepairRequests);
+
+// Get repair request details by ID
+router.get("/requests/:requestId", authenticateUser, getRepairRequestDetail);
 
 // Get all active technicians
 router.get("/technicians", authenticateUser, getTechnicians);

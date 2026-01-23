@@ -20,6 +20,8 @@ import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/orders/MyOrders";
 import OrderDetails from "./pages/orders/OrderDetails";
 import RequestRepair from "./pages/repair/RequestRepair";
+import MyRepairRequests from "./pages/repair/MyRepairRequests";
+import RepairRequestProfile from "./pages/repair/RepairRequestProfile";
 
 const Layout = () => {
   return (
@@ -114,13 +116,30 @@ function App() {
             </PrivateRoute>
           ),
         },
+        /* -----------------------------------------------------------------
+              Repair routes
+        --------------------------------------------------------------------*/
         {
-          path: "repairs-request",
+          path: "repair",
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
-              <RequestRepair />
+              <Outlet />
             </PrivateRoute>
           ),
+          children: [
+            {
+              path: "request-repair", // base: /repair/request-repair
+              element: <RequestRepair />,
+            },
+            {
+              path: "my-requests", // base: /repair/my-requests
+              element: <MyRepairRequests />,
+            },
+            {
+              path: "my-requests/:requestId", // base: /repair/my-requests/:requestId
+              element: <RepairRequestProfile />,
+            },
+          ],
         },
         {
           path: "coming-soon",

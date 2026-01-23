@@ -25,12 +25,12 @@ function Header() {
 
   // filter categories for phones
   const categoriesPhone = categories.filter(
-    (category) => category.category_type === "phone"
+    (category) => category.category_type === "phone",
   );
 
   // filter categories for accessories
   const categoriesAccessories = categories.filter(
-    (category) => category.category_type === "accessory"
+    (category) => category.category_type === "accessory",
   );
 
   const handelLogout = async () => {
@@ -42,7 +42,7 @@ function Header() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong, Please try again later"
+          "Something went wrong, Please try again later",
       );
       console.error(error);
     }
@@ -59,7 +59,7 @@ function Header() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
       console.error(error);
     }
@@ -141,7 +141,11 @@ function Header() {
               <Nav.Link as={Link} to={"/products"} className="navbar_link">
                 Products
               </Nav.Link>
-              <Nav.Link as={Link} to={"/repairs-request"} className="navbar_link">
+              <Nav.Link
+                as={Link}
+                to={"/repair/request-repair"}
+                className="navbar_link"
+              >
                 Repairs
               </Nav.Link>
               <Nav.Link as={Link} to={"/about-us"} className="navbar_link">
@@ -181,6 +185,9 @@ function Header() {
                   </Dropdown.Item>
                   <Dropdown.Item as={Link} to="/my-orders">
                     My Orders
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/repair/my-requests">
+                    My Repair Requests
                   </Dropdown.Item>
                   <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
