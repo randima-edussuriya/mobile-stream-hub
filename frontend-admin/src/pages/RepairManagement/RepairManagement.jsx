@@ -61,7 +61,7 @@ function RepairManagement() {
     if (loading) {
       return (
         <tr>
-          <td colSpan={6} className="text-center py-3">
+          <td colSpan={7} className="text-center py-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -73,7 +73,7 @@ function RepairManagement() {
     if (error) {
       return (
         <tr>
-          <td colSpan={6} className="text-danger text-center">
+          <td colSpan={7} className="text-danger text-center">
             {error}
           </td>
         </tr>
@@ -83,7 +83,7 @@ function RepairManagement() {
     if (repairs.length === 0) {
       return (
         <tr>
-          <td colSpan={6} className="text-danger text-center">
+          <td colSpan={7} className="text-danger text-center">
             No repair requests found
           </td>
         </tr>
@@ -96,10 +96,13 @@ function RepairManagement() {
         <td className="text-muted">
           {dayjs(repair.appointment_date).format("YYYY-MM-DD HH:mm")}
         </td>
-        <td>{repair.device_info}</td>
-        <td>{repair.technician_name || "—"}</td>
+        <td>{repair.issue_description}</td>
+        <td className="text-muted">{repair.device_info}</td>
+        <td className="fw-medium">{repair.technician_name}</td>
         <td>
-          <Badge bg={getStatusBadge(repair.status)}>{repair.status}</Badge>
+          <Badge bg={getStatusBadge(repair.status)}>
+            {repair.status.charAt(0).toUpperCase() + repair.status.slice(1)}
+          </Badge>
         </td>
         <td>
           <div className="d-flex gap-3 align-items-center">
@@ -127,6 +130,7 @@ function RepairManagement() {
               <tr className="fw-bold">
                 <th>Request ID</th>
                 <th>Appointment Date</th>
+                <th>Issue Description</th>
                 <th>Device</th>
                 <th>Technician</th>
                 <th>Status</th>
