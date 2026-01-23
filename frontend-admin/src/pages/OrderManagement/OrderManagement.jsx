@@ -178,7 +178,9 @@ function OrderManagement() {
         </td>
         <td className="fw-semibold">{Number(order.total).toLocaleString()}</td>
         <td>
-          <Badge bg={getStatusBadge(order.status)}>{order.status}</Badge>
+          <Badge bg={getStatusBadge(order.status)}>
+            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+          </Badge>
         </td>
         <td>{order.payment_method}</td>
         <td>{order.district}</td>
