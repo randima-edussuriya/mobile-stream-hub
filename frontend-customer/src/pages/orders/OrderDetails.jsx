@@ -129,7 +129,8 @@ const OrderDetails = () => {
                   <p className="mb-2">
                     <strong>Order Status:</strong>{" "}
                     <Badge bg={getStatusBadge(orderData.status)}>
-                      {orderData.status}
+                      {orderData.status.charAt(0).toUpperCase() +
+                        orderData.status.slice(1)}
                     </Badge>
                   </p>
                 </Col>
@@ -139,7 +140,10 @@ const OrderDetails = () => {
                   </p>
                   <p className="mb-2">
                     <strong>Payment Status:</strong>{" "}
-                    <Badge bg="secondary">{orderData.payment_status}</Badge>
+                    <Badge bg="secondary">
+                      {orderData.payment_status.charAt(0).toUpperCase() +
+                        orderData.payment_status.slice(1)}
+                    </Badge>
                   </p>
                   <p className="mb-2">
                     <strong>Payment Date:</strong>{" "}
