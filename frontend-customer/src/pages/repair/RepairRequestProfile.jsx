@@ -44,7 +44,6 @@ function RepairRequestProfile() {
         error?.response?.data?.message ||
         "Failed to fetch repair request details. Please try again.";
       setError(errorMsg);
-      toast.error(errorMsg);
       console.error(error);
     } finally {
       setLoading(false);
@@ -91,21 +90,27 @@ function RepairRequestProfile() {
     <Container className="py-4">
       <Row className="mb-4">
         <Col>
-          <Button
-            variant="secondary"
-            onClick={() => navigate("/repair/my-requests")}
-            className="mb-3"
-          >
-            ← Back to Requests
-          </Button>
           <h3 className="fw-bold">
             Repair Request #{repairRequest.repair_requests_id}
           </h3>
+        </Col>
+        {/* Back Button */}
+        <Col xs="auto">
+          <Button
+            variant="none"
+            className="btn_main_dark"
+            onClick={() => navigate("/repair/my-requests")}
+          >
+            Back to Requests
+          </Button>
         </Col>
       </Row>
 
       <Row>
         <Col lg={8}>
+          {/* --------------------------------------------------------
+                    Request Details
+        ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
               <Card.Title className="mb-0">Request Details</Card.Title>
@@ -122,7 +127,9 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <h6 className="text-muted mb-1">Created Date</h6>
                   <p className="mb-0">
-                    {dayjs(repairRequest.created_at).format("YYYY-MM-DD HH:mm")}
+                    {dayjs(repairRequest.created_at).format(
+                      "YYYY-MM-DD HH:mm:ss",
+                    )}
                   </p>
                 </Col>
               </Row>
@@ -139,13 +146,18 @@ function RepairRequestProfile() {
                 <Col md={6}>
                   <h6 className="text-muted mb-1">Last Updated</h6>
                   <p className="mb-0">
-                    {dayjs(repairRequest.updated_at).format("YYYY-MM-DD HH:mm")}
+                    {dayjs(repairRequest.updated_at).format(
+                      "YYYY-MM-DD HH:mm:ss",
+                    )}
                   </p>
                 </Col>
               </Row>
             </Card.Body>
           </Card>
 
+          {/* --------------------------------------------------------
+                    Issue & Device Information
+            ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
               <Card.Title className="mb-0">
@@ -168,6 +180,9 @@ function RepairRequestProfile() {
           </Card>
         </Col>
 
+        {/* --------------------------------------------------------
+                    Technician Information
+        ------------------------------------------------------------ */}
         <Col lg={4}>
           <Card className="shadow">
             <Card.Header className="bg-light">

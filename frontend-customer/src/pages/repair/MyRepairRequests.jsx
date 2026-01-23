@@ -6,15 +6,14 @@ import {
   Spinner,
   Badge,
   Card,
-  Alert,
   Row,
   Col,
   Button,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 function MyRepairRequests() {
   const [repairRequests, setRepairRequests] = useState([]);
@@ -44,7 +43,6 @@ function MyRepairRequests() {
         error?.response?.data?.message ||
         "Failed to fetch repair requests. Please try again.";
       setError(errorMsg);
-      toast.error(errorMsg);
       console.error(error);
     } finally {
       setLoading(false);
@@ -61,13 +59,6 @@ function MyRepairRequests() {
       rejected: "danger",
     };
     return statusMap[status] || "secondary";
-  };
-
-  /* -----------------------------------------------------------------
-        Handle view details button
-  --------------------------------------------------------------------*/
-  const handleViewDetails = (requestId) => {
-    navigate(`/repair/my-requests/${requestId}`);
   };
 
   /* -----------------------------------------------------------------
@@ -112,9 +103,7 @@ function MyRepairRequests() {
         <td className="text-muted">
           {dayjs(request.appointment_date).format("YYYY-MM-DD HH:mm")}
         </td>
-        <td>
-          {request.technician_name || <span className="text-muted">-</span>}
-        </td>
+        <td>{request.technician_name}</td>
         <td>
           <Badge bg={getStatusBadge(request.status)}>
             {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
@@ -122,11 +111,13 @@ function MyRepairRequests() {
         </td>
         <td>
           <Button
+            variant="none"
             size="sm"
-            variant="primary"
-            onClick={() => handleViewDetails(request.repair_requests_id)}
+            className="btn_main_dark"
+            as={Link}
+            to={`/repair/my-requests/${request.repair_requests_id}`}
           >
-            View Details
+            View
           </Button>
         </td>
       </tr>
@@ -141,15 +132,9 @@ function MyRepairRequests() {
         </Col>
       </Row>
 
-      {error && !loading && (
-        <Alert variant="danger" dismissible onClose={() => setError("")}>
-          {error}
-        </Alert>
-      )}
-
       <Card className="shadow">
         <Card.Body className="p-0">
-          <div className="overflow-y-auto" style={{ maxHeight: "70vh" }}>
+          <div className="overflow-y-auto">
             <Table hover striped size="sm" className="mb-0">
               <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
                 <tr className="fw-bold bg-light">
