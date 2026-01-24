@@ -44,7 +44,7 @@ function RepairManagement() {
   --------------------------------------------------- */
   const getStatusBadge = (status) => {
     const statusMap = {
-      pending: "warning",
+      pending: "primary",
       accepted: "success",
       rejected: "danger",
     };

@@ -45,6 +45,7 @@ function RepairsListing() {
       "diagnostics completed": "primary",
       "repair in progress": "warning",
       "repair completed": "success",
+      "cancelled": "danger",
     };
     return statusMap[status] || "secondary";
   };
