@@ -62,7 +62,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-person-gear fs-5 me-3"></i>
-          <span className="small fw-semibold">Suplier Management</span>
+          <span className="small fw-semibold">Supplier Management</span>
         </NavLink>
         <NavLink
           to={"/order-management"}
