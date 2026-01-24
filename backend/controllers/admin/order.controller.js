@@ -29,7 +29,6 @@ export const getAllOrders = async (req, res) => {
           `;
 
     const [orders] = await dbPool.query(orderSql, filters);
-    console.log(orderSql);
 
     res.status(200).json({
       success: true,
