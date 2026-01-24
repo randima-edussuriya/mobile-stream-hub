@@ -88,45 +88,6 @@ export const getRepairRequestDetail = async (req, res) => {
 };
 
 /**
- * PUT /api/admin/repairs/:requestId/status
- * Update repair request status
- */
-export const updateRepairRequestStatus = async (req, res) => {
-  try {
-    const { requestId } = req.params;
-    const { status } = req.body;
-
-    // Validate status
-    const validStatuses = ["pending", "rejected"];
-    if (!status || !validStatuses.includes(status)) {
-      return res.status(400).json({
-        message: `Invalid status. Must be: ${validStatuses.join(", ")}.`,
-      });
-    }
-
-    const query = `UPDATE repair_request SET status = ? WHERE repair_requests_id = ?`;
-    const [result] = await dbPool.query(query, [status, requestId]);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        message: "Repair request not found.",
-      });
-    }
-
-    return res.status(200).json({
-      message: "Repair request status updated successfully.",
-      data: { repair_requests_id: requestId, status },
-    });
-  } catch (error) {
-    console.error("Error updating repair request status:", error);
-    return res.status(500).json({
-      message:
-        "Failed to update repair request status. Please try again later.",
-    });
-  }
-};
-
-/**
  * GET /api/admin/repairs/records
  * List all repairs (after acceptance)
  */
@@ -402,6 +363,179 @@ export const createRepairAcceptance = async (req, res) => {
     console.error("Error creating repair acceptance:", error);
     return res.status(500).json({
       message: "Failed to create repair record. Please try again later.",
+    });
+  }
+};
+
+/**
+ * GET /api/admin/repairs/technicians
+ * Get all active technicians
+ */
+export const getActiveTechnicians = async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        s.staff_id,
+        s.first_name,
+        s.last_name,
+        s.email,
+        s.phone_number
+      FROM staff s
+      INNER JOIN staff_type st ON s.staff_type_id = st.staff_type_id
+      WHERE st.staff_type_name = 'technician' AND s.is_active = TRUE
+      ORDER BY s.first_name ASC
+    `;
+
+    const [technicians] = await dbPool.query(query);
+
+    return res.status(200).json({
+      success: true,
+      data: technicians,
+    });
+  } catch (error) {
+    console.error("Error fetching active technicians:", error);
+    return res.status(500).json({
+      message: "Failed to fetch technicians. Please try again later.",
+    });
+  }
+};
+
+/**
+ * PUT /api/admin/repairs/:requestId/technician
+ * Update technician for a repair request
+ */
+export const updateRepairTechnician = async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { technicianId } = req.body;
+
+    if (!technicianId) {
+      return res.status(400).json({
+        message: "Technician ID is required.",
+      });
+    }
+
+    // Check if repair request exists
+    const [requestRows] = await dbPool.query(
+      "SELECT repair_requests_id FROM repair_request WHERE repair_requests_id = ?",
+      [requestId],
+    );
+
+    if (requestRows.length === 0) {
+      return res.status(404).json({
+        message: "Repair request not found.",
+      });
+    }
+
+    // Check if technician exists and is active
+    const [techRows] = await dbPool.query(
+      `SELECT s.staff_id FROM staff s
+       INNER JOIN staff_type st ON s.staff_type_id = st.staff_type_id
+       WHERE s.staff_id = ? AND st.staff_type_name = 'technician' AND s.is_active = TRUE`,
+      [technicianId],
+    );
+
+    if (techRows.length === 0) {
+      return res.status(404).json({
+        message: "Technician not found or is not active.",
+      });
+    }
+
+    // Update technician
+    const query = `UPDATE repair_request SET technician_id = ? WHERE repair_requests_id = ?`;
+    await dbPool.query(query, [technicianId, requestId]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Technician updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating repair technician:", error);
+    return res.status(500).json({
+      message: "Failed to update technician. Please try again later.",
+    });
+  }
+};
+
+/**
+ * PUT /api/admin/repairs/records/:repairId/cancel
+ * Cancel a repair by updating its status
+ */
+export const cancelRepair = async (req, res) => {
+  try {
+    const { repairId } = req.params;
+
+    // Check if repair exists
+    const [repairRows] = await dbPool.query(
+      "SELECT repair_id, repair_requests_id FROM repair WHERE repair_id = ?",
+      [repairId],
+    );
+
+    if (repairRows.length === 0) {
+      return res.status(404).json({
+        message: "Repair not found.",
+      });
+    }
+
+    // Update repair status to 'cancelled'
+    const query = `UPDATE repair SET status = 'cancelled' WHERE repair_id = ?`;
+    await dbPool.query(query, [repairId]);
+
+    // Update repair request status to 'rejected'
+    const updateRequestQuery = `UPDATE repair_request SET status = 'rejected' WHERE repair_requests_id = ?`;
+    await dbPool.query(updateRequestQuery, [repairRows[0].repair_requests_id]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Repair cancelled successfully.",
+    });
+  } catch (error) {
+    console.error("Error cancelling repair:", error);
+    return res.status(500).json({
+      message: "Failed to cancel repair. Please try again later.",
+    });
+  }
+};
+
+/**
+ * PUT /api/admin/repairs/:requestId/reject
+ * Reject a repair request (status -> rejected)
+ */
+export const rejectRepairRequest = async (req, res) => {
+  try {
+    const { requestId } = req.params;
+
+    // Check if repair request exists
+    const [requestRows] = await dbPool.query(
+      "SELECT repair_requests_id, status FROM repair_request WHERE repair_requests_id = ?",
+      [requestId],
+    );
+
+    if (requestRows.length === 0) {
+      return res.status(404).json({
+        message: "Repair request not found.",
+      });
+    }
+
+    if (requestRows[0].status === "rejected") {
+      return res.status(200).json({
+        success: true,
+        message: "Repair request already rejected.",
+      });
+    }
+
+    // Update status to rejected
+    const query = `UPDATE repair_request SET status = 'rejected' WHERE repair_requests_id = ?`;
+    await dbPool.query(query, [requestId]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Repair request rejected successfully.",
+    });
+  } catch (error) {
+    console.error("Error rejecting repair request:", error);
+    return res.status(500).json({
+      message: "Failed to reject repair request. Please try again later.",
     });
   }
 };

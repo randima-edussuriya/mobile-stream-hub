@@ -5,9 +5,12 @@ import {
   getRepairRequestDetail,
   getAllRepairs,
   getRepairDetail,
-  updateRepairRequestStatus,
   updateRepairStatus,
   updateRepairDetails,
+  getActiveTechnicians,
+  updateRepairTechnician,
+  cancelRepair,
+  rejectRepairRequest,
 } from "../../controllers/admin/repair.controller.js";
 import {
   authenticateUser,
@@ -50,6 +53,30 @@ router.put(
   updateRepairStatus,
 );
 
+// PUT /records/:repairId/cancel – Cancel repair
+router.put(
+  "/records/:repairId/cancel",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  cancelRepair,
+);
+
+// PUT /:requestId/reject – Reject repair request
+router.put(
+  "/:requestId/reject",
+  authenticateUser,
+  authorizeRoles(["admin", "technician"]),
+  rejectRepairRequest,
+);
+
+// GET /technicians – Get all active technicians
+router.get(
+  "/technicians",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  getActiveTechnicians,
+);
+
 // GET / – List all customer repair requests
 router.get(
   "/",
@@ -66,12 +93,12 @@ router.get(
   getRepairRequestDetail,
 );
 
-// PUT /:requestId/status – Update repair request status
+// PUT /:requestId/technician – Update technician for repair request
 router.put(
-  "/:requestId/status",
+  "/:requestId/technician",
   authenticateUser,
-  authorizeRoles(["admin", "technician"]),
-  updateRepairRequestStatus,
+  authorizeRoles(["admin"]),
+  updateRepairTechnician,
 );
 
 // POST / – Create a repair record for accepted repair request

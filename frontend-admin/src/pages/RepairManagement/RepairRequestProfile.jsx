@@ -8,10 +8,11 @@ import {
   Col,
   Spinner,
   Button,
-  Form,
+  Badge,
 } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
+import { confirmAction } from "../../utils/confirmAction";
 import { toast } from "react-toastify";
 
 function RepairRequestProfile() {
@@ -20,6 +21,7 @@ function RepairRequestProfile() {
   const { backendUrl } = useContext(AppContext);
 
   const [loading, setLoading] = useState(true);
+  const [rejecting, setRejecting] = useState(false);
   const [error, setError] = useState("");
   const [repairRequest, setRepairRequest] = useState(null);
 
@@ -48,21 +50,36 @@ function RepairRequestProfile() {
   };
 
   /* -----------------------------------------------------------------
-        Handle status change
+        Handle reject repair request
   -------------------------------------------------------*/
-  const handleStatusChange = async (newStatus) => {
+  const handelRejectRequest = async () => {
+    const result = await confirmAction(
+      "Are you sure you want to reject this repair request?",
+    );
+    if (!result.isConfirmed) return;
     try {
-      await axios.put(`${backendUrl}/api/admin/repairs/${requestId}/status`, {
-        status: newStatus,
-      });
-      toast.success("Status updated successfully.");
+      setRejecting(true);
+      await axios.put(`${backendUrl}/api/admin/repairs/${requestId}/reject`);
+      toast.success("Repair request rejected successfully.");
       fetchRepairDetails();
     } catch (error) {
       const message =
-        error?.response?.data?.message || "Failed to update status.";
-      toast.error(message);
+        error?.response?.data?.message ||
+        "Failed to reject repair request. Please try again.";
+      setError(message);
       console.error(error);
+    } finally {
+      setRejecting(false);
     }
+  };
+
+  const getStatusBadge = (status) => {
+    const statusMap = {
+      pending: "primary",
+      accepted: "success",
+      rejected: "danger",
+    };
+    return statusMap[status] || "secondary";
   };
 
   useEffect(() => {
@@ -122,7 +139,10 @@ function RepairRequestProfile() {
               <span>Repair Request Details</span>
               <Button
                 variant="success"
-                disabled={repairRequest.status === "accepted"}
+                disabled={
+                  repairRequest.status === "accepted" ||
+                  repairRequest.status === "rejected"
+                }
                 onClick={() =>
                   navigate(`/repair-management/accept-request/${requestId}`)
                 }
@@ -142,15 +162,11 @@ function RepairRequestProfile() {
                 </Col>
                 <Col md={6}>
                   <div className="mb-3">
-                    <strong className="text-muted">Status</strong>
-                    <Form.Select
-                      value={repairRequest.status}
-                      disabled={repairRequest.status === "accepted"}
-                      onChange={(e) => handleStatusChange(e.target.value)}
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="rejected">Rejected</option>
-                    </Form.Select>
+                    <strong className="text-muted">Status: </strong>
+                    <Badge bg={getStatusBadge(repairRequest.status)}>
+                      {repairRequest.status.charAt(0).toUpperCase() +
+                        repairRequest.status.slice(1)}
+                    </Badge>
                   </div>
                 </Col>
               </Row>
@@ -304,6 +320,40 @@ function RepairRequestProfile() {
                   </div>
                 </Col>
               </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* ----------------------------------------------------
+                    Danger Zone
+        -------------------------------------------------------- */}
+        <Col xs={12}>
+          <Card className="shadow-sm border-danger">
+            <Card.Header className="bg-danger-subtle fw-semibold text-danger">
+              Danger Zone
+            </Card.Header>
+            <Card.Body>
+              {/* Cancel Repair */}
+              <div className="border border-danger p-3 rounded">
+                <h6 className="fw-bold text-danger mb-3">Reject Repair</h6>
+                <p className="text-muted mb-3 small">
+                  This will reject the repair request. This action cannot be
+                  undone.
+                </p>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  disabled={rejecting || repairRequest.status === "rejected"}
+                  onClick={handelRejectRequest}
+                  className="fw-bold"
+                >
+                  {rejecting
+                    ? "Rejecting..."
+                    : repairRequest.status === "rejected"
+                      ? "Already rejected"
+                      : "Reject Request"}
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>

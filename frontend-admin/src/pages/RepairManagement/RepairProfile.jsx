@@ -9,21 +9,27 @@ import {
   Spinner,
   Button,
   Form,
+  Badge,
 } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import { confirmAction } from "../../utils/confirmAction";
+import { hasPermission } from "../../utils/permissions";
+import { use } from "react";
 
 function RepairProfile() {
   const { repairId } = useParams();
   const navigate = useNavigate();
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, userData } = useContext(AppContext);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [repair, setRepair] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [technicians, setTechnicians] = useState([]);
+  const [selectedTechnicianId, setSelectedTechnicianId] = useState("");
   const [editedValues, setEditedValues] = useState({
     totalCost: "",
     identifiedIssue: "",
@@ -41,6 +47,7 @@ function RepairProfile() {
         `${backendUrl}/api/admin/repairs/records/${repairId}`,
       );
       setRepair(data.data);
+      setSelectedTechnicianId(data.data.technician_id);
       setEditedValues({
         totalCost: data.data.total_cost,
         identifiedIssue: data.data.identified_issue,
@@ -58,15 +65,40 @@ function RepairProfile() {
   };
 
   /* -----------------------------------------------------------------
-        Get badge variant based on repair status
-  --------------------------------------------------- */
+        Fetch active technicians
+  --------------------------------------------------------------------*/
+  const fetchTechnicians = async () => {
+    if(userData?.userRole !== "admin") return;
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/admin/repairs/technicians`,
+      );
+      setTechnicians(data.data || []);
+    } catch (error) {
+      console.error("Error fetching technicians:", error);
+      toast.error("Failed to fetch technicians list.");
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Get badge variant based on repair status, request status
+  --------------------------------------------------------------------*/
   const getRepairStatusBadge = (status) => {
     const statusMap = {
       "diagnostics completed": "bg-primary-subtle",
       "repair in progress": "bg-warning-subtle",
       "repair completed": "bg-success-subtle",
+      cancelled: "bg-danger-subtle",
     };
-    return statusMap[status] || "";
+    return statusMap[status] || "bg-primary-subtle";
+  };
+
+  const getRequestStatusBadge = (status) => {
+    const statusMap = {
+      accepted: "success",
+      rejected: "danger",
+    };
+    return statusMap[status] || "secondary";
   };
 
   /* -----------------------------------------------------------------
@@ -76,11 +108,24 @@ function RepairProfile() {
     "diagnostics completed",
     "repair in progress",
     "repair completed",
+    "cancelled",
   ];
+
   /* -----------------------------------------------------------------
         Update repair status
   --------------------------------------------------------------------*/
   const handleStatusChange = async (newStatus) => {
+    if (userData?.userRole !== "admin" && newStatus === "cancelled") {
+      toast.warning("Only admin users can cancel repairs.");
+      return;
+    }
+
+    if (newStatus === "cancelled") {
+      toast.warning(
+        "To cancel the repair, please use the 'Cancel Repair' option in the Danger Zone section.",
+      );
+      return;
+    }
     try {
       setUpdating(true);
       await axios.put(
@@ -141,8 +186,84 @@ function RepairProfile() {
     setEditing(false);
   };
 
+  /* -----------------------------------------------------------------
+        Update technician for repair request
+  --------------------------------------------------------------------*/
+  const handleUpdateTechnician = async () => {
+    if (!selectedTechnicianId) {
+      toast.error("Please select a technician.");
+      return;
+    }
+
+    if (selectedTechnicianId === repair.technician_id) {
+      toast.info("No changes made.");
+      return;
+    }
+
+    const result = await confirmAction(
+      "Are you sure you want to update the technician for this repair?",
+    );
+    if (!result.isConfirmed) return;
+
+    try {
+      setUpdating(true);
+      await axios.put(
+        `${backendUrl}/api/admin/repairs/${repair.repair_requests_id}/technician`,
+        { technicianId: selectedTechnicianId },
+      );
+      setRepair({
+        ...repair,
+        technician_id: selectedTechnicianId,
+        technician_name: technicians.find(
+          (t) => t.staff_id === parseInt(selectedTechnicianId),
+        )?.first_name,
+      });
+      toast.success("Technician updated successfully.");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to update technician. Please try again later.";
+      toast.error(message);
+      console.error(error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Cancel repair
+  --------------------------------------------------------------------*/
+  const handleCancelRepair = async () => {
+    const result = await confirmAction(
+      "Are you sure you want to cancel this repair? This action cannot be undone.",
+    );
+    if (!result.isConfirmed) return;
+
+    try {
+      setUpdating(true);
+      await axios.put(
+        `${backendUrl}/api/admin/repairs/records/${repairId}/cancel`,
+      );
+      setRepair({
+        ...repair,
+        repair_status: "cancelled",
+        request_status: "rejected",
+      });
+      toast.success("Repair cancelled successfully.");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to cancel repair. Please try again later.";
+      toast.error(message);
+      console.error(error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   useEffect(() => {
     fetchRepairDetail();
+    fetchTechnicians();
   }, [repairId]);
 
   if (loading) {
@@ -188,7 +309,7 @@ function RepairProfile() {
 
       <Row className="g-3">
         {/* Repair Summary */}
-        <Col md={12}>
+        <Col xs={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
               Repair Summary
@@ -210,7 +331,9 @@ function RepairProfile() {
                       size="sm"
                       value={repair.repair_status}
                       onChange={(e) => handleStatusChange(e.target.value)}
-                      disabled={updating}
+                      disabled={
+                        updating || repair.repair_status === "cancelled"
+                      }
                       className={`mt-1 fw-bold ${getRepairStatusBadge(repair.repair_status)}`}
                     >
                       {repairStatuses.map((status) => (
@@ -251,8 +374,10 @@ function RepairProfile() {
                   </p>
                   <p className="mb-2">
                     <strong>Request Status:</strong>{" "}
-                    {repair.request_status.charAt(0).toUpperCase() +
-                      repair.request_status.slice(1)}
+                    <Badge bg={getRequestStatusBadge(repair.request_status)}>
+                      {repair.request_status.charAt(0).toUpperCase() +
+                        repair.request_status.slice(1)}
+                    </Badge>
                   </p>
                 </Col>
               </Row>
@@ -346,8 +471,8 @@ function RepairProfile() {
           </Card>
         </Col>
 
-        {/* Request Details */}
-        <Col md={12}>
+        {/* Original Request */}
+        <Col xs={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
               Original Request
@@ -397,7 +522,7 @@ function RepairProfile() {
         </Col>
 
         {/* Customer Info */}
-        <Col md={12}>
+        <Col xs={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
               Customer Information
@@ -426,7 +551,7 @@ function RepairProfile() {
         </Col>
 
         {/* Technician Info */}
-        <Col md={12}>
+        <Col xs={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold">
               Technician Information
@@ -453,6 +578,84 @@ function RepairProfile() {
             </Card.Body>
           </Card>
         </Col>
+
+        {/* Danger Zone */}
+        {hasPermission(userData?.userRole, "repair:danger-zone") && (
+          /* Show Danger Zone only to admin users */
+          <Col xs={12}>
+            <Card className="shadow-sm border-danger">
+              <Card.Header className="bg-danger-subtle fw-semibold text-danger">
+                Danger Zone
+              </Card.Header>
+              <Card.Body>
+                <Row>
+                  {/* Change Technician */}
+                  <Col md={6} className="mb-3">
+                    <div className="border p-3 rounded">
+                      <h6 className="fw-bold text-muted mb-3">
+                        Change Technician
+                      </h6>
+                      <Form.Group className="mb-2">
+                        <Form.Label className="text-muted">
+                          Select New Technician
+                        </Form.Label>
+                        <Form.Select
+                          value={selectedTechnicianId}
+                          onChange={(e) =>
+                            setSelectedTechnicianId(e.target.value)
+                          }
+                          disabled={updating}
+                        >
+                          <option value="">-- Select a Technician --</option>
+                          {technicians.map((tech) => (
+                            <option key={tech.staff_id} value={tech.staff_id}>
+                              {tech.first_name} {tech.last_name} ({tech.email})
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                      <Button
+                        variant="warning"
+                        size="sm"
+                        onClick={handleUpdateTechnician}
+                        disabled={updating}
+                        className="fw-bold"
+                      >
+                        Update Technician
+                      </Button>
+                    </div>
+                  </Col>
+
+                  {/* Cancel Repair */}
+                  <Col md={6} className="mb-3">
+                    <div className="border border-danger p-3 rounded">
+                      <h6 className="fw-bold text-danger mb-3">
+                        Cancel Repair
+                      </h6>
+                      <p className="text-muted mb-3 small">
+                        This will cancel the repair and reject the repair
+                        request. This action cannot be undone.
+                      </p>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={handleCancelRepair}
+                        disabled={
+                          updating || repair.repair_status === "cancelled"
+                        }
+                        className="fw-bold"
+                      >
+                        {repair.repair_status === "cancelled"
+                          ? "Already Cancelled"
+                          : "Cancel Repair"}
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        )}
       </Row>
     </Container>
   );
