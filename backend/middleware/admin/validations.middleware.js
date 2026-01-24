@@ -33,7 +33,7 @@ export const validateRegister = (req, res, next) => {
   // validate password strength
   if (
     !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-      password
+      password,
     )
   ) {
     return res.status(400).json({
@@ -362,7 +362,7 @@ export const validateUpdateItem = (req, res, next) => {
     item[key] = numValue;
   }
   req.body.itemData = item;
-  // next();
+  next();
 };
 
 export const validateCreateCoupon = (req, res, next) => {
