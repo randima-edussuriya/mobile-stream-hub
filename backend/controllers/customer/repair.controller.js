@@ -310,3 +310,95 @@ export const createRepairRequest = async (req, res) => {
     });
   }
 };
+
+// Get all repairs for logged-in customer
+export const getMyRepairs = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+
+    const sql = `
+      SELECT 
+        r.repair_id,
+        r.status,
+        r.total_cost,
+        r.identified_device,
+        rr.appointment_date,
+        CONCAT(s.first_name, ' ', s.last_name) as technician_name
+      FROM repair r
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+      WHERE rr.customer_id = ?
+      ORDER BY rr.appointment_date DESC
+    `;
+
+    const [repairs] = await dbPool.query(sql, [customerId]);
+
+    return res.status(200).json({
+      success: true,
+      data: repairs,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+// Get repair details by ID
+export const getRepairDetail = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+    const { repairId } = req.params;
+
+    if (!repairId) {
+      return res.status(400).json({
+        success: false,
+        message: "Repair ID is required",
+      });
+    }
+
+    const sql = `
+      SELECT 
+        r.repair_id,
+        r.status,
+        r.total_cost,
+        r.identified_issue,
+        r.identified_device,
+        rr.repair_requests_id,
+        rr.issue_description,
+        rr.device_info,
+        rr.appointment_date,
+        rr.created_at,
+        rr.updated_at,
+        CONCAT(s.first_name, ' ', s.last_name) as technician_name,
+        s.email as technician_email,
+        s.phone_number as technician_phone
+      FROM repair r
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+      WHERE r.repair_id = ? AND rr.customer_id = ?
+    `;
+
+    const [repairs] = await dbPool.query(sql, [repairId, customerId]);
+
+    if (repairs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Repair not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: repairs[0],
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

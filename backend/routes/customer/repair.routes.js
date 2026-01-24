@@ -6,6 +6,8 @@ import {
   getTechnicians,
   checkTechnicianAvailability,
   createRepairRequest,
+  getMyRepairs,
+  getRepairDetail,
 } from "../../controllers/customer/repair.controller.js";
 
 const router = express.Router();
@@ -17,6 +19,12 @@ router.get("/my-requests", authenticateUser, getMyRepairRequests);
 
 // Get repair request details by ID
 router.get("/requests/:requestId", authenticateUser, getRepairRequestDetail);
+
+// Get my repairs
+router.get("/my-repairs", authenticateUser, getMyRepairs);
+
+// Get repair details by ID
+router.get("/repairs/:repairId", authenticateUser, getRepairDetail);
 
 // Get all active technicians
 router.get("/technicians", authenticateUser, getTechnicians);

@@ -22,6 +22,8 @@ import OrderDetails from "./pages/orders/OrderDetails";
 import RequestRepair from "./pages/repair/RequestRepair";
 import MyRepairRequests from "./pages/repair/MyRepairRequests";
 import RepairRequestProfile from "./pages/repair/RepairRequestProfile";
+import MyRepairs from "./pages/repair/MyRepairs";
+import RepairProfile from "./pages/repair/RepairProfile";
 
 const Layout = () => {
   return (
@@ -138,6 +140,14 @@ function App() {
             {
               path: "my-requests/:requestId", // base: /repair/my-requests/:requestId
               element: <RepairRequestProfile />,
+            },
+            {
+              path: "listing", // base: /repair/listing
+              element: <MyRepairs />,
+            },
+            {
+              path: ":repairId", // base: /repair/:repairId
+              element: <RepairProfile />,
             },
           ],
         },

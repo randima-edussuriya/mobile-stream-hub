@@ -189,6 +189,9 @@ function Header() {
                   <Dropdown.Item as={Link} to="/repair/my-requests">
                     My Repair Requests
                   </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/repair/listing">
+                    My Repairs
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
