@@ -3,7 +3,10 @@ import {
   authenticateUser,
   authorizeRoles,
 } from "../../middleware/admin/auth.middleware.js";
-import { getAllSuppliers } from "../../controllers/admin/supplier.controller.js";
+import {
+  getAllSuppliers,
+  getSupplierById,
+} from "../../controllers/admin/supplier.controller.js";
 
 const router = express.Router();
 
@@ -14,6 +17,14 @@ router.get(
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
   getAllSuppliers,
+);
+
+// GET /:supplierId – Supplier details with items
+router.get(
+  "/:supplierId",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
+  getSupplierById,
 );
 
 export default router;

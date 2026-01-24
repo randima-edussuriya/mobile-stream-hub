@@ -34,6 +34,8 @@ import RepairRequestProfile from "./pages/RepairManagement/RepairRequestProfile"
 import AcceptRequest from "./pages/RepairManagement/AcceptRequest";
 import RepairsListing from "./pages/RepairManagement/RepairsListing";
 import RepairProfile from "./pages/RepairManagement/RepairProfile";
+import SupplierManagement from "./pages/SupplierManagement/SupplierManagement";
+import SupplierProfile from "./pages/SupplierManagement/SupplierProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -228,6 +230,32 @@ function App() {
             },
           ],
         },
+
+        /*--------------------------------------------------------
+              supplier-management routes
+        ---------------------------------------------------------- */
+        {
+          path: "supplier-management",
+          element: (
+            <RoleRoute
+              userData={userData}
+              allowedRoles={["admin", "inventory manager"]}
+            >
+              <Outlet />
+            </RoleRoute>
+          ),
+          children: [
+            {
+              path: "", // base path: /supplier-management
+              element: <SupplierManagement />,
+            },
+            {
+              path: "profile/:supplierId", // base path: /supplier-management/profile/:supplierId
+              element: <SupplierProfile />,
+            },
+          ],
+        },
+
         /*--------------------------------------------------------
               order-management routes
         ---------------------------------------------------------- */
@@ -301,15 +329,16 @@ function App() {
               element: <AcceptRequest />,
             },
             {
-              path: "repairs-listing",  // base path: /repair-management/repairs-listing
+              path: "repairs-listing", // base path: /repair-management/repairs-listing
               element: <RepairsListing />,
             },
             {
-              path:"repair-profile/:repairId", // base path: /repair-management/repair-profile/:repairId
-              element:<RepairProfile />
+              path: "repair-profile/:repairId", // base path: /repair-management/repair-profile/:repairId
+              element: <RepairProfile />,
             },
           ],
         },
+
         /*--------------------------------------------------------
               reorder-management routes
         ---------------------------------------------------------- */
