@@ -9,9 +9,9 @@ function Sidebar() {
       {/* ----------------------------------------------------
                             logo section
                 -------------------------------------------------------- */}
-      <div className="p-2 pb-0 bg-primary-subtle sticky-top">
+      <div className="p-2 pb-0 bg-primary-subtle sticky-top text-center">
         <Link to={"/home"}>
-          <img src={logo} alt="logo" className="img-fluid" />
+          <img src={logo} alt="logo" width={160} className="img-fluid" />
         </Link>
         <hr className="text-dark" />
       </div>
@@ -26,7 +26,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-person-gear fs-5 me-3"></i>
-          <span>Staff Management</span>
+          <span className="small fw-semibold">Staff Management</span>
         </NavLink>
         <NavLink
           to={"/customer-management"}
@@ -35,7 +35,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-people fs-5 me-3"></i>
-          <span>Customer Management</span>
+          <span className="small fw-semibold">Customer Management</span>
         </NavLink>
         <NavLink
           to={"/category-management"}
@@ -44,7 +44,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-bookmarks fs-5 me-3"></i>
-          <span>Category Management</span>
+          <span className="small fw-semibold">Category Management</span>
         </NavLink>
         <NavLink
           to={"/item-management"}
@@ -53,7 +53,16 @@ function Sidebar() {
           }
         >
           <i className="bi bi-diagram-3 fs-5 me-3"></i>
-          <span>Item Management</span>
+          <span className="small fw-semibold">Item Management</span>
+        </NavLink>
+        <NavLink
+          to={"/supplier-management"}
+          className={({ isActive }) =>
+            `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
+          }
+        >
+          <i className="bi bi-person-gear fs-5 me-3"></i>
+          <span className="small fw-semibold">Suplier Management</span>
         </NavLink>
         <NavLink
           to={"/order-management"}
@@ -62,7 +71,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-border-all fs-5 me-3"></i>
-          <span>Order Management</span>
+          <span className="small fw-semibold">Order Management</span>
         </NavLink>
         <NavLink
           to={"/order-cancellation"}
@@ -71,7 +80,7 @@ function Sidebar() {
           }
         >
           <i className="bi-x-octagon fs-5 me-3"></i>
-          <span>Order Cancellation</span>
+          <span className="small fw-semibold">Order Cancellation</span>
         </NavLink>
         <NavLink
           to={"/delivery-management"}
@@ -80,7 +89,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-truck fs-5 me-3"></i>
-          <span>Delivery Management</span>
+          <span className="small fw-semibold">Delivery Management</span>
         </NavLink>
         <NavLink
           to={"/repair-management"}
@@ -89,7 +98,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-sliders2-vertical fs-5 me-3"></i>
-          <span>Repair Management</span>
+          <span className="small fw-semibold">Repair Management</span>
         </NavLink>
         <NavLink
           to={"/reorder-management"}
@@ -98,7 +107,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-arrow-clockwise fs-5 me-3"></i>
-          <span>Reorder Management</span>
+          <span className="small fw-semibold">Reorder Management</span>
         </NavLink>
         {/* <NavLink
           to={"/day-off-management"}
@@ -107,7 +116,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-calendar-day fs-5 me-3"></i>
-          <span>Day off Management</span>
+          <span className="small fw-semibold">Day off Management</span>
         </NavLink> */}
         {/* <NavLink
           to={"/loyalty-program-management"}
@@ -116,7 +125,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-cursor fs-5 me-3"></i>
-          <span>Loyalty Program Management</span>
+          <span className="small fw-semibold">Loyalty Program Management</span>
         </NavLink> */}
         <NavLink
           to={"/feedback-rating-management"}
@@ -125,7 +134,9 @@ function Sidebar() {
           }
         >
           <i className="bi bi-star fs-5 me-3"></i>
-          <span>Feedback and rating Management</span>
+          <span className="small fw-semibold">
+            Feedback and rating Management
+          </span>
         </NavLink>
         {/* <NavLink
           to={"/customer-support-management"}
@@ -134,7 +145,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-telephone-forward fs-5 me-3"></i>
-          <span>Customer Support Management</span>
+          <span className="small fw-semibold">Customer Support Management</span>
         </NavLink> */}
         <NavLink
           to={"/reports-management"}
@@ -143,7 +154,7 @@ function Sidebar() {
           }
         >
           <i className="bi bi-flag fs-5 me-3"></i>
-          <span>Reports Management</span>
+          <span className="small fw-semibold">Reports Management</span>
         </NavLink>
       </div>
     </>
