@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Container, Table, Spinner, Form } from "react-bootstrap";
 import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import { useUserAction } from "../../hooks/useUserAction";
@@ -29,13 +29,13 @@ function StaffManagement() {
       const { data } = await axios.get(`${backendUrl}/api/admin/staff-users`);
       // filter out logged in user from the list
       const filteredUsers = data.data.filter(
-        (user) => user.staff_id !== userData.userId
+        (user) => user.staff_id !== userData.userId,
       );
       setStaffUsers(filteredUsers);
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     } finally {
@@ -105,7 +105,7 @@ function StaffManagement() {
                 "staff",
                 staffUser.staff_id,
                 !staffUser.is_active,
-                fetchStaffUsers
+                fetchStaffUsers,
               )
             }
             label={
@@ -120,11 +120,13 @@ function StaffManagement() {
           />
         </td>
         <td>
-          <i
-            role="button"
-            className="bi-arrow-up-right-square text-primary action_icon"
-            onClick={() => navigate(`profile/${staffUser.staff_id}`)}
-          ></i>
+          <Link to={`profile/${staffUser.staff_id}`}>
+            <i
+              role="button"
+              title="View Details"
+              className="bi-arrow-up-right-square text-primary action_icon"
+            ></i>
+          </Link>
         </td>
       </tr>
     ));

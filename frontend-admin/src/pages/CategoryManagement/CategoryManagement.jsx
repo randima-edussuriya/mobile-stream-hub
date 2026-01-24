@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Container, Table, Spinner, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import { hasPermission } from "../../utils/permissions";
@@ -30,7 +30,7 @@ function CategoryManagement() {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     } finally {
@@ -43,7 +43,7 @@ function CategoryManagement() {
   --------------------------------------------------------------------*/
   const handleDelete = async (categoryId) => {
     const result = await confirmAction(
-      "Are you sure you want to delete this category?"
+      "Are you sure you want to delete this category?",
     );
     if (!result.isConfirmed) return;
 
@@ -54,7 +54,7 @@ function CategoryManagement() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -110,15 +110,18 @@ function CategoryManagement() {
             {hasPermission(userData.userRole, "category:delete") && (
               <i
                 role="button"
+                title="Delete Category"
                 className="bi bi-trash text-danger action_icon"
                 onClick={() => handleDelete(category.category_id)}
               ></i>
             )}
-            <i
-              role="button"
-              className="bi-arrow-up-right-square text-primary action_icon"
-              onClick={() => navigate(`profile/${category.category_id}`)}
-            ></i>
+            <Link to={`profile/${category.category_id}`}>
+              <i
+                role="button"
+                title="View Details"
+                className="bi-arrow-up-right-square text-primary action_icon"
+              ></i>
+            </Link>
           </div>
         </td>
       </tr>

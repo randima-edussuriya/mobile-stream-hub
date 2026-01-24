@@ -161,6 +161,7 @@ function CategoryManagement() {
             {hasPermission(userData.userRole, "item:delete") && (
               <i
                 role="button"
+                title="Delete Item"
                 className="bi bi-trash text-danger action_icon"
                 onClick={() => handleDelete(item.item_id)}
               ></i>
@@ -168,6 +169,7 @@ function CategoryManagement() {
             <Link to={`profile/${item.item_id}`}>
               <i
                 role="button"
+                title="View Details"
                 className="bi-arrow-up-right-square text-primary action_icon"
               ></i>
             </Link>

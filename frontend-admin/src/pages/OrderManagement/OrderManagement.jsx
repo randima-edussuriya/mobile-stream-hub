@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 function OrderManagement() {
   const [Loading, setLoading] = useState(true);
@@ -187,11 +188,13 @@ function OrderManagement() {
         <td>{order.customer_id}</td>
         <td>
           <div className="d-flex gap-3 align-items-center">
-            <i
-              role="button"
-              className="bi-arrow-up-right-square text-primary action_icon"
-              onClick={() => navigate(`profile/${order.order_id}`)}
-            ></i>
+            <Link to={`profile/${order.order_id}`}>
+              <i
+                role="button"
+                title="View Details"
+                className="bi-arrow-up-right-square text-primary action_icon"
+              ></i>
+            </Link>
           </div>
         </td>
       </tr>
