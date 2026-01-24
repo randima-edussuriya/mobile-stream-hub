@@ -68,7 +68,7 @@ function RepairProfile() {
         Fetch active technicians
   --------------------------------------------------------------------*/
   const fetchTechnicians = async () => {
-    if(userData?.userRole !== "admin") return;
+    if (userData?.userRole !== "admin") return;
     try {
       const { data } = await axios.get(
         `${backendUrl}/api/admin/repairs/technicians`,
@@ -580,82 +580,80 @@ function RepairProfile() {
         </Col>
 
         {/* Danger Zone */}
-        {hasPermission(userData?.userRole, "repair:danger-zone") && (
-          /* Show Danger Zone only to admin users */
-          <Col xs={12}>
-            <Card className="shadow-sm border-danger">
-              <Card.Header className="bg-danger-subtle fw-semibold text-danger">
-                Danger Zone
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                  {/* Change Technician */}
-                  <Col md={6} className="mb-3">
-                    <div className="border p-3 rounded">
-                      <h6 className="fw-bold text-muted mb-3">
-                        Change Technician
-                      </h6>
-                      <Form.Group className="mb-2">
-                        <Form.Label className="text-muted">
-                          Select New Technician
-                        </Form.Label>
-                        <Form.Select
-                          value={selectedTechnicianId}
-                          onChange={(e) =>
-                            setSelectedTechnicianId(e.target.value)
-                          }
+        {hasPermission(userData?.userRole, "repair:danger-zone") &&
+          repair.repair_status !== "cancelled" && (
+            /* Show Danger Zone only to admin users */
+            <Col xs={12}>
+              <Card className="shadow-sm border-danger">
+                <Card.Header className="bg-danger-subtle fw-semibold text-danger">
+                  Danger Zone
+                </Card.Header>
+                <Card.Body>
+                  <Row>
+                    {/* Change Technician */}
+                    <Col md={6} className="mb-3">
+                      <div className="border p-3 rounded">
+                        <h6 className="fw-bold text-muted mb-3">
+                          Change Technician
+                        </h6>
+                        <Form.Group className="mb-2">
+                          <Form.Label className="text-muted">
+                            Select New Technician
+                          </Form.Label>
+                          <Form.Select
+                            value={selectedTechnicianId}
+                            onChange={(e) =>
+                              setSelectedTechnicianId(e.target.value)
+                            }
+                            disabled={updating}
+                          >
+                            <option value="">-- Select a Technician --</option>
+                            {technicians.map((tech) => (
+                              <option key={tech.staff_id} value={tech.staff_id}>
+                                {tech.first_name} {tech.last_name} ({tech.email}
+                                )
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          onClick={handleUpdateTechnician}
                           disabled={updating}
+                          className="fw-bold"
                         >
-                          <option value="">-- Select a Technician --</option>
-                          {technicians.map((tech) => (
-                            <option key={tech.staff_id} value={tech.staff_id}>
-                              {tech.first_name} {tech.last_name} ({tech.email})
-                            </option>
-                          ))}
-                        </Form.Select>
-                      </Form.Group>
-                      <Button
-                        variant="warning"
-                        size="sm"
-                        onClick={handleUpdateTechnician}
-                        disabled={updating}
-                        className="fw-bold"
-                      >
-                        Update Technician
-                      </Button>
-                    </div>
-                  </Col>
+                          Update Technician
+                        </Button>
+                      </div>
+                    </Col>
 
-                  {/* Cancel Repair */}
-                  <Col md={6} className="mb-3">
-                    <div className="border border-danger p-3 rounded">
-                      <h6 className="fw-bold text-danger mb-3">
-                        Cancel Repair
-                      </h6>
-                      <p className="text-muted mb-3 small">
-                        This will cancel the repair and reject the repair
-                        request. This action cannot be undone.
-                      </p>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={handleCancelRepair}
-                        disabled={
-                          updating || repair.repair_status === "cancelled"
-                        }
-                        className="fw-bold"
-                      >
-                        {repair.repair_status === "cancelled"
-                          ? "Already Cancelled"
-                          : "Cancel Repair"}
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
+                    {/* Cancel Repair */}
+                    <Col md={6} className="mb-3">
+                      <div className="border border-danger p-3 rounded">
+                        <h6 className="fw-bold text-danger mb-3">
+                          Cancel Repair
+                        </h6>
+                        <p className="text-muted mb-3 small">
+                          This will cancel the repair and reject the repair
+                          request. This action cannot be undone.
+                        </p>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={handleCancelRepair}
+                          disabled={updating}
+                          className="fw-bold"
+                        >
+                          Cancel Repair
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Col>
+          )}
       </Row>
     </Container>
   );
