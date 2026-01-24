@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Spinner } from "react-bootstrap";
+import { Container, Table, Spinner, Badge } from "react-bootstrap";
 import axios from "axios";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
@@ -80,8 +80,10 @@ function SupplierManagement() {
         <td className="fw-medium">{supplier.name}</td>
         <td className="text-muted">{supplier.email}</td>
         <td>{supplier.phone_number}</td>
-        <td>{supplier.address}</td>
-        <td className="fw-bold">{supplier.item_count}</td>
+        <td className="fw-medium">{supplier.address}</td>
+        <td className="fw-bold">
+          <Badge pill>{supplier.item_count}</Badge>
+        </td>
         <td>
           <Link to={`profile/${supplier.supplier_id}`}>
             <i
