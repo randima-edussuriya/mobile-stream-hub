@@ -37,7 +37,7 @@ function CategoryManagement() {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     } finally {
@@ -50,7 +50,7 @@ function CategoryManagement() {
   --------------------------------------------------------------------*/
   const handleDelete = async (itemId) => {
     const result = await confirmAction(
-      "Are you sure you want to delete this item?"
+      "Are you sure you want to delete this item?",
     );
     if (!result.isConfirmed) return;
     try {
@@ -60,7 +60,7 @@ function CategoryManagement() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -187,6 +187,7 @@ function CategoryManagement() {
           {hasPermission(userData.userRole, "item:add") && (
             <Button
               onClick={() => navigate("add")}
+              size="sm"
               className="btn_main_dark shadow"
             >
               <i className="bi bi-plus-circle me-2 fs-6"></i>

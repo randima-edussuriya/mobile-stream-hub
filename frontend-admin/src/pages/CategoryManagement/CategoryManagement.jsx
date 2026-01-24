@@ -136,6 +136,7 @@ function CategoryManagement() {
           {hasPermission(userData.userRole, "category:add") && (
             <Button
               onClick={() => navigate("add")}
+              size="sm"
               className="btn_main_dark shadow"
             >
               <i className="bi bi-plus-circle me-2 fs-6"></i>

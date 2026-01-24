@@ -126,6 +126,7 @@ function RepairManagement() {
             <h4 className="mb-0">Repair Requests</h4>
             <Button
               variant="none"
+              size="sm"
               onClick={() => navigate("repairs-listing")}
               className="btn_main_light_outline"
             >

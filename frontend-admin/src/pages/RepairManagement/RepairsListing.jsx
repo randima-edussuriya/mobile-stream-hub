@@ -45,7 +45,7 @@ function RepairsListing() {
       "diagnostics completed": "primary",
       "repair in progress": "warning",
       "repair completed": "success",
-      "cancelled": "danger",
+      cancelled: "danger",
     };
     return statusMap[status] || "secondary";
   };
@@ -127,6 +127,7 @@ function RepairsListing() {
             <h4 className="mb-0">Repairs</h4>
             <Button
               variant="none"
+              size="sm"
               onClick={() => navigate("/repair-management")}
               className="btn_main_light_outline"
             >

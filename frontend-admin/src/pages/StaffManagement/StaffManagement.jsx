@@ -139,6 +139,7 @@ function StaffManagement() {
           <h4>Staff Users</h4>
           <Button
             onClick={() => navigate("register")}
+            size="sm"
             className="btn_main_dark shadow"
           >
             <i className="bi bi-plus-circle me-2 fs-6"></i>
