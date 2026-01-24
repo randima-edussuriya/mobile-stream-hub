@@ -31,7 +31,7 @@ function Slider() {
               liquid damage. Trust our experts to restore your device quickly
               and affordably!
             </p>
-            <Link to={"/repair/request-repair"} className="btn btn-dark">
+            <Link to={"/repair"} className="btn btn-dark">
               Get Repair
             </Link>
           </Carousel.Caption>

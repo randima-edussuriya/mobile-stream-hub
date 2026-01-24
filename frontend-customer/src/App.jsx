@@ -128,7 +128,7 @@ function App() {
           ),
           children: [
             {
-              path: "request-repair", // base: /repair/request-repair
+              path: "", // base: /repair
               element: <RequestRepair />,
             },
             {

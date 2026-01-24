@@ -143,7 +143,7 @@ function Header() {
               </Nav.Link>
               <Nav.Link
                 as={Link}
-                to={"/repair/request-repair"}
+                to={"/repair"}
                 className="navbar_link"
               >
                 Repairs
