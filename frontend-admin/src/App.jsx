@@ -36,6 +36,7 @@ import RepairsListing from "./pages/RepairManagement/RepairsListing";
 import RepairProfile from "./pages/RepairManagement/RepairProfile";
 import SupplierManagement from "./pages/SupplierManagement/SupplierManagement";
 import SupplierProfile from "./pages/SupplierManagement/SupplierProfile";
+import ReOrder from "./pages/ItemManagement/ReOrder";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -186,7 +187,7 @@ function App() {
           element: <Outlet />,
           children: [
             {
-              path: "",
+              path: "", // base path: /item-management
               element: (
                 <RoleRoute
                   userData={userData}
@@ -202,7 +203,7 @@ function App() {
               ),
             },
             {
-              path: "profile/:itemId",
+              path: "profile/:itemId", // base path: /item-management/profile/:itemId
               element: (
                 <RoleRoute
                   userData={userData}
@@ -218,13 +219,24 @@ function App() {
               ),
             },
             {
-              path: "add",
+              path: "add", // base path: /item-management/add
               element: (
                 <RoleRoute
                   userData={userData}
                   allowedRoles={["admin", "inventory manager"]}
                 >
                   <ItemAdd />
+                </RoleRoute>
+              ),
+            },
+            {
+              path: "reorder/:itemId", // base path: /item-management/reorder/:itemId
+              element: (
+                <RoleRoute
+                  userData={userData}
+                  allowedRoles={["admin", "inventory manager"]}
+                >
+                  <ReOrder />
                 </RoleRoute>
               ),
             },

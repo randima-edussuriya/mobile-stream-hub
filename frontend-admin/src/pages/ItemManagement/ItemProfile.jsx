@@ -43,7 +43,7 @@ function ItemProfile() {
       setItemFormData({});
       setError("");
       const { data } = await axios.get(
-        `${backendUrl}/api/admin/items/${itemId}`
+        `${backendUrl}/api/admin/items/${itemId}`,
       );
       setItem(data.data);
       setItemFormData({
@@ -62,7 +62,7 @@ function ItemProfile() {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
       console.error(error);
     }
@@ -80,7 +80,7 @@ function ItemProfile() {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -98,7 +98,7 @@ function ItemProfile() {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -121,7 +121,7 @@ function ItemProfile() {
       formData.append("itemData", JSON.stringify(itemFormData));
       const { data } = await axios.put(
         `${backendUrl}/api/admin/items/${itemId}`,
-        formData
+        formData,
       );
       toast.success(data.message || "Item updated successfully.");
       setEditing(false);
@@ -129,7 +129,7 @@ function ItemProfile() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
       console.error(error);
     }
@@ -204,6 +204,19 @@ function ItemProfile() {
             <h4>{getStockStatus(item)}</h4>
           </Col>
           <Col xs="auto">
+            {(item.stock_quantity === 0 ||
+              item.stock_quantity <= item.reorder_point) && (
+              <Button
+                className="me-2 shadow"
+                variant="warning"
+                onClick={() =>
+                  navigate(`/item-management/reorder/${item.item_id}`)
+                }
+              >
+                <i className="bi bi-arrow-repeat me-2"></i>
+                Reorder
+              </Button>
+            )}
             <Button
               className="me-2 border-2 shadow"
               variant="secondary"
@@ -222,7 +235,6 @@ function ItemProfile() {
             )}
           </Col>
         </Row>
-        <hr className="mt-3 border-1" />
 
         {/* ------------------------------------------------
             item details section

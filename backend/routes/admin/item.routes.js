@@ -4,6 +4,7 @@ import {
   deleteItem,
   getAllItems,
   getItem,
+  sendReorderEmail,
   updateItem,
 } from "../../controllers/admin/item.controller.js";
 import {
@@ -65,6 +66,14 @@ router.get(
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
   validateItemId,
   getItem,
+);
+
+// POST /reorder/:itemId – Send reorder email to supplier
+router.post(
+  "/reorder/:itemId",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager"]),
+  sendReorderEmail,
 );
 
 export default router;
