@@ -85,6 +85,42 @@ export const getSupplierById = async (req, res) => {
   }
 };
 
+export const addSupplier = async (req, res) => {
+  const { name, email, phone_number, address } = req.body;
+
+  try {
+    if (!name || !email || !phone_number || !address) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields (name, email, phone_number, address) are required",
+      });
+    }
+
+    // check valid email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email format",
+      });
+    }
+
+    await dbPool.query(
+      `INSERT INTO supplier (name, email, phone_number, address) VALUES (?, ?, ?, ?)`,
+      [name, email, phone_number, address],
+    );
+
+    return res
+      .status(201)
+      .json({ success: true, message: "Supplier added successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const updateSupplier = async (req, res) => {
   const { supplierId } = req.params;
   const { name, email, phone_number, address } = req.body;

@@ -6,6 +6,7 @@ import {
 import {
   getAllSuppliers,
   getSupplierById,
+  addSupplier,
   updateSupplier,
 } from "../../controllers/admin/supplier.controller.js";
 
@@ -18,6 +19,14 @@ router.get(
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
   getAllSuppliers,
+);
+
+// POST / – Create supplier
+router.post(
+  "/",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager"]),
+  addSupplier,
 );
 
 // GET /:supplierId – Supplier details with items

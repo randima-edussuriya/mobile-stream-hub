@@ -37,6 +37,7 @@ import RepairProfile from "./pages/RepairManagement/RepairProfile";
 import SupplierManagement from "./pages/SupplierManagement/SupplierManagement";
 import SupplierProfile from "./pages/SupplierManagement/SupplierProfile";
 import ReOrder from "./pages/ItemManagement/ReOrder";
+import SupplierAdd from "./pages/SupplierManagement/SupplierAdd";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -264,6 +265,10 @@ function App() {
             {
               path: "profile/:supplierId", // base path: /supplier-management/profile/:supplierId
               element: <SupplierProfile />,
+            },
+            {
+              path: "add", // base path: /supplier-management/add
+              element: <SupplierAdd />,
             },
           ],
         },

@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Spinner, Badge } from "react-bootstrap";
+import { Container, Table, Spinner, Badge, Button } from "react-bootstrap";
 import axios from "axios";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SupplierManagement() {
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const { backendUrl } = useContext(AppContext);
 
@@ -103,6 +105,14 @@ function SupplierManagement() {
         <Container className="mb-3">
           <div className="d-flex align-items-center justify-content-between">
             <h4 className="mb-0">Supplier Management</h4>
+            <Button
+              onClick={() => navigate("add")}
+              size="sm"
+              className="btn_main_dark shadow"
+            >
+              <i className="bi bi-plus-circle me-2 fs-6"></i>
+              Add New
+            </Button>
           </div>
         </Container>
         <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
