@@ -11,7 +11,7 @@ import CustomerManagement from "./pages/CustomerManagement";
 import OrderManagement from "./pages/OrderManagement/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
 import ReorderManagement from "./pages/ReorderManagement";
-import DayOffManagement from "./pages/DayOffManagement";
+import DayOffManagement from "./pages/DayOffManagement/DayOffManagement";
 import LoyaltyProgramManagement from "./pages/LoyaltyProgramManagement";
 import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
 import CustomerSupportManagement from "./pages/CustomerSupportManagement";
@@ -38,6 +38,7 @@ import SupplierManagement from "./pages/SupplierManagement/SupplierManagement";
 import SupplierProfile from "./pages/SupplierManagement/SupplierProfile";
 import ReOrder from "./pages/ItemManagement/ReOrder";
 import SupplierAdd from "./pages/SupplierManagement/SupplierAdd";
+import DayOffProfile from "./pages/DayOffManagement/DayOffProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -372,11 +373,17 @@ function App() {
         ---------------------------------------------------------- */
         {
           path: "day-off-management",
-          element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <DayOffManagement />
-            </RoleRoute>
-          ),
+          element: <Outlet />,
+          children: [
+            {
+              path: "", // base path: /day-off-management
+              element: <DayOffManagement />,
+            },
+            {
+              path: "profile/:dayOffId", // base path: /day-off-management/profile/:dayOffId
+              element: <DayOffProfile />,
+            },
+          ],
         },
         /*--------------------------------------------------------
               loyalty-program-management routes

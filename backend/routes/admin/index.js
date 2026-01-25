@@ -10,6 +10,7 @@ import couponRoutes from "./coupon.routes.js";
 import dashboardRoutes from "./dashboard.routes.js";
 import deliveryRoutes from "./delivery.routes.js";
 import repairRoutes from "./repair.routes.js";
+import dayOffRoutes from "./dayOff.routes.js";
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.use("/coupons", couponRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/deliveries", deliveryRoutes);
 router.use("/repairs", repairRoutes);
+router.use("/day-offs", dayOffRoutes);
 
 export default router;
