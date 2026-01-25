@@ -180,3 +180,35 @@ export const updateDayOff = async (req, res) => {
     });
   }
 };
+
+export const deleteDayOff = async (req, res) => {
+  const { dayOffId } = req.params;
+
+  try {
+    // Check if day off exists
+    const [dayOffExists] = await dbPool.query(
+      "SELECT day_off_id FROM day_off WHERE day_off_id = ?",
+      [dayOffId],
+    );
+
+    if (dayOffExists.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Day off record not found" });
+    }
+
+    // Delete day off
+    await dbPool.query("DELETE FROM day_off WHERE day_off_id = ?", [dayOffId]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Day off record deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

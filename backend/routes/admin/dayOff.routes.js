@@ -8,6 +8,7 @@ import {
   getDayOffById,
   updateDayOff,
   addDayOff,
+  deleteDayOff,
 } from "../../controllers/admin/dayOff.controller.js";
 
 const router = express.Router();
@@ -17,12 +18,7 @@ const router = express.Router();
 router.get("/", authenticateUser, getDayOffs);
 
 // POST / – Create day off
-router.post(
-  "/",
-  authenticateUser,
-  authorizeRoles(["admin"]),
-  addDayOff,
-);
+router.post("/", authenticateUser, authorizeRoles(["admin"]), addDayOff);
 
 // GET /:dayOffId – Get day off details
 router.get(
@@ -38,6 +34,14 @@ router.put(
   authenticateUser,
   authorizeRoles(["admin", "inventory manager"]),
   updateDayOff,
+);
+
+// DELETE /:dayOffId – Delete day off
+router.delete(
+  "/:dayOffId",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  deleteDayOff,
 );
 
 export default router;

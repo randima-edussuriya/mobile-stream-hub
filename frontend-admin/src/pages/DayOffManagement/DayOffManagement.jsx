@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { hasPermission } from "../../utils/permissions";
+import { confirmAction } from "../../utils/confirmAction";
 
 function DayOffManagement() {
   const [loading, setLoading] = useState(true);
@@ -41,6 +42,33 @@ function DayOffManagement() {
   useEffect(() => {
     fetchDayOffs();
   }, []);
+
+  /* -----------------------------------------------------------------
+        Delete day off record
+  --------------------------------------------------------------------*/
+  const handleDelete = async (dayOffId) => {
+    const result = await confirmAction(
+      "Are you sure you want to delete this day off record?",
+    );
+    if (!result.isConfirmed) return;
+
+    try {
+      const { data } = await axios.delete(
+        `${backendUrl}/api/admin/day-offs/${dayOffId}`,
+      );
+
+      if (data.success) {
+        toast.success(data.message || "Day off record deleted successfully");
+        fetchDayOffs();
+      }
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to delete day off record. Please try again later.";
+      toast.error(message);
+      console.error(error);
+    }
+  };
 
   const renderTableBody = () => {
     if (loading) {
@@ -87,13 +115,21 @@ function DayOffManagement() {
         </td>
         <td className="text-muted">{dayOff.created_by_name}</td>
         <td>
-          <Link to={`profile/${dayOff.day_off_id}`}>
+          <div className="d-flex gap-3 align-items-center">
             <i
               role="button"
-              className="bi-arrow-up-right-square text-primary action_icon"
-              title="View Details"
+              title="Delete Day Off"
+              className="bi bi-trash text-danger action_icon"
+              onClick={() => handleDelete(dayOff.day_off_id)}
             ></i>
-          </Link>
+            <Link to={`profile/${dayOff.day_off_id}`}>
+              <i
+                role="button"
+                className="bi-arrow-up-right-square text-primary action_icon"
+                title="View Details"
+              ></i>
+            </Link>
+          </div>
         </td>
       </tr>
     ));
