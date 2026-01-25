@@ -8,6 +8,7 @@ export const permissions = {
     "item:edit",
     "order:cancel",
     "repair:danger-zone",
+    "dayoff:edit",
   ],
   "inventory manager": [
     "category:add",

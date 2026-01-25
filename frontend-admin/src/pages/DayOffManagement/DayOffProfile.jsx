@@ -13,11 +13,12 @@ import {
 import { AppContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import { hasPermission } from "../../utils/permissions";
 
 function DayOffProfile() {
   const { dayOffId } = useParams();
   const navigate = useNavigate();
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, userData } = useContext(AppContext);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -201,16 +202,17 @@ function DayOffProfile() {
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold d-flex justify-content-between align-items-center">
               <span>Day Off Details</span>
-              {!isEditing && (
-                <Button
-                  variant="none"
-                  size="sm"
-                  onClick={handleEditClick}
-                  className="btn_main_dark"
-                >
-                  Edit
-                </Button>
-              )}
+              {!isEditing &&
+                hasPermission(userData.userRole, "dayoff:edit") && (
+                  <Button
+                    variant="none"
+                    size="sm"
+                    onClick={handleEditClick}
+                    className="btn_main_dark"
+                  >
+                    Edit
+                  </Button>
+                )}
             </Card.Header>
             <Card.Body>
               {error && (
