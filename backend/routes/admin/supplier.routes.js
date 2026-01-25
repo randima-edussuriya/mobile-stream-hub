@@ -6,6 +6,7 @@ import {
 import {
   getAllSuppliers,
   getSupplierById,
+  updateSupplier,
 } from "../../controllers/admin/supplier.controller.js";
 
 const router = express.Router();
@@ -25,6 +26,14 @@ router.get(
   authenticateUser,
   authorizeRoles(["admin", "inventory manager", "cashier", "technician"]),
   getSupplierById,
+);
+
+// PUT /:supplierId – Update supplier
+router.put(
+  "/:supplierId",
+  authenticateUser,
+  authorizeRoles(["admin", "inventory manager"]),
+  updateSupplier,
 );
 
 export default router;
