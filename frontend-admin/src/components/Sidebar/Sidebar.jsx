@@ -101,15 +101,6 @@ function Sidebar() {
           <span className="small fw-semibold">Repair Management</span>
         </NavLink>
         <NavLink
-          to={"/reorder-management"}
-          className={({ isActive }) =>
-            `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
-          }
-        >
-          <i className="bi bi-arrow-clockwise fs-5 me-3"></i>
-          <span className="small fw-semibold">Reorder Management</span>
-        </NavLink>
-        <NavLink
           to={"/day-off-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`

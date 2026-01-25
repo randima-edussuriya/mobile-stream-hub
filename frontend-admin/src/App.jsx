@@ -10,7 +10,6 @@ import Login from "./pages/Login";
 import CustomerManagement from "./pages/CustomerManagement";
 import OrderManagement from "./pages/OrderManagement/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
-import ReorderManagement from "./pages/ReorderManagement";
 import DayOffManagement from "./pages/DayOffManagement/DayOffManagement";
 import LoyaltyProgramManagement from "./pages/LoyaltyProgramManagement";
 import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
@@ -357,17 +356,6 @@ function App() {
           ],
         },
 
-        /*--------------------------------------------------------
-              reorder-management routes
-        ---------------------------------------------------------- */
-        {
-          path: "reorder-management",
-          element: (
-            <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <ReorderManagement />
-            </RoleRoute>
-          ),
-        },
         /*--------------------------------------------------------
               day-off-management routes
         ---------------------------------------------------------- */
