@@ -163,7 +163,6 @@ export const checkTechnicianAvailability = async (req, res) => {
     ]);
 
     const appointmentCount = result[0].appointment_count;
-    console.log("appointmentCount:", appointmentCount);
     const isAvailable = appointmentCount < 6; // Allow max 6 appointments per day
 
     return res.status(200).json({
