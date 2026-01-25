@@ -1,18 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Container, Table, Spinner } from "react-bootstrap";
+import { Container, Table, Spinner, Button } from "react-bootstrap";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { hasPermission } from "../../utils/permissions";
 
 function DayOffManagement() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [dayOffs, setDayOffs] = useState([]);
 
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, userData } = useContext(AppContext);
+  const navigate = useNavigate();
 
   /* -----------------------------------------------------------------
         Fetch all day off records from API
@@ -101,7 +103,19 @@ function DayOffManagement() {
     <Container>
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="mb-3">
-          <h4>Day Off Records</h4>
+          <div className="d-flex align-items-center justify-content-between">
+            <h4 className="mb-0">Day Off Records</h4>
+            {hasPermission(userData.userRole, "dayoff:add") && (
+              <Button
+                onClick={() => navigate("add")}
+                size="sm"
+                className="btn_main_dark shadow"
+              >
+                <i className="bi bi-plus-circle me-2 fs-6"></i>
+                Add New
+              </Button>
+            )}
+          </div>
         </Container>
         <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
           <Table hover striped size="sm" className="shadow">

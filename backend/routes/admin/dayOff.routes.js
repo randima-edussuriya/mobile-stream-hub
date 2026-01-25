@@ -7,16 +7,21 @@ import {
   getDayOffs,
   getDayOffById,
   updateDayOff,
+  addDayOff,
 } from "../../controllers/admin/dayOff.controller.js";
 
 const router = express.Router();
 
 // base: /api/admin/day-offs
 // GET / – List all day offs
-router.get(
+router.get("/", authenticateUser, getDayOffs);
+
+// POST / – Create day off
+router.post(
   "/",
   authenticateUser,
-  getDayOffs,
+  authorizeRoles(["admin"]),
+  addDayOff,
 );
 
 // GET /:dayOffId – Get day off details

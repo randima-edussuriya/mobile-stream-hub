@@ -24,6 +24,49 @@ export const getDayOffs = async (req, res) => {
   }
 };
 
+export const addDayOff = async (req, res) => {
+  const { reason, start_date, end_date } = req.body;
+  const createdBy = req.user?.userId;
+
+  try {
+    if (!reason || !start_date || !end_date) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields (reason, start_date, end_date) are required",
+      });
+    }
+
+    if (!createdBy) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized - User information not found",
+      });
+    }
+
+    if (new Date(start_date) >= new Date(end_date)) {
+      return res.status(400).json({
+        success: false,
+        message: "Start date must be before end date",
+      });
+    }
+
+    await dbPool.query(
+      `INSERT INTO day_off (reason, start_date, end_date, created_by) VALUES (?, ?, ?, ?)`,
+      [reason, start_date, end_date, createdBy],
+    );
+
+    return res
+      .status(201)
+      .json({ success: true, message: "Day off created successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const getDayOffById = async (req, res) => {
   const { dayOffId } = req.params;
 

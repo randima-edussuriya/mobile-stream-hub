@@ -38,6 +38,7 @@ import SupplierProfile from "./pages/SupplierManagement/SupplierProfile";
 import ReOrder from "./pages/ItemManagement/ReOrder";
 import SupplierAdd from "./pages/SupplierManagement/SupplierAdd";
 import DayOffProfile from "./pages/DayOffManagement/DayOffProfile";
+import DayOffAdd from "./pages/DayOffManagement/DayOffAdd";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -370,6 +371,14 @@ function App() {
             {
               path: "profile/:dayOffId", // base path: /day-off-management/profile/:dayOffId
               element: <DayOffProfile />,
+            },
+            {
+              path: "add", // base path: /day-off-management/add
+              element: (
+                <RoleRoute userData={userData} allowedRoles={["admin"]}>
+                  <DayOffAdd />
+                </RoleRoute>
+              ),
             },
           ],
         },
