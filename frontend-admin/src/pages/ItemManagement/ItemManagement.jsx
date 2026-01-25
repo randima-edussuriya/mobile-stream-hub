@@ -7,6 +7,7 @@ import {
   Spinner,
   Image,
   Badge,
+  Form,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -15,10 +16,11 @@ import { hasPermission } from "../../utils/permissions";
 import { confirmAction } from "../../utils/confirmAction";
 import { toast } from "react-toastify";
 
-function CategoryManagement() {
+function ItemManagement() {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [items, setItems] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const { backendUrl, userData } = useContext(AppContext);
 
@@ -83,6 +85,30 @@ function CategoryManagement() {
     return <Badge bg="success">In Stock</Badge>;
   };
 
+  /* ---------------------------------------------
+      Filter items by stock status
+  ----------------------------------------------*/
+  const getFilteredItems = () => {
+    if (statusFilter === "all") {
+      return items;
+    }
+
+    return items.filter((item) => {
+      if (statusFilter === "in-stock") {
+        return item.stock_quantity > item.reorder_point;
+      }
+      if (statusFilter === "low-stock") {
+        return (
+          item.stock_quantity <= item.reorder_point && item.stock_quantity > 0
+        );
+      }
+      if (statusFilter === "out-of-stock") {
+        return item.stock_quantity === 0;
+      }
+      return true;
+    });
+  };
+
   useEffect(() => {
     fetchItems();
   }, []);
@@ -123,7 +149,19 @@ function CategoryManagement() {
       );
     }
 
-    return items.map((item) => (
+    const filteredItems = getFilteredItems();
+
+    if (filteredItems.length === 0) {
+      return (
+        <tr>
+          <td colSpan={11} className="text-muted text-center">
+            No items match the selected filter
+          </td>
+        </tr>
+      );
+    }
+
+    return filteredItems.map((item) => (
       <tr key={item.item_id}>
         <td style={{ maxWidth: "80px" }} className="text-center">
           <Image
@@ -184,16 +222,29 @@ function CategoryManagement() {
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="d-flex justify-content-between mb-3">
           <h4>Items</h4>
-          {hasPermission(userData.userRole, "item:add") && (
-            <Button
-              onClick={() => navigate("add")}
+          <div className="d-flex gap-2 align-items-center">
+            <Form.Select
               size="sm"
-              className="btn_main_dark shadow"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{ width: "auto" }}
             >
-              <i className="bi bi-plus-circle me-2 fs-6"></i>
-              Add New
-            </Button>
-          )}
+              <option value="all">All Status</option>
+              <option value="in-stock">In Stock</option>
+              <option value="low-stock">Low Stock</option>
+              <option value="out-of-stock">Out of Stock</option>
+            </Form.Select>
+            {hasPermission(userData.userRole, "item:add") && (
+              <Button
+                onClick={() => navigate("add")}
+                size="sm"
+                className="btn_main_dark shadow"
+              >
+                <i className="bi bi-plus-circle me-2 fs-6"></i>
+                Add New
+              </Button>
+            )}
+          </div>
         </Container>
         <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
           <Table hover striped size="sm" className="shadow" bordered>
@@ -219,4 +270,4 @@ function CategoryManagement() {
   );
 }
 
-export default CategoryManagement;
+export default ItemManagement;
