@@ -380,7 +380,7 @@ function LeaveProfile() {
                     <p className="mb-2">
                       <strong>Status:</strong>
                     </p>
-                    <Form.Select
+                      <Form.Select
                       value={leave.status}
                       onChange={(e) => handleStatusChange(e.target.value)}
                       disabled={
@@ -389,7 +389,7 @@ function LeaveProfile() {
                           "leave:edit-status",
                         ) || updating
                       }
-                      className={`fw-semibold ${getStatusBadge(leave.status)}`}
+                      className={`fw-semibold w-auto ${getStatusBadge(leave.status)}`}
                     >
                       {statusOptions.map((status) => (
                         <option key={status} value={status}>

@@ -85,12 +85,12 @@ function RepairProfile() {
   --------------------------------------------------------------------*/
   const getRepairStatusBadge = (status) => {
     const statusMap = {
-      "diagnostics completed": "bg-primary-subtle",
-      "repair in progress": "bg-warning-subtle",
-      "repair completed": "bg-success-subtle",
-      cancelled: "bg-danger-subtle",
+      "diagnostics completed": "bg-primary bg-opacity-50",
+      "repair in progress": "bg-warning bg-opacity-50",
+      "repair completed": "bg-success bg-opacity-50",
+      cancelled: "bg-danger bg-opacity-50",
     };
-    return statusMap[status] || "bg-primary-subtle";
+    return statusMap[status] || "bg-primary bg-opacity-50";
   };
 
   const getRequestStatusBadge = (status) => {
@@ -328,17 +328,17 @@ function RepairProfile() {
                   <div className="mb-2">
                     <strong>Status:</strong>
                     <Form.Select
-                      size="sm"
                       value={repair.repair_status}
+                      size="sm"
                       onChange={(e) => handleStatusChange(e.target.value)}
                       disabled={
                         updating || repair.repair_status === "cancelled"
                       }
-                      className={`mt-1 fw-bold ${getRepairStatusBadge(repair.repair_status)}`}
+                      className={`mt-1 fw-semibold w-auto ${getRepairStatusBadge(repair.repair_status)}`}
                     >
                       {repairStatuses.map((status) => (
                         <option key={status} value={status}>
-                          {status}
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
                         </option>
                       ))}
                     </Form.Select>

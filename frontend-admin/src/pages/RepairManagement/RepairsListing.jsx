@@ -96,7 +96,7 @@ function RepairsListing() {
         <td className="fw-semibold">{repair.repair_requests_id}</td>
         <td>
           <Badge bg={getStatusBadge(repair.repair_status)}>
-            {repair.repair_status}
+            {repair.repair_status.charAt(0).toUpperCase() + repair.repair_status.slice(1)}
           </Badge>
         </td>
         <td className="fw-semibold">
