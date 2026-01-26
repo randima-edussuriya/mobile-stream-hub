@@ -212,16 +212,18 @@ function LeaveProfile() {
           <Card className="shadow-sm">
             <Card.Header className="bg-secondary-subtle fw-semibold d-flex justify-content-between align-items-center">
               <span>Leave Request Details</span>
-              {!isEditing && hasPermission(userData.userRole, "leave:edit") && (
-                <Button
-                  variant="none"
-                  size="sm"
-                  onClick={handleEditClick}
-                  className="btn_main_dark"
-                >
-                  Edit
-                </Button>
-              )}
+              {!isEditing &&
+                hasPermission(userData.userRole, "leave:edit") &&
+                leave.status === "pending" && (
+                  <Button
+                    variant="none"
+                    size="sm"
+                    onClick={handleEditClick}
+                    className="btn_main_dark"
+                  >
+                    Edit
+                  </Button>
+                )}
             </Card.Header>
             <Card.Body>
               {error && (
@@ -338,7 +340,8 @@ function LeaveProfile() {
                       <strong>Status:</strong>
                     </p>
                     <span className={`badge ${getStatusBadge(leave.status)}`}>
-                      {leave.status.charAt(0).toUpperCase() + leave.status.slice(1)}
+                      {leave.status.charAt(0).toUpperCase() +
+                        leave.status.slice(1)}
                     </span>
                   </Col>
                   <Col md={6} className="mb-3">
