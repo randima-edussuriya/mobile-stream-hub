@@ -10,6 +10,7 @@ export const permissions = {
     "repair:danger-zone",
     "dayoff:edit",
     "dayoff:add",
+    "leave:edit-status",
   ],
   "inventory manager": [
     "category:add",

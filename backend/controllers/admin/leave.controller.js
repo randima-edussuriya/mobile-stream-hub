@@ -197,3 +197,62 @@ export const updateLeave = async (req, res) => {
     });
   }
 };
+
+export const updateLeaveStatus = async (req, res) => {
+  const { leaveId } = req.params;
+  const { status } = req.body;
+
+  try {
+    // Validate status
+    const validStatuses = ["pending", "approved", "rejected"];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status. Must be 'pending', 'approved', or 'rejected'",
+      });
+    }
+
+    // Check if leave request exists
+    const [leaveExists] = await dbPool.query(
+      "SELECT leave_request_id FROM leave_request WHERE leave_request_id = ?",
+      [leaveId],
+    );
+
+    if (leaveExists.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Leave request not found" });
+    }
+
+    // Update leave status and responded_at
+    await dbPool.query(
+      `
+          UPDATE leave_request
+          SET status = ?, responded_at = NOW()
+          WHERE leave_request_id = ?
+        `,
+      [status, leaveId],
+    );
+
+    // Fetch updated leave request
+    const [updatedLeave] = await dbPool.query(
+      `
+          SELECT status, responded_at
+          FROM leave_request
+          WHERE leave_request_id = ?
+        `,
+      [leaveId],
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: updatedLeave[0],
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

@@ -155,13 +155,54 @@ function LeaveProfile() {
     }
   };
 
+  /* -----------------------------------------------------------------
+        Get Status Badge Class, Options
+  --------------------------------------------------------------------*/
   const getStatusBadge = (status) => {
     const badgeClass = {
-      pending: "bg-warning text-dark",
-      approved: "bg-success",
-      rejected: "bg-danger",
+      pending: "bg-warning bg-opacity-50",
+      approved: "bg-success bg-opacity-50",
+      rejected: "bg-danger bg-opacity-50",
     };
-    return badgeClass[status] || "bg-secondary";
+    return badgeClass[status] || "bg-secondary bg-opacity-50";
+  };
+
+  const statusOptions = ["pending", "approved", "rejected"];
+
+  /* -----------------------------------------------------------------
+        Handle Status Change
+  --------------------------------------------------------------------*/
+  const handleStatusChange = async (newStatus) => {
+    if (newStatus === leave.status) {
+      return; // No change
+    }
+
+    try {
+      setUpdating(true);
+      const { data } = await axios.patch(
+        `${backendUrl}/api/admin/leaves/${leaveId}/status`,
+        { status: newStatus },
+      );
+
+      if (data.success) {
+        setLeave((prev) => ({
+          ...prev,
+          status: data.data.status,
+          responded_at: data.data.responded_at,
+        }));
+        toast.success(`Leave request ${newStatus} successfully`);
+      } else {
+        toast.error("Failed to update leave status");
+      }
+    } catch (err) {
+      const message =
+        err?.response?.data?.message ||
+        "Failed to update status. Please try again later.";
+      toast.error(message);
+      console.error(err);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   if (loading) {
@@ -339,10 +380,23 @@ function LeaveProfile() {
                     <p className="mb-2">
                       <strong>Status:</strong>
                     </p>
-                    <span className={`badge ${getStatusBadge(leave.status)}`}>
-                      {leave.status.charAt(0).toUpperCase() +
-                        leave.status.slice(1)}
-                    </span>
+                    <Form.Select
+                      value={leave.status}
+                      onChange={(e) => handleStatusChange(e.target.value)}
+                      disabled={
+                        !hasPermission(
+                          userData.userRole,
+                          "leave:edit-status",
+                        ) || updating
+                      }
+                      className={`fw-semibold ${getStatusBadge(leave.status)}`}
+                    >
+                      {statusOptions.map((status) => (
+                        <option key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Col>
                   <Col md={6} className="mb-3">
                     <p className="mb-2">

@@ -8,6 +8,7 @@ import {
   getLeaveById,
   updateLeave,
   addLeave,
+  updateLeaveStatus,
 } from "../../controllers/admin/leave.controller.js";
 
 const router = express.Router();
@@ -43,6 +44,13 @@ router.put(
     "technician",
   ]),
   updateLeave,
+);
+// PATCH /:leaveId/status – Update leave request status
+router.patch(
+  "/:leaveId/status",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  updateLeaveStatus,
 );
 
 export default router;
