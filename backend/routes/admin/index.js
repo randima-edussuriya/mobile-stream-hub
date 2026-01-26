@@ -11,6 +11,7 @@ import dashboardRoutes from "./dashboard.routes.js";
 import deliveryRoutes from "./delivery.routes.js";
 import repairRoutes from "./repair.routes.js";
 import dayOffRoutes from "./dayOff.routes.js";
+import leaveRoutes from "./leave.routes.js";
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use("/dashboard", dashboardRoutes);
 router.use("/deliveries", deliveryRoutes);
 router.use("/repairs", repairRoutes);
 router.use("/day-offs", dayOffRoutes);
+router.use("/leaves", leaveRoutes);
 
 export default router;

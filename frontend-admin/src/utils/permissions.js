@@ -18,10 +18,12 @@ export const permissions = {
     "item:delete",
     "item:add",
     "item:edit",
+    "leave:add",
+    "leave:edit",
   ],
-  cashier: ["order:cancel"],
-  technician: [],
-  "deliver person": [],
+  cashier: ["order:cancel", "leave:add", "leave:edit"],
+  technician: ["leave:add", "leave:edit"],
+  "deliver person": ["leave:add", "leave:edit"],
 };
 
 export const hasPermission = (role, action) =>

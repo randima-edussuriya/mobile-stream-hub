@@ -109,6 +109,15 @@ function Sidebar() {
           <i className="bi bi-calendar-day fs-5 me-3"></i>
           <span className="small fw-semibold">Day off Management</span>
         </NavLink>
+        <NavLink
+          to={"/leave-management"}
+          className={({ isActive }) =>
+            `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
+          }
+        >
+          <i className="bi bi-box-arrow-left fs-5 me-3"></i>
+          <span className="small fw-semibold">Leave Management</span>
+        </NavLink>
         {/* <NavLink
           to={"/loyalty-program-management"}
           className={({ isActive }) =>

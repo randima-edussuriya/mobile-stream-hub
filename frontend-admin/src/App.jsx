@@ -39,6 +39,9 @@ import ReOrder from "./pages/ItemManagement/ReOrder";
 import SupplierAdd from "./pages/SupplierManagement/SupplierAdd";
 import DayOffProfile from "./pages/DayOffManagement/DayOffProfile";
 import DayOffAdd from "./pages/DayOffManagement/DayOffAdd";
+import LeaveManagement from "./pages/LeaveManagement/LeaveManagement";
+import LeaveProfile from "./pages/LeaveManagement/LeaveProfile";
+import LeaveAdd from "./pages/LeaveManagement/LeaveAdd";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -379,6 +382,27 @@ function App() {
                   <DayOffAdd />
                 </RoleRoute>
               ),
+            },
+          ],
+        },
+        /*--------------------------------------------------------
+              leave-management routes
+        ---------------------------------------------------------- */
+        {
+          path: "leave-management",
+          element: <Outlet />,
+          children: [
+            {
+              path: "",
+              element: <LeaveManagement />,
+            },
+            {
+              path: "profile/:leaveId",
+              element: <LeaveProfile />,
+            },
+            {
+              path: "add",
+              element: <LeaveAdd />,
             },
           ],
         },
