@@ -117,14 +117,14 @@ function DayOffProfile() {
     }
 
     // validate start date
-    if (startDate.getHours() < 9 || startDate.getHours() > 19) {
-      toast.error("Start date time must be between 09:00 AM and 07:00 PM");
+    if (startDate.getHours() < 9 || startDate.getHours() >= 19) {
+      toast.error("Start date time must be between 09:00 AM and 06:59 PM");
       return;
     }
 
     ///validate end date
-    if (endDate.getHours() < 9 || endDate.getHours() > 19) {
-      toast.error("End date time must be between 09:00 AM and 07:00 PM");
+    if (endDate.getHours() < 9 || endDate.getHours() >= 19) {
+      toast.error("End date time must be between 09:00 AM and 06:59 PM");
       return;
     }
 
