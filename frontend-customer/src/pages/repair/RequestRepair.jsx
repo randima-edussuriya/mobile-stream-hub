@@ -21,7 +21,7 @@ function RequestRepair() {
   const [appointmentDate, setAppointmentDate] = useState("");
   const [issueDescription, setIssueDescription] = useState("");
   const [deviceInfo, setDeviceInfo] = useState("");
-  const [isAvailable, setIsAvailable] = useState(null);
+  const [isAvailable, setIsAvailable] = useState(false);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [availabilityMessage, setAvailabilityMessage] = useState("");
@@ -68,14 +68,14 @@ function RequestRepair() {
         setTimeValidationError(
           "Appointments can only be scheduled from 9:00 AM to 5:00 PM",
         );
-        setIsAvailable(null);
+        setIsAvailable(false);
         setAvailabilityMessage("");
       } else {
         setTimeValidationError("");
         checkAvailability();
       }
     } else {
-      setIsAvailable(null);
+      setIsAvailable(false);
       setAvailabilityMessage("");
       setTimeValidationError("");
     }
@@ -95,20 +95,11 @@ function RequestRepair() {
       );
 
       setIsAvailable(data.data.isAvailable);
-
-      if (data.data.isAvailable) {
-        setAvailabilityMessage(
-          `✓ Available! (${data.data.maxAppointmentsPerDay - data.data.appointmentCount} slots remaining)`,
-        );
-      } else {
-        setAvailabilityMessage(
-          `✗ Not available. Maximum ${data.data.maxAppointmentsPerDay} appointments per day reached.`,
-        );
-      }
+      setAvailabilityMessage(data.message);
     } catch (error) {
       toast.error("Failed to check availability. Please try again.");
       console.error(error);
-      setIsAvailable(null);
+      setIsAvailable(false);
       setAvailabilityMessage("");
     } finally {
       setCheckingAvailability(false);
@@ -167,7 +158,7 @@ function RequestRepair() {
         setAppointmentDate("");
         setIssueDescription("");
         setDeviceInfo("");
-        setIsAvailable(null);
+        setIsAvailable(false);
         setAvailabilityMessage("");
         navigate("/repair/my-requests");
       }

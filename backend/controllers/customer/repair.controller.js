@@ -128,8 +128,60 @@ export const checkTechnicianAvailability = async (req, res) => {
       });
     }
 
-    // Parse the appointment date to check for the day
+    // Parse the appointment date
     const appointmentDateObj = new Date(appointmentDate);
+
+    /*----------------------------------------------
+        Check if the date is a day off
+    -----------------------------------------------*/
+    let isOnDayOff = false;
+    let hasLeave = false;
+    const dayOffSql = `
+      SELECT COUNT(*) as day_off_count
+      FROM day_off
+      WHERE ? BETWEEN start_date AND end_date
+    `;
+
+    const [dayOffResult] = await dbPool.query(dayOffSql, [appointmentDateObj]);
+    if (dayOffResult[0].day_off_count > 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Shop is closed on this date",
+        data: {
+          isAvailable: false,
+        },
+      });
+    }
+
+    /*----------------------------------------------
+        Check if technician has leave on that date
+    -----------------------------------------------*/
+    const leaveSql = `
+      SELECT COUNT(*) as leave_count
+      FROM leave_request
+      WHERE requested_by = ?
+        AND ? BETWEEN start_date AND end_date
+        AND status IN ('pending', 'approved')
+    `;
+
+    const [leaveResult] = await dbPool.query(leaveSql, [
+      technicianId,
+      appointmentDateObj,
+    ]);
+
+    if (leaveResult[0].leave_count > 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Technician is on leave on this date",
+        data: {
+          isAvailable: false,
+        },
+      });
+    }
+
+    /*----------------------------------------------
+        Check existing appointments for that date
+    -----------------------------------------------*/
     const startOfDay = new Date(
       appointmentDateObj.getFullYear(),
       appointmentDateObj.getMonth(),
@@ -148,7 +200,7 @@ export const checkTechnicianAvailability = async (req, res) => {
     );
 
     // 9:00 AM and 04:59 PM are counted
-    const sql = `
+    const appointmentSql = `
       SELECT COUNT(*) as appointment_count
       FROM repair_request
       WHERE technician_id = ? 
@@ -156,21 +208,28 @@ export const checkTechnicianAvailability = async (req, res) => {
         AND status IN ('pending', 'accepted')
     `;
 
-    const [result] = await dbPool.query(sql, [
+    const [appointmentResult] = await dbPool.query(appointmentSql, [
       technicianId,
       startOfDay,
       endOfDay,
     ]);
 
-    const appointmentCount = result[0].appointment_count;
-    const isAvailable = appointmentCount < 6; // Allow max 6 appointments per day
+    if (appointmentResult[0].appointment_count >= 6) {
+      return res.status(200).json({
+        success: true,
+        message:
+          "Technician is not available for this date. Maximum 6 appointments reached.",
+        data: {
+          isAvailable: false,
+        },
+      });
+    }
 
     return res.status(200).json({
       success: true,
+      message: `Technician is available for this date. (${6 - appointmentResult[0].appointment_count} slots remaining)`,
       data: {
-        isAvailable,
-        appointmentCount,
-        maxAppointmentsPerDay: 6,
+        isAvailable: true,
       },
     });
   } catch (error) {
