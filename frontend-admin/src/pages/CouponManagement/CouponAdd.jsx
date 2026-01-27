@@ -54,7 +54,8 @@ function CouponAdd() {
       !formData.coupon_code ||
       !formData.discount_type ||
       !formData.expiry_date ||
-      !formData.user_group
+      !formData.user_group ||
+      !formData.usage_limit
     ) {
       toast.error("All required fields must be filled");
       return;
@@ -65,8 +66,24 @@ function CouponAdd() {
       return;
     }
 
-    if (formData.discount_value && Number(formData.discount_value) <= 0) {
+    if (
+      formData.discount_type === "fixed amount" &&
+      Number(formData.discount_value) <= 0
+    ) {
       toast.error("Discount value must be greater than 0");
+      return;
+    }
+
+    if (
+      formData.discount_type === "free shipping" &&
+      Number(formData.discount_value) > 0
+    ) {
+      toast.error("Discount value must be 0 for free shipping type");
+      return;
+    }
+
+    if (formData.usage_limit && Number(formData.usage_limit) <= 0) {
+      toast.error("Usage limit must be greater than 0");
       return;
     }
 
@@ -182,7 +199,7 @@ function CouponAdd() {
                     name="usage_limit"
                     value={formData.usage_limit}
                     onChange={handleChange}
-                    placeholder="Leave empty for unlimited"
+                    placeholder="Enter usage limit (e.g., 100)"
                     disabled={submitting}
                     min="0"
                   />

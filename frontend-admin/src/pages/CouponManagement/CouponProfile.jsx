@@ -144,6 +144,11 @@ function CouponProfile() {
       return;
     }
 
+    if (editedCoupon.usage_limit <= 0) {
+      toast.error("Usage limit must be greater than to 0");
+      return;
+    }
+
     const expiryDate = new Date(editedCoupon.expiry_date);
     if (expiryDate <= new Date()) {
       toast.error("Expiry date must be in the future");
@@ -312,6 +317,7 @@ function CouponProfile() {
                           }
                           step="0.01"
                           min="0"
+                          placeholder="Enter discount value (e.g., 100.00)"
                         />
                       </Form.Group>
                     </Col>
@@ -344,7 +350,7 @@ function CouponProfile() {
                           onChange={handleInputChange}
                           disabled={updating}
                           min="0"
-                          placeholder="0 for unlimited"
+                          placeholder="Enter usage limit (e.g., 100)"
                         />
                       </Form.Group>
                     </Col>
