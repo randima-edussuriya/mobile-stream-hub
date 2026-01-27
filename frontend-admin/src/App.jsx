@@ -11,7 +11,6 @@ import CustomerManagement from "./pages/CustomerManagement";
 import OrderManagement from "./pages/OrderManagement/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
 import DayOffManagement from "./pages/DayOffManagement/DayOffManagement";
-import LoyaltyProgramManagement from "./pages/LoyaltyProgramManagement";
 import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
 import CustomerSupportManagement from "./pages/CustomerSupportManagement";
 import ReportsManagement from "./pages/ReportsManagement";
@@ -45,6 +44,8 @@ import LeaveAdd from "./pages/LeaveManagement/LeaveAdd";
 import CouponManagement from "./pages/CouponManagement/CouponManagement";
 import CouponProfile from "./pages/CouponManagement/CouponProfile";
 import CouponAdd from "./pages/CouponManagement/CouponAdd";
+import LoyaltyManagement from "./pages/LoyaltyManagement/LoyaltyManagement";
+import LoyaltyUsage from "./pages/LoyaltyManagement/LoyaltyUsage";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -410,7 +411,7 @@ function App() {
           ],
         },
         /*--------------------------------------------------------
-              loyalty-program-management routes
+              coupon-management routes
         ---------------------------------------------------------- */
         {
           path: "coupon-management",
@@ -431,6 +432,27 @@ function App() {
             {
               path: "add", // base path: /coupon-management/add
               element: <CouponAdd />,
+            },
+          ],
+        },
+        /*--------------------------------------------------------
+              loyalty-management routes
+        ---------------------------------------------------------- */
+        {
+          path: "loyalty-management",
+          element: (
+            <RoleRoute userData={userData} allowedRoles={["admin"]}>
+              <Outlet />
+            </RoleRoute>
+          ),
+          children: [
+            {
+              path: "", // base path: /loyalty-management
+              element: <LoyaltyManagement />,
+            },
+            {
+              path: "usage", // base path: /loyalty-management/usage
+              element: <LoyaltyUsage />,
             },
           ],
         },
