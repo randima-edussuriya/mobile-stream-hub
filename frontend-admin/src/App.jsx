@@ -42,6 +42,9 @@ import DayOffAdd from "./pages/DayOffManagement/DayOffAdd";
 import LeaveManagement from "./pages/LeaveManagement/LeaveManagement";
 import LeaveProfile from "./pages/LeaveManagement/LeaveProfile";
 import LeaveAdd from "./pages/LeaveManagement/LeaveAdd";
+import CouponManagement from "./pages/CouponManagement/CouponManagement";
+import CouponProfile from "./pages/CouponManagement/CouponProfile";
+import CouponAdd from "./pages/CouponManagement/CouponAdd";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -410,12 +413,26 @@ function App() {
               loyalty-program-management routes
         ---------------------------------------------------------- */
         {
-          path: "loyalty-program-management",
+          path: "coupon-management",
           element: (
             <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <LoyaltyProgramManagement />
+              <Outlet />
             </RoleRoute>
           ),
+          children: [
+            {
+              path: "", // base path: /coupon-management
+              element: <CouponManagement />,
+            },
+            {
+              path: "profile/:couponId", // base path: /coupon-management/profile/:couponId
+              element: <CouponProfile />,
+            },
+            {
+              path: "add", // base path: /coupon-management/add
+              element: <CouponAdd />,
+            },
+          ],
         },
         /*--------------------------------------------------------
               feedback-rating-management routes

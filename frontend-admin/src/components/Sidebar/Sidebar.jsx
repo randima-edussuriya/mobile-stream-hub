@@ -118,15 +118,15 @@ function Sidebar() {
           <i className="bi bi-box-arrow-left fs-5 me-3"></i>
           <span className="small fw-semibold">Leave Management</span>
         </NavLink>
-        {/* <NavLink
-          to={"/loyalty-program-management"}
+        <NavLink
+          to={"/coupon-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
           }
         >
-          <i className="bi bi-cursor fs-5 me-3"></i>
-          <span className="small fw-semibold">Loyalty Program Management</span>
-        </NavLink> */}
+          <i className="bi bi-credit-card fs-5 me-3"></i>
+          <span className="small fw-semibold">Coupon Management</span>
+        </NavLink>
         <NavLink
           to={"/feedback-rating-management"}
           className={({ isActive }) =>
