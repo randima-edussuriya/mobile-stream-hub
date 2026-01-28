@@ -158,14 +158,12 @@ function LoyaltyManagement() {
               </Button>
             </>
           ) : (
-            <Button
-              variant="none"
-              size="sm"
+            <i
+              role="button"
+              title="Edit Value"
               onClick={() => handleEditClick(setting)}
-              className="btn_main_light_outline"
-            >
-              Edit
-            </Button>
+              className="bi bi-pencil-square actoin_icon text-primary"
+            ></i>
           )}
         </td>
       </tr>
