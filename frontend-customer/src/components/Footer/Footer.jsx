@@ -61,7 +61,7 @@ function Footer() {
               </p>
               <p>
                 <Link
-                  to={"/coming-soon"}
+                  to={"/repair"}
                   className="text-reset text-decoration-none quick_link"
                 >
                   Repairs
