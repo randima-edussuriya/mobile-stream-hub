@@ -40,9 +40,7 @@ export const getLoyaltyInfo = async (req, res) => {
       "SELECT current_points FROM loyalty_program WHERE customer_id=? LIMIT 1",
       [userId],
     );
-    const userCurrentPoints = Number(
-      loyaltyPointsRows[0]?.current_points || 0,
-    );
+    const userCurrentPoints = Number(loyaltyPointsRows[0]?.current_points || 0);
 
     return res.status(200).json({
       success: true,
@@ -52,6 +50,43 @@ export const getLoyaltyInfo = async (req, res) => {
         minRedeemThreshold: settings.min_redeem_threshold,
         userCurrentPoints,
       },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getMyLoyaltyProgram = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const sql = `
+      SELECT 
+        total_points,
+        points_redeemed,
+        current_points,
+        badge,
+        updated_at
+      FROM loyalty_program
+      WHERE customer_id = ?
+      LIMIT 1
+    `;
+    const [rows] = await dbPool.query(sql, [userId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Loyalty program not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: rows[0],
     });
   } catch (error) {
     console.error(error);

@@ -162,7 +162,7 @@ function App() {
           ],
         },
         {
-          path: "coupons", // base: /coupons
+          path: "coupons-loyalty", // base: /coupons
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
               <Coupons />

@@ -14,10 +14,35 @@ import dayjs from "dayjs";
 
 function Coupons() {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [coupons, setCoupons] = useState([]);
+  const [loyaltyProgram, setLoyaltyProgram] = useState(null);
+  const [loyaltyLoading, setLoyaltyLoading] = useState(true);
+  const [loyaltyError, setLoyaltyError] = useState("");
+  const [couponError, setCouponError] = useState("");
 
   const { backendUrl } = useContext(AppContext);
+
+  /* -----------------------------------------------------------------
+        Fetch loyalty program data
+  --------------------------------------------------------------------*/
+  const fetchLoyaltyProgram = async () => {
+    try {
+      setLoyaltyLoading(true);
+      setLoyaltyError("");
+      const { data } = await axios.get(
+        `${backendUrl}/api/customer/loyalty/my-program`,
+      );
+      setLoyaltyProgram(data.data);
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        "Failed to fetch loyalty information. Please try again later.";
+      setLoyaltyError(message);
+      console.error(error);
+    } finally {
+      setLoyaltyLoading(false);
+    }
+  };
 
   /* -----------------------------------------------------------------
         Fetch available coupons from API
@@ -25,7 +50,7 @@ function Coupons() {
   const fetchAvailableCoupons = async () => {
     try {
       setLoading(true);
-      setError("");
+      setCouponError("");
       setCoupons([]);
 
       const { data } = await axios.get(`${backendUrl}/api/customer/coupons`);
@@ -34,7 +59,7 @@ function Coupons() {
       const message =
         error?.response?.data?.message ||
         "Failed to fetch coupons. Please try again later.";
-      setError(message);
+      setCouponError(message);
       console.error(error);
     } finally {
       setLoading(false);
@@ -42,8 +67,25 @@ function Coupons() {
   };
 
   useEffect(() => {
+    fetchLoyaltyProgram();
     fetchAvailableCoupons();
   }, []);
+
+  /* -----------------------------------------------------------------
+        Get badge color for loyalty tier
+  --------------------------------------------------------------------*/
+  const getLoyaltyBadgeColor = (badge) => {
+    switch (badge) {
+      case "silver":
+        return "secondary";
+      case "gold":
+        return "warning";
+      case "platinum":
+        return "info";
+      default:
+        return "light text-dark";
+    }
+  };
 
   /* -----------------------------------------------------------------
         Get badge color based on discount type
@@ -78,9 +120,102 @@ function Coupons() {
   };
 
   /* -----------------------------------------------------------------
+        Render loyalty program info
+  --------------------------------------------------------------------*/
+  const renderLoyaltyInfo = () => {
+    if (loyaltyLoading) {
+      return (
+        <Card className="shadow mb-4">
+          <Card.Body className="text-center py-3">
+            <Spinner animation="border" role="status" size="sm">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </Card.Body>
+        </Card>
+      );
+    }
+
+    if (loyaltyError) {
+      return (
+        <Card className="shadow mb-4 border-danger">
+          <Card.Body className="text-danger text-center py-3">
+            {loyaltyError}
+          </Card.Body>
+        </Card>
+      );
+    }
+
+    if (!loyaltyProgram) {
+      return null;
+    }
+
+    return (
+      <Card className="shadow mb-4 bg-light">
+        <Card.Body>
+          <Row className="align-items-center">
+            <Col md={6}>
+              <div className="mb-3 mb-md-0">
+                <p className="fw-semibold text-muted small mb-2">
+                  Your Loyalty Status
+                </p>
+                <h5 className="mb-3">
+                  <Badge bg={getLoyaltyBadgeColor(loyaltyProgram.badge)}>
+                    {loyaltyProgram.badge
+                      ? loyaltyProgram.badge?.toUpperCase()
+                      : "NO BADGE"}
+                  </Badge>
+                </h5>
+              </div>
+            </Col>
+            <Col md={6}>
+              <Row className="text-center">
+                <Col xs={6} className="mb-3 mb-md-0">
+                  <p className="fw-semibold text-muted small mb-1">
+                    Total Points
+                  </p>
+                  <h6 className="fw-bold">{loyaltyProgram.total_points}</h6>
+                </Col>
+                <Col xs={6}>
+                  <p className="fw-semibold text-muted small mb-1">
+                    Available Points
+                  </p>
+                  <h6 className="fw-bold text-success">
+                    {loyaltyProgram.current_points}
+                  </h6>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <hr className="my-2" />
+          <Row className="text-center text-muted small">
+            <Col xs={6}>
+              <p className="mb-0">
+                Redeemed:{" "}
+                <span className="fw-bold">
+                  {loyaltyProgram.points_redeemed}
+                </span>
+              </p>
+            </Col>
+            <Col xs={6}>
+              <p className="mb-0">
+                Last Updated:{" "}
+                <span className="fw-bold">
+                  {dayjs(loyaltyProgram.updated_at).format(
+                    "YYYY-MM-DD HH:mm:ss",
+                  )}
+                </span>
+              </p>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    );
+  };
+
+  /* -----------------------------------------------------------------
         Render coupons data into table
   --------------------------------------------------------------------*/
-  const renderTableBody = () => {
+  const renderCouponTableBody = () => {
     if (loading) {
       return (
         <tr>
@@ -93,11 +228,11 @@ function Coupons() {
       );
     }
 
-    if (error) {
+    if (couponError) {
       return (
         <tr>
           <td colSpan={6} className="text-danger text-center">
-            {error}
+            {couponError}
           </td>
         </tr>
       );
@@ -125,7 +260,7 @@ function Coupons() {
         </td>
         <td className="text-center">
           {coupon.discount_type?.toLowerCase() === "free shipping"
-            ? "Free Shipping"
+            ? "-"
             : `${coupon.discount_value}`}
         </td>
         <td className="text-center">
@@ -143,11 +278,16 @@ function Coupons() {
     ));
   };
 
+  /* -----------------------------------------------------------------
+        Main render
+  --------------------------------------------------------------------*/
   return (
     <Container className="py-4">
+      {renderLoyaltyInfo()}
+
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">Available Coupons</h3>
+          <h4 className="fw-bold">Available Coupons</h4>
         </Col>
       </Row>
 
@@ -165,7 +305,7 @@ function Coupons() {
                   <th className="text-center">For</th>
                 </tr>
               </thead>
-              <tbody>{renderTableBody()}</tbody>
+              <tbody>{renderCouponTableBody()}</tbody>
             </Table>
           </div>
         </Card.Body>

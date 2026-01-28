@@ -188,8 +188,8 @@ function Header() {
                   <Dropdown.Item as={Link} to="/repair/listing">
                     My Repairs
                   </Dropdown.Item>
-                  <Dropdown.Item as={Link} to="/coupons">
-                    Coupons
+                  <Dropdown.Item as={Link} to="/coupons-loyalty">
+                    Loyalty & Coupons
                   </Dropdown.Item>
                   <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
