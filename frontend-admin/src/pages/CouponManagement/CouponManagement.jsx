@@ -6,7 +6,6 @@ import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { hasPermission } from "../../utils/permissions";
 import { confirmAction } from "../../utils/confirmAction";
 
 function CouponManagement() {
