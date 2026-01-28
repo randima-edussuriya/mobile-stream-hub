@@ -48,3 +48,31 @@ export const updateLoyaltySetting = async (req, res) => {
     });
   }
 };
+
+export const getLoyaltyPrograms = async (req, res) => {
+  try {
+    const sql = `
+      SELECT 
+        lp.loyalty_id,
+        lp.total_points,
+        lp.points_redeemed,
+        lp.current_points,
+        lp.badge,
+        lp.updated_at,
+        lp.customer_id
+      FROM loyalty_program lp
+      ORDER BY lp.loyalty_id DESC
+    `;
+    const [programs] = await dbPool.query(sql);
+    return res.status(200).json({
+      success: true,
+      data: programs,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

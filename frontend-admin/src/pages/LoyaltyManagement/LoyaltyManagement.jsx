@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { Container, Table, Spinner, Form, Button } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function LoyaltyManagement() {
   const [loading, setLoading] = useState(true);
@@ -12,6 +13,8 @@ function LoyaltyManagement() {
   const [editValue, setEditValue] = useState("");
 
   const { backendUrl } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   const settingLabels = {
     earning_points_ratio: "Earning Points Ratio",
@@ -174,7 +177,18 @@ function LoyaltyManagement() {
     <Container>
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="mb-3">
-          <h4 className="mb-0">Loyalty Settings Management</h4>
+          <div className="d-flex align-items-center justify-content-between">
+            <h4 className="mb-0">Loyalty Settings Management</h4>
+            <Button
+              variant="none"
+              size="sm"
+              onClick={() => navigate("usage")}
+              className="btn_main_light_outline"
+            >
+              <i className="bi bi-caret-right-square-fill me-1"></i>
+              Go to Usage
+            </Button>
+          </div>
         </Container>
         <Container className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
           <Table hover striped size="sm" className="shadow">
