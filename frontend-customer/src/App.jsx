@@ -24,6 +24,7 @@ import MyRepairRequests from "./pages/repair/MyRepairRequests";
 import RepairRequestProfile from "./pages/repair/RepairRequestProfile";
 import MyRepairs from "./pages/repair/MyRepairs";
 import RepairProfile from "./pages/repair/RepairProfile";
+import Coupons from "./pages/Coupons";
 
 const Layout = () => {
   return (
@@ -70,6 +71,9 @@ function App() {
             </PrivateRoute>
           ),
         },
+        /* -----------------------------------------------------------------
+              Product routes
+        --------------------------------------------------------------------*/
         {
           path: "products",
           element: <Products />,
@@ -78,6 +82,9 @@ function App() {
           path: "products/:itemId",
           element: <ProductDetails />,
         },
+        /* -----------------------------------------------------------------
+              Static routes
+        --------------------------------------------------------------------*/
         {
           path: "about-us",
           element: <AboutUs />,
@@ -86,6 +93,9 @@ function App() {
           path: "contact-us",
           element: <ContactUs />,
         },
+        /* -----------------------------------------------------------------
+              cart and order routes
+        --------------------------------------------------------------------*/
         {
           path: "cart",
           element: (
@@ -150,6 +160,14 @@ function App() {
               element: <RepairProfile />,
             },
           ],
+        },
+        {
+          path: "coupons", // base: /coupons
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <Coupons />
+            </PrivateRoute>
+          ),
         },
         {
           path: "coming-soon",

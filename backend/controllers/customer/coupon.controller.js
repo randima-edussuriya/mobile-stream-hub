@@ -81,3 +81,35 @@ export const applyCoupon = async (req, res) => {
     });
   }
 };
+
+export const getAvailableCoupons = async (req, res) => {
+  try {
+    // Get all active coupons
+    const sql = `
+      SELECT 
+        coupon_code,
+        discount_type,
+        discount_value,
+        expiry_date,
+        usage_limit,
+        used_count,
+        user_group
+      FROM coupon_code
+      WHERE is_active = TRUE
+        AND expiry_date > NOW()
+      ORDER BY expiry_date ASC
+    `;
+    const [coupons] = await dbPool.query(sql);
+
+    return res.status(200).json({
+      success: true,
+      data: coupons,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

@@ -141,11 +141,7 @@ function Header() {
               <Nav.Link as={Link} to={"/products"} className="navbar_link">
                 Products
               </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to={"/repair"}
-                className="navbar_link"
-              >
+              <Nav.Link as={Link} to={"/repair"} className="navbar_link">
                 Repairs
               </Nav.Link>
               <Nav.Link as={Link} to={"/about-us"} className="navbar_link">
@@ -191,6 +187,9 @@ function Header() {
                   </Dropdown.Item>
                   <Dropdown.Item as={Link} to="/repair/listing">
                     My Repairs
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/coupons">
+                    Coupons
                   </Dropdown.Item>
                   <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
                 </Dropdown.Menu>
