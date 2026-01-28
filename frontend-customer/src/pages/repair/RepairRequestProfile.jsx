@@ -10,7 +10,6 @@ import {
   Button,
   Alert,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
@@ -78,6 +77,7 @@ function RepairRequestProfile() {
         <Alert variant="danger">{error || "Repair request not found"}</Alert>
         <Button
           variant="secondary"
+          size="sm"
           onClick={() => navigate("/repair/my-requests")}
         >
           Back to Requests
@@ -90,15 +90,15 @@ function RepairRequestProfile() {
     <Container className="py-4">
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">
+          <h4 className="fw-semibold">
             Repair Request #{repairRequest.repair_requests_id}
-          </h3>
+          </h4>
         </Col>
         {/* Back Button */}
         <Col xs="auto">
           <Button
-            variant="none"
-            className="btn_main_dark"
+            variant="secondary"
+            size="sm"
             onClick={() => navigate("/repair/my-requests")}
           >
             Back to Requests
@@ -113,7 +113,7 @@ function RepairRequestProfile() {
         ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">Request Details</Card.Title>
+              <h6 className="mb-0 fw-bold text-muted">Request Details</h6>
             </Card.Header>
             <Card.Body>
               <Row className="mb-3">
@@ -160,9 +160,9 @@ function RepairRequestProfile() {
             ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">
+              <h6 className="mb-0 fw-bold text-muted">
                 Issue & Device Information
-              </Card.Title>
+              </h6>
             </Card.Header>
             <Card.Body>
               <div className="mb-3">
@@ -186,7 +186,9 @@ function RepairRequestProfile() {
         <Col lg={4}>
           <Card className="shadow">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">Technician Information</Card.Title>
+              <h6 className="mb-0 fw-bold text-muted">
+                Technician Information
+              </h6>
             </Card.Header>
             <Card.Body>
               <div className="mb-3">

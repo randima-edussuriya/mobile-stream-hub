@@ -287,7 +287,7 @@ function Coupons() {
 
       <Row className="mb-4">
         <Col>
-          <h4 className="fw-bold">Available Coupons</h4>
+          <h4 className="fw-semibold">Available Coupons</h4>
         </Col>
       </Row>
 

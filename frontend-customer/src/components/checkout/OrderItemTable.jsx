@@ -33,7 +33,7 @@ function OrderItemTable({ cartItems, loading }) {
   };
   return (
     <Card className="p-3 shadow-sm border-body-secondary">
-      <h5 className="fw-bold mb-3">Order Items</h5>
+      <h5 className="fw-semibold mb-3">Order Items</h5>
       {renderContent()}
     </Card>
   );

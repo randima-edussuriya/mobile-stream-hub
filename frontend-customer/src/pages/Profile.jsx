@@ -51,7 +51,7 @@ function Profile() {
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
       console.error(error);
     } finally {
@@ -75,7 +75,7 @@ function Profile() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again."
+          "Something went wrong. Please try again.",
       );
       console.error(error);
     }
@@ -109,12 +109,14 @@ function Profile() {
           <Col xs="auto">
             <Button
               className="me-2 border-2 shadow"
+              size="sm"
               variant="secondary"
               onClick={() => navigate(-1)}
             >
               Back
             </Button>
             <Button
+              size="sm"
               variant="none"
               className="btn_main_light_outline shadow"
               onClick={() => setEditing((prev) => !prev)}
@@ -205,6 +207,7 @@ function Profile() {
           <div className="mt-3 text-center">
             <Button
               variant="none"
+              size="sm"
               onClick={handleSave}
               className="me-2 btn_main_dark shadow px-5"
             >

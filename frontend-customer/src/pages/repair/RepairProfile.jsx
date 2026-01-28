@@ -75,7 +75,7 @@ function RepairProfile() {
     return (
       <Container className="py-4">
         <Alert variant="danger">{error || "Repair not found"}</Alert>
-        <Button variant="secondary" onClick={() => navigate(-1)}>
+        <Button variant="secondary" size="sm" onClick={() => navigate(-1)}>
           Back to Repairs
         </Button>
       </Container>
@@ -86,13 +86,13 @@ function RepairProfile() {
     <Container className="py-4">
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">Repair #{repair.repair_id}</h3>
+          <h4 className="fw-semibold">Repair #{repair.repair_id}</h4>
         </Col>
         {/* Back Button */}
         <Col xs="auto">
           <Button
-            variant="none"
-            className="btn_main_dark"
+            variant="secondary"
+            size="sm"
             onClick={() => navigate(-1)}
           >
             Back to Repairs
@@ -107,7 +107,7 @@ function RepairProfile() {
         ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">Repair Details</Card.Title>
+              <h6 className="mb-0 fw-bold text-muted">Repair Details</h6>
             </Card.Header>
             <Card.Body>
               <Row className="mb-3">
@@ -148,7 +148,9 @@ function RepairProfile() {
             ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">Initial Issue & Device</Card.Title>
+              <h6 className="mb-0 fw-bold text-muted">
+                Initial Issue & Device
+              </h6>
             </Card.Header>
             <Card.Body>
               <div className="mb-3">
@@ -183,9 +185,9 @@ function RepairProfile() {
             ------------------------------------------------------------ */}
           <Card className="shadow mb-4">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">
+              <h6 className="mb-0 fw-bold text-muted">
                 Identified Issue & Device
-              </Card.Title>
+              </h6>
             </Card.Header>
             <Card.Body>
               <div className="mb-3">
@@ -207,7 +209,9 @@ function RepairProfile() {
         <Col lg={4}>
           <Card className="shadow">
             <Card.Header className="bg-light">
-              <Card.Title className="mb-0">Technician Information</Card.Title>
+              <h6 className="mb-0 fw-bold text-muted">
+                Technician Information
+              </h6>
             </Card.Header>
             <Card.Body>
               <div className="mb-3">

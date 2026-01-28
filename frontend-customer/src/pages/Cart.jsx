@@ -109,6 +109,7 @@ const Cart = () => {
             <div className="text-end mt-3">
               <Button
                 type="submit"
+                size="sm"
                 variant="none"
                 className="btn_main_dark"
                 disabled={!isUpdated}
@@ -130,7 +131,7 @@ const Cart = () => {
     <Container className="mt-5">
       <Row className="mb-3">
         <Col>
-          <h3 className="fw-semibold">Shopping Cart</h3>
+          <h4 className="fw-semibold">Shopping Cart</h4>
         </Col>
       </Row>
 

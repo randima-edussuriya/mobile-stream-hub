@@ -108,7 +108,7 @@ const OrderDetails = () => {
         <Col md={12}>
           <Card>
             <Card.Header className="bg-light d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Order Summary</h5>
+              <h6 className="mb-0 fw-bold text-muted">Order Summary</h6>
               <div>
                 <strong>Total Amount:</strong>{" "}
                 <span className="h5 fw-bold">
@@ -165,7 +165,7 @@ const OrderDetails = () => {
         <Col md={12}>
           <Card>
             <Card.Header className="bg-light">
-              <h5 className="mb-0">Delivery Information</h5>
+              <h6 className="mb-0 fw-bold text-muted">Delivery Information</h6>
             </Card.Header>
             <Card.Body>
               <Row>
@@ -203,7 +203,7 @@ const OrderDetails = () => {
         <Col md={12}>
           <Card>
             <Card.Header className="bg-light">
-              <h5 className="mb-0">Order Items</h5>
+              <h6 className="mb-0 fw-bold text-muted">Order Items</h6>
             </Card.Header>
             <Card.Body>
               <Table hover responsive className="align-middle mb-0">
@@ -261,7 +261,7 @@ const OrderDetails = () => {
           <Col md={12}>
             <Card>
               <Card.Header className="bg-danger-subtle d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Order Cancellation</h5>
+                <h6 className="mb-0 fw-bold text-muted">Order Cancellation</h6>
               </Card.Header>
               <Card.Body>
                 {isOnlinePayment || !isPending ? (
@@ -310,13 +310,13 @@ const OrderDetails = () => {
     <Container className="mt-5">
       <Row className="mb-3">
         <Col>
-          <h3 className="fw-semibold">Order Details</h3>
+          <h4 className="fw-semibold">Order Details</h4>
         </Col>
         {/* Back Button */}
         <Col xs="auto">
           <Button
-            variant="none"
-            className="btn_main_dark"
+            size="sm"
+            variant="secondary"
             onClick={() => navigate("/my-orders")}
           >
             Back to Orders

@@ -296,7 +296,7 @@ const Checkout = () => {
     <Container className="mt-5">
       <Row className="mb-3">
         <Col>
-          <h3 className="fw-semibold">Checkout</h3>
+          <h4 className="fw-semibold">Checkout</h4>
         </Col>
       </Row>
 

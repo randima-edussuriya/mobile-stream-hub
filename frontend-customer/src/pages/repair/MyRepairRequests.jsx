@@ -110,15 +110,13 @@ function MyRepairRequests() {
           </Badge>
         </td>
         <td>
-          <Button
-            variant="none"
-            size="sm"
-            className="btn_main_dark"
-            as={Link}
-            to={`/repair/my-requests/${request.repair_requests_id}`}
-          >
-            View
-          </Button>
+          <Link to={`/repair/my-requests/${request.repair_requests_id}`}>
+            <i
+              role="button"
+              title="View Details"
+              className="bi-arrow-up-right-square text-primary action_icon"
+            ></i>
+          </Link>
         </td>
       </tr>
     ));
@@ -128,7 +126,7 @@ function MyRepairRequests() {
     <Container className="py-4">
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">My Repair Requests</h3>
+          <h4 className="fw-semibold">My Repair Requests</h4>
         </Col>
       </Row>
 

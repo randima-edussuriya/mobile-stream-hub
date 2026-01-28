@@ -113,15 +113,13 @@ const MyOrders = () => {
           </Badge>
         </td>
         <td>
-          <Button
-            variant="none"
-            size="sm"
-            className="btn_main_dark"
-            as={Link}
-            to={`/my-orders/${order.order_id}`}
-          >
-            View
-          </Button>
+          <Link to={`/my-orders/${order.order_id}`}>
+            <i
+              role="button"
+              title="View Details"
+              className="bi-arrow-up-right-square text-primary action_icon"
+            ></i>
+          </Link>
         </td>
       </tr>
     ));
@@ -131,7 +129,7 @@ const MyOrders = () => {
     <Container className="py-4">
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">My Orders</h3>
+          <h4 className="fw-semibold">My Orders</h4>
         </Col>
       </Row>
 

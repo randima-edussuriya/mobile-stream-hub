@@ -55,12 +55,12 @@ function AddItemReview() {
     <Container className="mt-5">
       <Row className="mb-3">
         <Col>
-          <h3 className="fw-semibold">Add Review</h3>
+          <h4 className="fw-semibold">Add Review</h4>
         </Col>
         <Col xs="auto">
           <Button
-            variant="none"
-            className="btn_main_dark"
+            variant="secondary"
+            size="sm"
             onClick={() => navigate(`/my-orders/${orderId}`)}
           >
             Back to Order
@@ -70,7 +70,7 @@ function AddItemReview() {
 
       <Card>
         <Card.Header className="bg-light">
-          <h5 className="mb-0">Review Details</h5>
+          <h6 className="mb-0 text-muted fw-bold">Review Details</h6>
         </Card.Header>
         <Card.Body>
           <Form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>

@@ -117,7 +117,7 @@ function OrderSummary({
         {/* --------------------------------------------------------
               Payment Method Selection
         ------------------------------------------------------------ */}
-        <h6 className="fw-bold">Payment Method</h6>
+        <h6 className="fw-semibold">Payment Method</h6>
         <div className="mx-auto mb-3">
           <Form.Check
             name="paymentMethod"
@@ -148,7 +148,7 @@ function OrderSummary({
           />
         </div>
 
-        <Button onClick={handlePlaceOrder} variant="dark">
+        <Button onClick={handlePlaceOrder} size="sm" variant="dark">
           Place Order
         </Button>
       </>
@@ -157,7 +157,7 @@ function OrderSummary({
 
   return (
     <Card className="p-3 shadow-sm border-body-secondary">
-      <h5 className="fw-bold mb-3">Order Summary</h5>
+      <h5 className="fw-semibold mb-3">Order Summary</h5>
       {renderContent()}
     </Card>
   );

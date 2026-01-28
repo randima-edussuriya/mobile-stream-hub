@@ -54,7 +54,7 @@ function Products() {
     <Container className="mt-5">
       <Row className="fw-semibold mb-3">
         <Col>
-          <h3>Products</h3>
+          <h4 className="fw-semibold">Products</h4>
         </Col>
 
         <Col xs="auto">

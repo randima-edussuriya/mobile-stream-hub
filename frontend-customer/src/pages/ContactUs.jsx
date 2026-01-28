@@ -57,11 +57,11 @@ function ContactUs() {
       <Container className="col-lg-8 bg_light rounded shadow p-3">
         <Row>
           <Col>
-            <h3>Contact Us</h3>
+            <h4 className="fw-semibold">Contact Us</h4>
           </Col>
           <Col xs="auto">
             <Button
-              className="border-2 shadow"
+              size="sm"
               variant="secondary"
               onClick={() => navigate(-1)}
             >
@@ -138,6 +138,7 @@ function ContactUs() {
           <Container className="mt-3 d-flex gap-2 justify-content-center align-items-center">
             <Button
               type="submit"
+              size="sm"
               variant="none"
               className="btn_main_dark shadow w-auto"
             >
@@ -145,6 +146,7 @@ function ContactUs() {
             </Button>
             <Button
               type="button"
+              size="sm"
               variant="outline-danger"
               className="shadow"
               onClick={handleClear}

@@ -102,22 +102,22 @@ function MyRepairs() {
           {dayjs(repair.appointment_date).format("YYYY-MM-DD HH:mm")}
         </td>
         <td>{repair.technician_name}</td>
-        <td className="fw-medium">{repair.identified_device || "Not yet identified"}</td>
+        <td className="fw-medium">
+          {repair.identified_device || "Not yet identified"}
+        </td>
         <td>
           <Badge bg={getStatusBadge(repair.status)}>
             {repair.status.charAt(0).toUpperCase() + repair.status.slice(1)}
           </Badge>
         </td>
         <td>
-          <Button
-            variant="none"
-            size="sm"
-            className="btn_main_dark"
-            as={Link}
-            to={`/repair/${repair.repair_id}`}
-          >
-            View
-          </Button>
+          <Link to={`/repair/${repair.repair_id}`}>
+            <i
+              role="button"
+              title="View Details"
+              className="bi-arrow-up-right-square text-primary action_icon"
+            ></i>
+          </Link>
         </td>
       </tr>
     ));
@@ -127,7 +127,7 @@ function MyRepairs() {
     <Container className="py-4">
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-bold">My Repairs</h3>
+          <h4 className="fw-semibold">My Repairs</h4>
         </Col>
       </Row>
 

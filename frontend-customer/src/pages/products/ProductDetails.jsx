@@ -28,13 +28,13 @@ function ProductDetails() {
       setError("");
       setItem({});
       const { data } = await axios.get(
-        `${backendUrl}/api/customer/items/${itemId}`
+        `${backendUrl}/api/customer/items/${itemId}`,
       );
       setItem(data.data);
     } catch (error) {
       setError(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ function ProductDetails() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
       console.error(error);
     }
@@ -115,7 +115,7 @@ function ProductDetails() {
             />
           </Col>
           <Col md={6}>
-            <h3 className="mb-1">{item.name}</h3>
+            <h4 className="mb-1 fw-semibold">{item.name}</h4>
             <div className="text-muted mb-3">{item.brand}</div>
             {item.discount > 0 && (
               <Badge bg="success" className="mb-3 fs-6 p-1">
@@ -168,6 +168,7 @@ function ProductDetails() {
               <div className="my-4 d-flex gap-2">
                 <Button
                   type="submit"
+                  size="sm"
                   variant="none"
                   className="btn_main_dark"
                   disabled={!isInStock}
@@ -175,8 +176,11 @@ function ProductDetails() {
                   <i className="bi bi-cart-plus me-1" /> Add to Cart
                 </Button>
                 <Button
+                  type="button"
+                  size="sm"
                   variant="outline-secondary"
                   onClick={() => navigate("/products")}
+                  className="fw-medium"
                 >
                   Back to Products
                 </Button>

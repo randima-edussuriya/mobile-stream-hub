@@ -189,7 +189,7 @@ function RequestRepair() {
           <Card className="shadow">
             <Card.Body className="p-4">
               <Card.Title className="mb-4">
-                <h3>Request Repair Service</h3>
+                <h4 className="fw-semibold">Request Repair Service</h4>
               </Card.Title>
 
               <Form onSubmit={handleSubmit}>
@@ -294,6 +294,7 @@ function RequestRepair() {
                 <div className="d-grid gap-2">
                   <Button
                     variant="none"
+                    size="sm"
                     type="submit"
                     disabled={
                       submitting ||

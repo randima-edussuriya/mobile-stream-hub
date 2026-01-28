@@ -6,7 +6,7 @@ const AboutUs = () => {
       {/* Page Title */}
       <Row className="mb-4">
         <Col>
-          <h3 className="fw-semibold">About Mobile Stream Hub</h3>
+          <h4 className="fw-semibold">About Mobile Stream Hub</h4>
           <p className="text-muted">
             Your trusted mobile phone sales and repair partner in Colombo 3
           </p>

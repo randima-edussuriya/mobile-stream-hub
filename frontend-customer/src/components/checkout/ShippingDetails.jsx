@@ -50,7 +50,7 @@ function ShippingDetails({ setShippingData }) {
 
   return (
     <Card className="p-3 mb-3 shadow-sm border-body-secondary">
-      <h5 className="fw-bold mb-3">Shipping Details</h5>
+      <h5 className="fw-semibold mb-3">Shipping Details</h5>
       {/*-------------------------------------------------
             contact name & phone number
     --------------------------------------------------- */}
