@@ -250,9 +250,7 @@ const OrderDetails = () => {
                 {isOnlinePayment || !isPending ? (
                   <>
                     <div className="text-danger mt-1">
-                      Only pending orders can be cancelled. Online payment
-                      orders cannot be cancelled here. Please contact support
-                      for assistance.
+                      Only pending orders can be cancelled.
                     </div>
                     <div className="text-danger mt-1">
                       Online payment orders cannot be cancelled here. Please
