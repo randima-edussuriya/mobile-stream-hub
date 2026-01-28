@@ -24,8 +24,8 @@ import MyRepairRequests from "./pages/repair/MyRepairRequests";
 import RepairRequestProfile from "./pages/repair/RepairRequestProfile";
 import MyRepairs from "./pages/repair/MyRepairs";
 import RepairProfile from "./pages/repair/RepairProfile";
-import Coupons from "./pages/Coupons";
 import AddItemReview from "./pages/orders/AddItemReview";
+import CouponsLoyalty from "./pages/CouponsLoyalty";
 
 const Layout = () => {
   return (
@@ -176,7 +176,7 @@ function App() {
           path: "coupons-loyalty", // base: /coupons
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
-              <Coupons />
+              <CouponsLoyalty />
             </PrivateRoute>
           ),
         },

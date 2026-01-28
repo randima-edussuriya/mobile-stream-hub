@@ -12,7 +12,7 @@ import {
 import { AppContext } from "../context/AppContext";
 import dayjs from "dayjs";
 
-function Coupons() {
+function CouponsLoyalty() {
   const [loading, setLoading] = useState(true);
   const [coupons, setCoupons] = useState([]);
   const [loyaltyProgram, setLoyaltyProgram] = useState(null);
@@ -314,4 +314,4 @@ function Coupons() {
   );
 }
 
-export default Coupons;
+export default CouponsLoyalty;
