@@ -191,7 +191,14 @@ function Header() {
                   <Dropdown.Item as={Link} to="/coupons-loyalty">
                     Loyalty & Coupons
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={handelLogout}>Log Out</Dropdown.Item>
+                  <hr className="mb-0" />
+                  <Dropdown.Item
+                    onClick={handelLogout}
+                    className="d-flex align-items-center gap-2 fw-semibold text-danger"
+                  >
+                    <span>Log out</span>{" "}
+                    <i className="bi bi-box-arrow-right fs-5"></i>
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
