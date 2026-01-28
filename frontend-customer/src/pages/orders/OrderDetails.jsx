@@ -213,6 +213,7 @@ const OrderDetails = () => {
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Discount</th>
+                    {orderData.status === "delivered" && <th>Action</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -229,6 +230,22 @@ const OrderDetails = () => {
                       <td>Rs. {Number(item.item_price).toLocaleString()}</td>
                       <td>{item.item_quantity}</td>
                       <td>{Number(item.discount)}%</td>
+                      {orderData.status === "delivered" && (
+                        <td>
+                          <Button
+                            size="sm"
+                            variant="none"
+                            onClick={() =>
+                              navigate(
+                                `/my-orders/${orderData.order_id}/items/${item.item_id}/add-review`,
+                              )
+                            }
+                            className="btn_main_light_outline"
+                          >
+                            Add Review
+                          </Button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

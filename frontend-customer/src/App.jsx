@@ -25,6 +25,7 @@ import RepairRequestProfile from "./pages/repair/RepairRequestProfile";
 import MyRepairs from "./pages/repair/MyRepairs";
 import RepairProfile from "./pages/repair/RepairProfile";
 import Coupons from "./pages/Coupons";
+import AddItemReview from "./pages/orders/AddItemReview";
 
 const Layout = () => {
   return (
@@ -94,10 +95,10 @@ function App() {
           element: <ContactUs />,
         },
         /* -----------------------------------------------------------------
-              cart and order routes
+              cart and checkout routes
         --------------------------------------------------------------------*/
         {
-          path: "cart",
+          path: "cart", // base: /cart
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
               <Cart />
@@ -105,29 +106,39 @@ function App() {
           ),
         },
         {
-          path: "checkout",
+          path: "checkout", // base: /checkout
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
               <Checkout />
             </PrivateRoute>
           ),
         },
+        /* -----------------------------------------------------------------
+              Order routes
+        --------------------------------------------------------------------*/
         {
           path: "my-orders",
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
-              <MyOrders />
+              <Outlet />
             </PrivateRoute>
           ),
+          children: [
+            {
+              path: "", // base: /my-orders
+              element: <MyOrders />,
+            },
+            {
+              path: ":orderId", // base: /my-orders/:orderId
+              element: <OrderDetails />,
+            },
+            {
+              path: ":orderId/items/:itemId/add-review", // base: /my-orders/:orderId/items/:itemId/add-review
+              element: <AddItemReview />,
+            },
+          ],
         },
-        {
-          path: "my-orders/:orderId",
-          element: (
-            <PrivateRoute isLoggedIn={isLoggedIn}>
-              <OrderDetails />
-            </PrivateRoute>
-          ),
-        },
+
         /* -----------------------------------------------------------------
               Repair routes
         --------------------------------------------------------------------*/
