@@ -15,7 +15,7 @@ const router = express.Router();
 router.get(
   "/",
   authenticateUser,
-  authorizeRoles(["admin", "inventory manager", "cashier"]),
+  authorizeRoles(["admin"]),
   getLoyaltySettings,
 );
 
