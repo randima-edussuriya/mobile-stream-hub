@@ -13,6 +13,7 @@ import repairRoutes from "./repair.routes.js";
 import dayOffRoutes from "./dayOff.routes.js";
 import leaveRoutes from "./leave.routes.js";
 import loyaltyRoutes from "./loyalty.routes.js";
+import feedbackRoutes from "./feedback.routes.js";
 
 const router = express.Router();
 
@@ -31,5 +32,6 @@ router.use("/repairs", repairRoutes);
 router.use("/day-offs", dayOffRoutes);
 router.use("/leaves", leaveRoutes);
 router.use("/loyalty", loyaltyRoutes);
+router.use("/feedbacks", feedbackRoutes);
 
 export default router;

@@ -137,15 +137,13 @@ function Sidebar() {
           <span className="small fw-semibold">Loyalty Management</span>
         </NavLink>
         <NavLink
-          to={"/feedback-rating-management"}
+          to={"/feedback-management"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
           }
         >
           <i className="bi bi-star fs-5 me-3"></i>
-          <span className="small fw-semibold">
-            Feedback and rating Management
-          </span>
+          <span className="small fw-semibold">Feedback Management</span>
         </NavLink>
         {/* <NavLink
           to={"/customer-support-management"}

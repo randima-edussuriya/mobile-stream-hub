@@ -11,7 +11,6 @@ import CustomerManagement from "./pages/CustomerManagement";
 import OrderManagement from "./pages/OrderManagement/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
 import DayOffManagement from "./pages/DayOffManagement/DayOffManagement";
-import FeedbackRatingManagement from "./pages/FeedbackRatingManagement";
 import CustomerSupportManagement from "./pages/CustomerSupportManagement";
 import ReportsManagement from "./pages/ReportsManagement";
 import RepairManagement from "./pages/RepairManagement/RepairManagement";
@@ -47,6 +46,8 @@ import CouponAdd from "./pages/CouponManagement/CouponAdd";
 import LoyaltyManagement from "./pages/LoyaltyManagement/LoyaltyManagement";
 import LoyaltyUsage from "./pages/LoyaltyManagement/LoyaltyUsage";
 import OrderTracking from "./pages/OrderManagement/OrderTracking";
+import ItemFeedbackListing from "./pages/FeedbackManagement/ItemFeedbackListing";
+import ItemFeedbackProfile from "./pages/FeedbackManagement/ItemFeedbackProfile";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -305,7 +306,7 @@ function App() {
               element: <OrderProfile />,
             },
             {
-              path: ":orderId/tracking",  // base path: /order-management/:orderId/tracking
+              path: ":orderId/tracking", // base path: /order-management/:orderId/tracking
               element: <OrderTracking />,
             },
           ],
@@ -462,15 +463,25 @@ function App() {
           ],
         },
         /*--------------------------------------------------------
-              feedback-rating-management routes
+              feedback-management routes
         ---------------------------------------------------------- */
         {
-          path: "feedback-rating-management",
+          path: "feedback-management",
           element: (
             <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <FeedbackRatingManagement />
+              <Outlet />
             </RoleRoute>
           ),
+          children: [
+            {
+              path: "", // base path: /feedback-management
+              element: <ItemFeedbackListing />,
+            },
+            {
+              path: "item/:feedbackId", // base path: /feedback-management/item/:feedbackId
+              element: <ItemFeedbackProfile />,
+            },
+          ],
         },
         /*--------------------------------------------------------
               customer-support-management routes
