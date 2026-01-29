@@ -233,7 +233,7 @@ const OrderProfile = () => {
               Order Summary
             </Card.Header>
             <Card.Body>
-              <Row className="g-2">
+              <Row className="g-2 ">
                 <Col xs={12} md={4}>
                   <p className="mb-2">
                     <strong>Order Date:</strong>{" "}
@@ -251,7 +251,7 @@ const OrderProfile = () => {
                   </p>
                 </Col>
                 <Col xs={12} md={8}>
-                  <Row className="g-2 mb-2">
+                  <Row className="g-2">
                     <Col sm={6}>
                       <Form.Group controlId="orderStatus">
                         <Form.Label className="fw-semibold">
@@ -292,8 +292,6 @@ const OrderProfile = () => {
                         </Form.Select>
                       </Form.Group>
                     </Col>
-                  </Row>
-                  <Row className="g-2">
                     {orderData.payment_method === "online" ? (
                       <>
                         <Col xs={12} xl={6}>
