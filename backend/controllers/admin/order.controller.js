@@ -154,16 +154,35 @@ export const updatePaymentStatus = async (req, res) => {
       });
     }
 
-    // Update payment status
-    const updateSql = "UPDATE payment SET status = ? WHERE order_id = ?";
-    await dbPool.query(updateSql, [paymentStatus, orderId]);
-
-    // update payment date for 'completed' status
-    if (paymentStatus === "completed") {
-      const paymentDateSql =
-        "UPDATE payment SET payment_date = NOW() WHERE order_id = ?";
-      await dbPool.query(paymentDateSql, [orderId]);
+    const validStatuses = ["pending", "completed", "failed", "refunded"];
+    if (!validStatuses.includes(paymentStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid payment status.`,
+      });
     }
+
+    let paymentParam = [];
+    let paymentValue = [];
+
+    // Update payment status
+    paymentParam.push("status = ?");
+    paymentValue.push(paymentStatus);
+
+    // Set payment date based on status
+    if (paymentStatus === "completed") {
+      paymentParam.push("payment_date = ?");
+      paymentValue.push(new Date());
+    }
+
+    if (["pending", "failed"].includes(paymentStatus)) {
+      paymentParam.push("payment_date = ?");
+      paymentValue.push(null);
+    }
+
+    const updateSql = `UPDATE payment SET ${paymentParam.join(", ")} WHERE order_id = ?`;
+    paymentValue.push(orderId);
+    await dbPool.query(updateSql, paymentValue);
 
     return res.status(200).json({
       success: true,
