@@ -162,6 +162,18 @@ export const updatePaymentStatus = async (req, res) => {
       });
     }
 
+    // get order payment method
+    const [orderRow] = await dbPool.query(
+      "SELECT payment_method FROM order_table WHERE order_id = ? LIMIT 1",
+      [orderId],
+    );
+    if (orderRow.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Payment record not found for the order",
+      });
+    }
+
     let paymentParam = [];
     let paymentValue = [];
 
@@ -169,15 +181,17 @@ export const updatePaymentStatus = async (req, res) => {
     paymentParam.push("status = ?");
     paymentValue.push(paymentStatus);
 
-    // Set payment date based on status
-    if (paymentStatus === "completed") {
-      paymentParam.push("payment_date = ?");
-      paymentValue.push(new Date());
-    }
+    // For 'cod' and 'pickup' methods, update payment date based on status
+    if (["cod", "pickup"].includes(orderRow[0].payment_method)) {
+      if (paymentStatus === "completed") {
+        paymentParam.push("payment_date = ?");
+        paymentValue.push(new Date());
+      }
 
-    if (["pending", "failed"].includes(paymentStatus)) {
-      paymentParam.push("payment_date = ?");
-      paymentValue.push(null);
+      if (["pending", "failed"].includes(paymentStatus)) {
+        paymentParam.push("payment_date = ?");
+        paymentValue.push(null);
+      }
     }
 
     const updateSql = `UPDATE payment SET ${paymentParam.join(", ")} WHERE order_id = ?`;
