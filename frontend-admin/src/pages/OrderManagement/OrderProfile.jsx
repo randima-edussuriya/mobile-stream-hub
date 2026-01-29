@@ -66,6 +66,16 @@ const OrderProfile = () => {
       return;
     }
 
+    // check if changed
+    if (
+      paymentDateValue ===
+        dayjs(orderData.payment_date).format("YYYY-MM-DDTHH:mm:ss") &&
+      paymentTokenValue === orderData.payment_token
+    ) {
+      toast.info("No changes detected in payment details");
+      return;
+    }
+
     try {
       await axios.put(`${backendUrl}/api/admin/orders/${orderId}/payment`, {
         paymentDate: paymentDateValue,
@@ -223,8 +233,8 @@ const OrderProfile = () => {
               Order Summary
             </Card.Header>
             <Card.Body>
-              <Row>
-                <Col md={4} className="mb-3">
+              <Row className="g-2">
+                <Col xs={12} md={4}>
                   <p className="mb-2">
                     <strong>Order Date:</strong>{" "}
                     {dayjs(orderData.order_date).format("YYYY-MM-DD HH:mm:ss")}
@@ -240,8 +250,8 @@ const OrderProfile = () => {
                     <span className="text-primary h5 fw-bold">{`Rs. ${Number(orderData.total).toLocaleString()}`}</span>
                   </p>
                 </Col>
-                <Col md={8}>
-                  <Row className="g-3">
+                <Col xs={12} md={8}>
+                  <Row className="g-2 mb-2">
                     <Col sm={6}>
                       <Form.Group controlId="orderStatus">
                         <Form.Label className="fw-semibold">
@@ -283,15 +293,13 @@ const OrderProfile = () => {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Row className="mt-3 align-items-center">
+                  <Row className="g-2">
                     {orderData.payment_method === "online" ? (
                       <>
-                        <Col xs="auto">
-                          <Form.Label className="fw-semibold mb-0">
+                        <Col xs={12} xl={6}>
+                          <Form.Label className="fw-semibold">
                             Payment Date
                           </Form.Label>
-                        </Col>
-                        <Col>
                           <Form.Control
                             type="datetime-local"
                             step="1"
@@ -301,17 +309,20 @@ const OrderProfile = () => {
                             }
                           />
                         </Col>
-                        <Col>
+                        <Col xs={12} xl={6}>
+                          <Form.Label className="fw-semibold">
+                            Payment Token
+                          </Form.Label>
                           <Form.Control
                             type="text"
-                            placeholder="Payment Token"
+                            placeholder="Enter Payment Token"
                             value={paymentTokenValue}
                             onChange={(e) =>
                               setPaymentTokenValue(e.target.value)
                             }
                           />
                         </Col>
-                        <Col xs="auto">
+                        <Col xs={12}>
                           <Button
                             variant="none"
                             size="sm"
@@ -323,14 +334,14 @@ const OrderProfile = () => {
                         </Col>
                       </>
                     ) : (
-                      <p className="mb-2">
+                      <Col>
                         <strong>Payment Date:</strong>{" "}
                         {orderData.payment_date
                           ? dayjs(orderData.payment_date).format(
                               "YYYY-MM-DD HH:mm:ss",
                             )
                           : "Not Paid Yet"}
-                      </p>
+                      </Col>
                     )}
                   </Row>
                 </Col>
