@@ -78,9 +78,15 @@ export const getMyLoyaltyProgram = async (req, res) => {
     const [rows] = await dbPool.query(sql, [userId]);
 
     if (rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Loyalty program not found",
+      return res.status(200).json({
+        success: true,
+        data: {
+          total_points: 0,
+          points_redeemed: 0,
+          current_points: 0,
+          badge: "NO BADGE",
+          updated_at: null,
+        },
       });
     }
 

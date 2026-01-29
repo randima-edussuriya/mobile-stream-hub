@@ -200,9 +200,11 @@ function CouponsLoyalty() {
               <p className="mb-0">
                 Last Updated:{" "}
                 <span className="fw-bold">
-                  {dayjs(loyaltyProgram.updated_at).format(
-                    "YYYY-MM-DD HH:mm:ss",
-                  )}
+                  {loyaltyProgram.updated_at
+                    ? dayjs(loyaltyProgram.updated_at).format(
+                        "YYYY-MM-DD HH:mm:ss",
+                      )
+                    : "Not Updated Yet"}
                 </span>
               </p>
             </Col>
