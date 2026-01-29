@@ -67,7 +67,7 @@ function ItemFeedbackProfile() {
   const getRatingColor = (rating) => {
     const rate = Number(rating);
     if (rate >= 4.5) return "success";
-    if (rate >= 3.5) return "warning";
+    if (rate >= 3.5) return "warning text-dark";
     return "danger";
   };
 
