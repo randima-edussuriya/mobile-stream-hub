@@ -218,8 +218,8 @@ const OrderProfile = () => {
         </Col>
         <Col className="text-end">
           <Button
-            variant="primary"
-            className="me-2"
+            variant="none"
+            className="me-2 btn_main_dark"
             onClick={() => navigate(`/order-management/${orderId}/tracking`)}
           >
             View Tracking
