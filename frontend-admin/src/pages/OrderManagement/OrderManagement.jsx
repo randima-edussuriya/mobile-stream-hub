@@ -109,9 +109,9 @@ function OrderManagement() {
     const statusMap = {
       pending: "dark",
       "packaging in progress": "secondary",
-      "ready for pickup": "info text-dark",
+      "ready for pickup": "primary",
       "ready for delivery": "primary",
-      dispatched: "warning text-dark",
+      dispatched: "warning",
       delivered: "success",
       cancelled: "danger",
     };
