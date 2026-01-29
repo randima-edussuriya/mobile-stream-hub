@@ -217,6 +217,13 @@ const OrderProfile = () => {
           <h4 className="text-white">Order #{orderData.order_id}</h4>
         </Col>
         <Col className="text-end">
+          <Button
+            variant="primary"
+            className="me-2"
+            onClick={() => navigate(`/order-management/${orderId}/tracking`)}
+          >
+            View Tracking
+          </Button>
           <Button variant="dark" onClick={() => navigate(-1)}>
             Back
           </Button>

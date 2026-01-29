@@ -9,6 +9,7 @@ import {
   getCancellations,
   getOrderDistricts,
   getOrderStatuses,
+  getOrderTracking,
 } from "../../controllers/admin/order.controller.js";
 import { authenticateUser } from "../../middleware/admin/auth.middleware.js";
 import { authorizeRoles } from "../../middleware/admin/auth.middleware.js";
@@ -30,6 +31,13 @@ router.get(
   authenticateUser,
   authorizeRoles(["admin", "cashier", "deliver person"]),
   getOrder,
+);
+// GET /:orderId/tracking – Get order tracking history
+router.get(
+  "/:orderId/tracking",
+  authenticateUser,
+  authorizeRoles(["admin", "cashier", "deliver person"]),
+  getOrderTracking,
 );
 // GET /districts/list – Get list of order districts
 router.get(

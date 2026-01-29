@@ -46,6 +46,7 @@ import CouponProfile from "./pages/CouponManagement/CouponProfile";
 import CouponAdd from "./pages/CouponManagement/CouponAdd";
 import LoyaltyManagement from "./pages/LoyaltyManagement/LoyaltyManagement";
 import LoyaltyUsage from "./pages/LoyaltyManagement/LoyaltyUsage";
+import OrderTracking from "./pages/OrderManagement/OrderTracking";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -296,12 +297,16 @@ function App() {
           ),
           children: [
             {
-              path: "",
+              path: "", // base path: /order-management
               element: <OrderManagement />,
             },
             {
-              path: "profile/:orderId",
+              path: "profile/:orderId", // base path: /order-management/profile/:orderId
               element: <OrderProfile />,
+            },
+            {
+              path: ":orderId/tracking",  // base path: /order-management/:orderId/tracking
+              element: <OrderTracking />,
             },
           ],
         },

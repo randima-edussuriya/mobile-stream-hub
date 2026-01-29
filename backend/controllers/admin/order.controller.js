@@ -389,3 +389,59 @@ export const getOrderStatuses = async (req, res) => {
     });
   }
 };
+
+export const getOrderTracking = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID is required",
+      });
+    }
+
+    // Check if order exists
+    const [orderRows] = await dbPool.query(
+      "SELECT order_id FROM order_table WHERE order_id = ?",
+      [orderId],
+    );
+
+    if (orderRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // Get tracking history
+    const sql = `
+      SELECT 
+        t.tracking_id,
+        t.status,
+        t.changed_at,
+        t.changed_by,
+        CONCAT(s.first_name, ' ',  s.last_name) as changed_by_name,
+        s.staff_id as changed_by_id,
+        ST.staff_type_name as changed_by_role
+      FROM tracking t
+      INNER JOIN staff s ON t.changed_by = s.staff_id
+      INNER JOIN staff_type st ON s.staff_type_id = st.staff_type_id
+      WHERE t.order_id = ? AND t.service_type = 'order'
+      ORDER BY t.changed_at DESC
+    `;
+
+    const [trackingRows] = await dbPool.query(sql, [orderId]);
+
+    return res.status(200).json({
+      success: true,
+      data: trackingRows,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
