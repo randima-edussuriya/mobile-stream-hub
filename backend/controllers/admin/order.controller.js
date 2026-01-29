@@ -103,6 +103,7 @@ export const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
     const { status } = req.body;
+    const { userId } = req.user;
 
     if (!orderId) {
       return res.status(400).json({
@@ -121,6 +122,13 @@ export const updateOrderStatus = async (req, res) => {
     // Update order status
     const updateSql = "UPDATE order_table SET status = ? WHERE order_id = ?";
     await dbPool.query(updateSql, [status, orderId]);
+
+    // Insert tracking record
+    const trackingSql = `
+      INSERT INTO tracking (status, service_type, changed_by, order_id)
+      VALUES (?, 'order', ?, ?)
+    `;
+    await dbPool.query(trackingSql, [status, userId, orderId]);
 
     return res.status(200).json({
       success: true,
