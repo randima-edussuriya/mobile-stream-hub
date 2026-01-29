@@ -498,11 +498,12 @@ export const placeOrder = async (req, res) => {
       if (userLoyaltyInfo.totalPoints === 0) {
         // insert new loyalty program record
         const insertLoyaltySql = `
-                      INSERT INTO loyalty_program (total_points, current_points, customer_id) 
-                      VALUES (?, ?, ?)`;
+                      INSERT INTO loyalty_program (total_points, current_points, badge, customer_id) 
+                      VALUES (?, ?, ?, ?)`;
         await dbPool.query(insertLoyaltySql, [
           pointsEarned,
           pointsEarned,
+          newBadge,
           userId,
         ]);
       } else {
