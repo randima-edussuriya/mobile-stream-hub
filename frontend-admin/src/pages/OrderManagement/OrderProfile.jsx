@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Container,
   Row,
@@ -219,8 +219,9 @@ const OrderProfile = () => {
         <Col className="text-end">
           <Button
             variant="none"
+            as={Link}
+            to={`/order-management/${orderId}/tracking`}
             className="me-2 btn_main_dark"
-            onClick={() => navigate(`/order-management/${orderId}/tracking`)}
           >
             View Tracking
           </Button>
