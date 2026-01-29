@@ -48,9 +48,9 @@ const MyOrders = () => {
     const statusMap = {
       pending: "dark",
       "packaging in progress": "secondary",
-      "ready for pickup": "primary",
+      "ready for pickup": "info text-dark",
       "ready for delivery": "primary",
-      dispatched: "warning",
+      dispatched: "warning text-dark",
       delivered: "success",
       cancelled: "danger",
     };
