@@ -636,3 +636,55 @@ export const getDeliveryCost = async (req, res) => {
     });
   }
 };
+
+// Get order tracking history
+export const getCustomerOrderTracking = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { userId } = req.user;
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID is required",
+      });
+    }
+
+    // Check if order exists and belongs to the customer
+    const [orderRows] = await dbPool.query(
+      "SELECT order_id FROM order_table WHERE order_id = ? AND customer_id = ?",
+      [orderId, userId],
+    );
+
+    if (orderRows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // Get tracking history
+    const sql = `
+      SELECT 
+        t.tracking_id,
+        t.status,
+        t.changed_at
+      FROM tracking t
+      WHERE t.order_id = ? AND t.service_type = 'order'
+      ORDER BY t.changed_at DESC
+    `;
+
+    const [trackingRows] = await dbPool.query(sql, [orderId]);
+
+    return res.status(200).json({
+      success: true,
+      data: trackingRows,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};

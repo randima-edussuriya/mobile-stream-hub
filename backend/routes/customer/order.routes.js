@@ -5,6 +5,7 @@ import {
   placeOrder,
   getDeliveryCost,
   cancelCustomerOrder,
+  getCustomerOrderTracking,
 } from "../../controllers/customer/order.controller.js";
 import {
   validateGetDeliveryCost,
@@ -24,6 +25,8 @@ router.post("/", authenticateUser, validatePlaceOrder, placeOrder);
 router.get("/", authenticateUser, getCustomerOrders);
 // GET /:orderId – Get a specific customer order by ID
 router.get("/:orderId", authenticateUser, getCustomerOrder);
+// GET /:orderId/tracking – Get order tracking history
+router.get("/:orderId/tracking", authenticateUser, getCustomerOrderTracking);
 // PUT /:orderId/cancel – Cancel a customer's order
 router.put("/:orderId/cancel", authenticateUser, cancelCustomerOrder);
 

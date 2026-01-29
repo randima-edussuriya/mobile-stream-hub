@@ -56,9 +56,9 @@ const OrderDetails = () => {
     const statusMap = {
       pending: "dark",
       "packaging in progress": "secondary",
-      "ready for pickup": "primary",
+      "ready for pickup": "info text-dark",
       "ready for delivery": "primary",
-      dispatched: "warning",
+      dispatched: "warning text-dark",
       delivered: "success",
       cancelled: "danger",
     };
@@ -314,6 +314,15 @@ const OrderDetails = () => {
         </Col>
         {/* Back Button */}
         <Col xs="auto">
+          <Button
+            as={Link}
+            to={`/my-orders/${orderId}/tracking`}
+            size="sm"
+            variant="none"
+            className="me-2 btn_main_dark"
+          >
+            View Tracking
+          </Button>
           <Button
             size="sm"
             variant="secondary"
