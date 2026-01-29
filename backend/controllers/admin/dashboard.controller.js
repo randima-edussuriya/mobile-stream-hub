@@ -125,7 +125,7 @@ export const getRevenueByOrder = async (req, res) => {
         WHERE p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
         	AND p.status = "completed"
         GROUP BY name
-        ORDER BY value ASC;
+        ORDER BY name ASC;
     `;
 
     const [data] = await dbPool.query(sql);
@@ -158,8 +158,8 @@ export const getRevenueByCategory = async (req, res) => {
         INNER JOIN payment p ON ot.order_id=p.order_id
         WHERE p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
         	AND p.status="completed"
-        GROUP BY name
-        ORDER BY VALUE ASC;
+        GROUP BY c.category_id
+        ORDER BY VALUE DESC;
     `;
 
     const [data] = await dbPool.query(sql);
