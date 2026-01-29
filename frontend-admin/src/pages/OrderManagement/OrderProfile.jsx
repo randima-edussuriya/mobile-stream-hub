@@ -42,11 +42,9 @@ const OrderProfile = () => {
       );
       setOrderData(data.data);
       setPaymentDateValue(
-        data.data.payment_date
-          ? dayjs(data.data.payment_date).format("YYYY-MM-DDTHH:mm:ss")
-          : "",
-        setPaymentTokenValue(data.data.payment_token || ""),
+        dayjs(data.data.payment_date).format("YYYY-MM-DDTHH:mm:ss") || "",
       );
+      setPaymentTokenValue(data.data.payment_token || "");
     } catch (err) {
       setError(
         err?.response?.data?.message ||
@@ -58,10 +56,10 @@ const OrderProfile = () => {
     }
   };
 
-  /*-------------------------------------------------
-        update order payment date
-  --------------------------------------------------- */
-  const updateOrderPaymentDate = async () => {
+  /*-----------------------------------------------------------
+        update order payment details for online payments
+  ------------------------------------------------------------- */
+  const updateOrderPayment = async () => {
     // Validate payment date
     if (!paymentDateValue || !paymentTokenValue) {
       toast.error("Please fill in both payment date and payment token");
@@ -286,21 +284,23 @@ const OrderProfile = () => {
                     </Col>
                   </Row>
                   <Row className="mt-3 align-items-center">
-                    <Col xs="auto">
-                      <Form.Label className="fw-semibold mb-0">
-                        Payment Date
-                      </Form.Label>
-                    </Col>
-                    <Col>
-                      <Form.Control
-                        type="datetime-local"
-                        step="1"
-                        value={paymentDateValue}
-                        onChange={(e) => setPaymentDateValue(e.target.value)}
-                      />
-                    </Col>
-                    {orderData.payment_method === "online" && (
+                    {orderData.payment_method === "online" ? (
                       <>
+                        <Col xs="auto">
+                          <Form.Label className="fw-semibold mb-0">
+                            Payment Date
+                          </Form.Label>
+                        </Col>
+                        <Col>
+                          <Form.Control
+                            type="datetime-local"
+                            step="1"
+                            value={paymentDateValue}
+                            onChange={(e) =>
+                              setPaymentDateValue(e.target.value)
+                            }
+                          />
+                        </Col>
                         <Col>
                           <Form.Control
                             type="text"
@@ -316,12 +316,21 @@ const OrderProfile = () => {
                             variant="none"
                             size="sm"
                             className="btn_main_dark"
-                            onClick={() => updateOrderPaymentDate()}
+                            onClick={() => updateOrderPayment()}
                           >
                             Update Payment
                           </Button>
                         </Col>
                       </>
+                    ) : (
+                      <p className="mb-2">
+                        <strong>Payment Date:</strong>{" "}
+                        {orderData.payment_date
+                          ? dayjs(orderData.payment_date).format(
+                              "YYYY-MM-DD HH:mm:ss",
+                            )
+                          : "Not Paid Yet"}
+                      </p>
                     )}
                   </Row>
                 </Col>
