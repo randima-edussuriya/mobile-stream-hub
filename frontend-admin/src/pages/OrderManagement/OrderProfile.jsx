@@ -45,6 +45,7 @@ const OrderProfile = () => {
         data.data.payment_date
           ? dayjs(data.data.payment_date).format("YYYY-MM-DDTHH:mm:ss")
           : "",
+        setPaymentTokenValue(data.data.payment_token || ""),
       );
     } catch (err) {
       setError(

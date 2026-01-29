@@ -55,7 +55,7 @@ export const getOrder = async (req, res) => {
 
     // Get order details
     const orderSql = `
-      SELECT ot.*, d.*, p.payment_date as payment_date, p.status as payment_status
+      SELECT ot.*, d.*, p.payment_date as payment_date, p.status as payment_status, p.token as payment_token
       FROM order_table ot
       INNER JOIN delivering d ON d.order_id=ot.order_id
       INNER JOIN payment p ON p.order_id=ot.order_id
