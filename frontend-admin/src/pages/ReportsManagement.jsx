@@ -53,6 +53,7 @@ function ReportsManagement() {
               type="datetime-local"
               value={fromDate}
               size="sm"
+              readOnly={applyDateRange}
               onChange={(e) => setFromDate(e.target.value)}
             />
           </Col>
@@ -62,6 +63,7 @@ function ReportsManagement() {
               type="datetime-local"
               value={toDate}
               size="sm"
+              readOnly={applyDateRange}
               onChange={(e) => setToDate(e.target.value)}
             />
           </Col>
