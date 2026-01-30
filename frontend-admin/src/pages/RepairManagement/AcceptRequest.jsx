@@ -56,7 +56,7 @@ function AcceptRequest() {
       });
 
       toast.success("Repair acceptance recorded successfully!");
-    //   navigate("/repairs");
+      navigate("/repair-management/repairs-listing");
     } catch (error) {
       const message =
         error?.response?.data?.message ||
