@@ -84,7 +84,7 @@ function RepairProfile() {
 
   return (
     <Container className="py-4">
-      <Row className="mb-4">
+      <Row>
         <Col>
           <h4 className="fw-semibold">Repair #{repair.repair_id}</h4>
         </Col>
@@ -94,9 +94,20 @@ function RepairProfile() {
             variant="secondary"
             size="sm"
             onClick={() => navigate(-1)}
+            className="me-2"
           >
             Back to Repairs
           </Button>
+          {repair.status === "repair completed" && (
+            <Button
+              variant="none"
+              size="sm"
+              onClick={() => navigate(`/repair/${repairId}/add-review`)}
+              className="btn_main_dark"
+            >
+              Add Review
+            </Button>
+          )}
         </Col>
       </Row>
 

@@ -68,6 +68,76 @@ export const addOrderFeedback = async (req, res) => {
   }
 };
 
+export const addRepairFeedback = async (req, res) => {
+  try {
+    const { message, rating, repairId } = req.body;
+    const { userId } = req.user;
+
+    if (!message || !message.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Message is required",
+      });
+    }
+
+    const ratingValue = Number(rating);
+    if (Number.isNaN(ratingValue)) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating is required",
+      });
+    }
+
+    if (ratingValue < 0 || ratingValue > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating must be between 0 and 5",
+      });
+    }
+
+    if (!repairId) {
+      return res.status(400).json({
+        success: false,
+        message: "Repair ID is required",
+      });
+    }
+
+    // verify that the repair belongs to the user
+    const verifyRepairSql =`
+        SELECT 1 FROM repair r
+        INNER JOIN repair_request rr ON r.repair_requests_id=rr.repair_requests_id
+        WHERE r.repair_id=? AND rr.customer_id=?`;
+    const [repairRows] = await dbPool.query(verifyRepairSql, [
+      repairId,
+      userId,
+    ]);
+    if (repairRows.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "The specified repair does not belong to you",
+      });
+    }
+
+    const sql = `
+      INSERT INTO feedback (message, rating, status, service_type, customer_id, repair_id)
+      VALUES (?, ?, 'accepted', 'repair', ?, ?)
+    `;
+
+    await dbPool.query(sql, [message.trim(), ratingValue, userId, repairId]);
+
+    return res.status(201).json({
+      success: true,
+      message: "Feedback submitted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const getItemFeedbacks = async (req, res) => {
   try {
     const { itemId } = req.params;
@@ -91,9 +161,9 @@ export const getItemFeedbacks = async (req, res) => {
     `;
 
     const [avgRatingRows] = await dbPool.query(avgRatingSql, [itemId]);
-    const averageRating = Number(
-      avgRatingRows[0].average_rating || 0,
-    ).toFixed(1);
+    const averageRating = Number(avgRatingRows[0].average_rating || 0).toFixed(
+      1,
+    );
     const totalFeedbacks = avgRatingRows[0].total_feedbacks || 0;
 
     // Get individual feedbacks

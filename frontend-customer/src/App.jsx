@@ -27,6 +27,7 @@ import RepairProfile from "./pages/repair/RepairProfile";
 import AddItemReview from "./pages/orders/AddItemReview";
 import CouponsLoyalty from "./pages/CouponsLoyalty";
 import OrderTracking from "./pages/orders/OrderTracking";
+import AddRepairReview from "./pages/repair/AddRepairReview";
 
 const Layout = () => {
   return (
@@ -175,6 +176,10 @@ function App() {
               path: ":repairId", // base: /repair/:repairId
               element: <RepairProfile />,
             },
+            {
+              path:":repairId/add-review", // base: /repair/:repairId/add-review
+              element: <AddRepairReview />,
+            }
           ],
         },
         {
