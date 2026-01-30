@@ -191,6 +191,9 @@ function Header() {
                   <Dropdown.Item as={Link} to="/coupons-loyalty">
                     Loyalty & Coupons
                   </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/inquiry-listing">
+                    My Inquiries
+                  </Dropdown.Item>
                   <hr className="mb-0" />
                   <Dropdown.Item
                     onClick={handelLogout}

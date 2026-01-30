@@ -28,6 +28,7 @@ import AddItemReview from "./pages/orders/AddItemReview";
 import CouponsLoyalty from "./pages/CouponsLoyalty";
 import OrderTracking from "./pages/orders/OrderTracking";
 import AddRepairReview from "./pages/repair/AddRepairReview";
+import InquiryLIsting from "./pages/inquiries/InquiryLIsting";
 
 const Layout = () => {
   return (
@@ -177,9 +178,9 @@ function App() {
               element: <RepairProfile />,
             },
             {
-              path:":repairId/add-review", // base: /repair/:repairId/add-review
+              path: ":repairId/add-review", // base: /repair/:repairId/add-review
               element: <AddRepairReview />,
-            }
+            },
           ],
         },
         {
@@ -187,6 +188,14 @@ function App() {
           element: (
             <PrivateRoute isLoggedIn={isLoggedIn}>
               <CouponsLoyalty />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "inquiry-listing", // base: /inquiry-listing
+          element: (
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <InquiryLIsting />
             </PrivateRoute>
           ),
         },

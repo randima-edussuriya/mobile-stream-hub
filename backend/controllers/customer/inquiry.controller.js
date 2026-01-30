@@ -42,3 +42,35 @@ export const submitInquiry = async (req, res) => {
     });
   }
 };
+
+export const getMyInquiries = async (req, res) => {
+  try {
+    const customerId = req.user.userId;
+
+    const sql = `
+      SELECT 
+        inquiry_id,
+        inquired_at,
+        message,
+        reply,
+        replyed_at,
+        staff_id
+      FROM inquiry
+      WHERE customer_id = ?
+      ORDER BY inquired_at DESC
+    `;
+
+    const [inquiries] = await dbPool.query(sql, [customerId]);
+
+    return res.status(200).json({
+      success: true,
+      data: inquiries,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
