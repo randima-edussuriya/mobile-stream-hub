@@ -145,15 +145,15 @@ function Sidebar() {
           <i className="bi bi-star fs-5 me-3"></i>
           <span className="small fw-semibold">Feedback Management</span>
         </NavLink>
-        {/* <NavLink
-          to={"/customer-support-management"}
+        <NavLink
+          to={"/customer-support"}
           className={({ isActive }) =>
             `list-group-item py-2 rounded${isActive ? " active_link" : ""}`
           }
         >
           <i className="bi bi-telephone-forward fs-5 me-3"></i>
-          <span className="small fw-semibold">Customer Support Management</span>
-        </NavLink> */}
+          <span className="small fw-semibold">Customer Support</span>
+        </NavLink>
         <NavLink
           to={"/reports-management"}
           className={({ isActive }) =>

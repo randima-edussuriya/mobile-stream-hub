@@ -11,7 +11,6 @@ import CustomerManagement from "./pages/CustomerManagement";
 import OrderManagement from "./pages/OrderManagement/OrderManagement";
 import DeliveryManagement from "./pages/DeliveryManagement";
 import DayOffManagement from "./pages/DayOffManagement/DayOffManagement";
-import CustomerSupportManagement from "./pages/CustomerSupportManagement";
 import ReportsManagement from "./pages/ReportsManagement";
 import RepairManagement from "./pages/RepairManagement/RepairManagement";
 import CategoryManagement from "./pages/CategoryManagement/CategoryManagement";
@@ -50,6 +49,7 @@ import ItemFeedbackListing from "./pages/FeedbackManagement/ItemFeedbackListing"
 import ItemFeedbackProfile from "./pages/FeedbackManagement/ItemFeedbackProfile";
 import TechnicianFeedListing from "./pages/FeedbackManagement/TechnicianFeedListing";
 import TechnicianFeedBack from "./pages/FeedbackManagement/TechnicianFeedBack";
+import CustomerSupport from "./pages/CustomerSupport";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -494,13 +494,13 @@ function App() {
           ],
         },
         /*--------------------------------------------------------
-              customer-support-management routes
+              customer-support routes
         ---------------------------------------------------------- */
         {
-          path: "customer-support-management",
+          path: "customer-support", // base path: /customer-support
           element: (
             <RoleRoute userData={userData} allowedRoles={["admin"]}>
-              <CustomerSupportManagement />
+              <CustomerSupport />
             </RoleRoute>
           ),
         },
