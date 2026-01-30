@@ -103,7 +103,7 @@ export const addRepairFeedback = async (req, res) => {
     }
 
     // verify that the repair belongs to the user
-    const verifyRepairSql =`
+    const verifyRepairSql = `
         SELECT 1 FROM repair r
         INNER JOIN repair_request rr ON r.repair_requests_id=rr.repair_requests_id
         WHERE r.repair_id=? AND rr.customer_id=?`;
@@ -128,6 +128,72 @@ export const addRepairFeedback = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Feedback submitted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getTechnicianFeedbacks = async (req, res) => {
+  try {
+    const { technicianId } = req.params;
+
+    if (!technicianId) {
+      return res.status(400).json({
+        success: false,
+        message: "Technician ID is required",
+      });
+    }
+
+    // Get average rating
+    const avgRatingSql = `
+      SELECT 
+        COALESCE(AVG(f.rating), 0) as average_rating,
+        COUNT(f.feedback_id) as total_feedbacks
+      FROM feedback f
+      INNER JOIN repair r ON f.repair_id = r.repair_id
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      WHERE rr.technician_id = ?
+        AND f.service_type = 'repair'
+    `;
+
+    const [avgRatingRows] = await dbPool.query(avgRatingSql, [technicianId]);
+    const averageRating = Number(avgRatingRows[0].average_rating || 0).toFixed(
+      1,
+    );
+    const totalFeedbacks = avgRatingRows[0].total_feedbacks || 0;
+
+    // Get individual feedbacks
+    const sql = `
+      SELECT 
+        f.feedback_id,
+        f.feedback_date,
+        f.message,
+        f.rating,
+        c.first_name,
+        c.last_name
+      FROM feedback f
+      INNER JOIN repair r ON f.repair_id = r.repair_id
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      INNER JOIN customer c ON f.customer_id = c.customer_id
+      WHERE rr.technician_id = ?
+        AND f.service_type = 'repair'
+      ORDER BY f.feedback_date DESC
+    `;
+
+    const [rows] = await dbPool.query(sql, [technicianId]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        averageRating,
+        totalFeedbacks,
+        feedbacks: rows,
+      },
     });
   } catch (error) {
     console.error(error);

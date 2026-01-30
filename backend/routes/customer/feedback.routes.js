@@ -3,6 +3,7 @@ import { authenticateUser } from "../../middleware/customer/auth.middleware.js";
 import {
   addOrderFeedback,
   addRepairFeedback,
+  getTechnicianFeedbacks,
   getItemFeedbacks,
 } from "../../controllers/customer/feedback.controller.js";
 
@@ -15,5 +16,7 @@ router.post("/order-item", authenticateUser, addOrderFeedback);
 router.post("/repair-item", authenticateUser, addRepairFeedback);
 // GET /items/:itemId – Get accepted item feedbacks
 router.get("/items/:itemId", getItemFeedbacks);
+// GET /technicians/:technicianId – Get technician feedbacks
+router.get("/technicians/:technicianId", getTechnicianFeedbacks);
 
 export default router;

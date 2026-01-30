@@ -9,6 +9,8 @@ import {
   Row,
   Col,
   Alert,
+  Badge,
+  ListGroup,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { AppContext } from "../../context/AppContext";
@@ -26,6 +28,12 @@ function RequestRepair() {
   const [submitting, setSubmitting] = useState(false);
   const [availabilityMessage, setAvailabilityMessage] = useState("");
   const [timeValidationError, setTimeValidationError] = useState("");
+  const [techFeedback, setTechFeedback] = useState({
+    averageRating: "0.0",
+    totalFeedbacks: 0,
+    feedbacks: [],
+  });
+  const [loadingTechFeedback, setLoadingTechFeedback] = useState(false);
 
   const { backendUrl } = useContext(AppContext);
 
@@ -53,6 +61,46 @@ function RequestRepair() {
       console.error(error);
     } finally {
       setLoadingTechs(false);
+    }
+  };
+
+  /* -----------------------------------------------------------------
+        Fetch technician feedback when selected
+  --------------------------------------------------------------------*/
+  useEffect(() => {
+    if (!selectedTechnician) {
+      setTechFeedback({
+        averageRating: "0.0",
+        totalFeedbacks: 0,
+        feedbacks: [],
+      });
+      return;
+    }
+    fetchTechnicianFeedback(selectedTechnician);
+  }, [selectedTechnician]);
+
+  const fetchTechnicianFeedback = async (technicianId) => {
+    setLoadingTechFeedback(true);
+    try {
+      const { data } = await axios.get(
+        `${backendUrl}/api/customer/feedback/technicians/${technicianId}`,
+      );
+      setTechFeedback(
+        data.data || { averageRating: "0.0", totalFeedbacks: 0, feedbacks: [] },
+      );
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to fetch technician feedback. Please try again.",
+      );
+      console.error(error);
+      setTechFeedback({
+        averageRating: "0.0",
+        totalFeedbacks: 0,
+        feedbacks: [],
+      });
+    } finally {
+      setLoadingTechFeedback(false);
     }
   };
 
@@ -217,6 +265,58 @@ function RequestRepair() {
                     </Form.Select>
                   )}
                 </Form.Group>
+
+                {/* Technician Feedback */}
+                {selectedTechnician && (
+                  <Card className="mb-3">
+                    <Card.Body>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <h6 className="mb-0">Technician Feedback</h6>
+                        <Badge bg="secondary">
+                          {techFeedback.averageRating} / 5
+                        </Badge>
+                      </div>
+                      <div className="mb-2">
+                        <small className="text-muted">
+                          {techFeedback.totalFeedbacks} reviews
+                        </small>
+                      </div>
+
+                      {loadingTechFeedback ? (
+                        <div className="text-center py-2">
+                          <Spinner animation="border" size="sm" />
+                        </div>
+                      ) : techFeedback.feedbacks.length === 0 ? (
+                        <Alert variant="light" className="mb-0">
+                          No feedback yet.
+                        </Alert>
+                      ) : (
+                        <ListGroup
+                          variant="flush"
+                          className="overflow-auto"
+                          style={{ maxHeight: "120px" }}
+                        >
+                          {techFeedback.feedbacks.map((fb) => (
+                            <ListGroup.Item key={fb.feedback_id}>
+                              <div className="d-flex align-items-center justify-content-between">
+                                <strong>
+                                  {fb.first_name} {fb.last_name}
+                                </strong>
+                                <Badge bg="primary">
+                                  {Number(fb.rating).toFixed(1)}
+                                </Badge>
+                              </div>
+                              <div className="small text-muted mb-1">
+                                {new Date(fb.feedback_date).toLocaleString()}
+                              </div>
+                              <div>{fb.message}</div>
+                            </ListGroup.Item>
+                          ))}
+                        </ListGroup>
+                      )}
+                    </Card.Body>
+                  </Card>
+                )}
 
                 {/* Appointment Date */}
                 <Form.Group className="mb-3">
