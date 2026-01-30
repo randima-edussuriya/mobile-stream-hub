@@ -2,6 +2,8 @@ import express from "express";
 import {
   getAllItemFeedbacks,
   getItemFeedback,
+  getAllTechnicianFeedbacks,
+  getTechnicianFeedback,
   updateFeedbackStatus,
 } from "../../controllers/admin/feedback.controller.js";
 import { authenticateUser } from "../../middleware/admin/auth.middleware.js";
@@ -19,12 +21,28 @@ router.get(
   getAllItemFeedbacks,
 );
 
+// GET /technicians – Get all technician feedbacks
+router.get(
+  "/technicians",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  getAllTechnicianFeedbacks,
+);
+
 // GET /:feedbackId – Get a specific feedback by ID
 router.get(
   "/:feedbackId",
   authenticateUser,
   authorizeRoles(["admin", "cashier"]),
   getItemFeedback,
+);
+
+// GET /technicians/:technicianId – Get technician feedback details
+router.get(
+  "/technicians/:technicianId",
+  authenticateUser,
+  authorizeRoles(["admin"]),
+  getTechnicianFeedback,
 );
 
 // PUT /:feedbackId/status – Update feedback status

@@ -85,6 +85,84 @@ export const getItemFeedback = async (req, res) => {
   }
 };
 
+export const getAllTechnicianFeedbacks = async (req, res) => {
+  try {
+    const sql = `
+      SELECT 
+        s.staff_id,
+        CONCAT(s.first_name, ' ', s.last_name) as technician_name,
+        COALESCE(AVG(f.rating), 0) as average_rating,
+        COUNT(f.feedback_id) as total_feedbacks
+      FROM staff s
+      INNER JOIN repair_request rr ON s.staff_id = rr.technician_id
+      INNER JOIN repair r ON rr.repair_requests_id = r.repair_requests_id
+      LEFT JOIN feedback f ON r.repair_id = f.repair_id 
+        AND f.service_type = 'repair'
+      WHERE s.is_active = TRUE
+      GROUP BY s.staff_id
+      ORDER BY average_rating DESC, technician_name ASC
+    `;
+
+    const [feedbacks] = await dbPool.query(sql);
+
+    return res.status(200).json({
+      success: true,
+      data: feedbacks,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
+export const getTechnicianFeedback = async (req, res) => {
+  try {
+    const { technicianId } = req.params;
+
+    if (!technicianId) {
+      return res.status(400).json({
+        success: false,
+        message: "Technician ID is required",
+      });
+    }
+
+    const sql = `
+      SELECT 
+        f.feedback_id,
+        f.feedback_date,
+        f.message,
+        f.rating,
+        f.customer_id,
+        r.repair_id,
+        CONCAT(c.first_name, ' ', c.last_name) as customer_name,
+        CONCAT(s.first_name, ' ', s.last_name) as technician_name
+      FROM feedback f
+      INNER JOIN customer c ON f.customer_id = c.customer_id
+      INNER JOIN repair r ON f.repair_id = r.repair_id
+      INNER JOIN repair_request rr ON r.repair_requests_id = rr.repair_requests_id
+      INNER JOIN staff s ON rr.technician_id = s.staff_id
+      WHERE rr.technician_id = ? AND f.service_type = 'repair'
+      ORDER BY f.feedback_date DESC
+    `;
+
+    const [feedbacks] = await dbPool.query(sql, [technicianId]);
+
+    return res.status(200).json({
+      success: true,
+      data: feedbacks,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again later.",
+    });
+  }
+};
+
 export const updateFeedbackStatus = async (req, res) => {
   try {
     const { feedbackId } = req.params;

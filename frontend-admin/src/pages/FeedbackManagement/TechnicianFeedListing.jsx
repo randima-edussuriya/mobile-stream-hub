@@ -2,12 +2,10 @@ import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import { Container, Table, Spinner, Badge, Button } from "react-bootstrap";
 import { AppContext } from "../../context/AppContext";
-import dayjs from "dayjs";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function ItemFeedbackListing() {
+function TechnicianFeedListing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [feedbacks, setFeedbacks] = useState([]);
@@ -15,7 +13,7 @@ function ItemFeedbackListing() {
   const { backendUrl } = useContext(AppContext);
 
   /* -----------------------------------------------------------------
-        Fetch all item feedbacks from API
+        Fetch all technician feedbacks from API
   --------------------------------------------------------------------*/
   const fetchFeedbacks = async () => {
     try {
@@ -23,30 +21,20 @@ function ItemFeedbackListing() {
       setError("");
       setFeedbacks([]);
 
-      const { data } = await axios.get(`${backendUrl}/api/admin/feedbacks`);
+      const { data } = await axios.get(
+        `${backendUrl}/api/admin/feedbacks/technicians`,
+      );
       setFeedbacks(data.data);
     } catch (error) {
       const message =
         error?.response?.data?.message ||
-        "Failed to fetch feedbacks. Please try again later.";
+        "Failed to fetch technician feedbacks. Please try again later.";
       setError(message);
       toast.error(message);
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  /* -----------------------------------------------------------------
-        Get badge variant based on status
-  --------------------------------------------------- */
-  const getStatusBadge = (status) => {
-    const statusMap = {
-      pending: "secondary",
-      accepted: "success",
-      rejected: "danger",
-    };
-    return statusMap[status] || "secondary";
   };
 
   /* -----------------------------------------------------------------
@@ -70,7 +58,7 @@ function ItemFeedbackListing() {
     if (loading) {
       return (
         <tr>
-          <td colSpan={7} className="text-center py-3">
+          <td colSpan={5} className="text-center py-3">
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -82,7 +70,7 @@ function ItemFeedbackListing() {
     if (error) {
       return (
         <tr>
-          <td colSpan={7} className="text-danger text-center">
+          <td colSpan={5} className="text-danger text-center">
             {error}
           </td>
         </tr>
@@ -92,35 +80,27 @@ function ItemFeedbackListing() {
     if (feedbacks.length === 0) {
       return (
         <tr>
-          <td colSpan={7} className="text-danger text-center">
-            No feedbacks found
+          <td colSpan={5} className="text-danger text-center">
+            No technician feedbacks found
           </td>
         </tr>
       );
     }
 
     return feedbacks.map((feedback) => (
-      <tr key={feedback.feedback_id}>
-        <td className="fw-bold">{feedback.feedback_id}</td>
-        <td className="text-muted">
-          {dayjs(feedback.feedback_date).format("YYYY-MM-DD HH:mm:ss")}
-        </td>
-        <td className="text-truncate" style={{ maxWidth: "300px" }}>
-          {feedback.message.substring(0, 50)}...
-        </td>
-        <td className="fw-medium">{feedback.item_name}</td>
+      <tr key={feedback.staff_id}>
+        <td className="fw-bold">{feedback.staff_id}</td>
+        <td className="fw-medium">{feedback.technician_name}</td>
         <td>
-          <Badge bg={getRatingColor(feedback.rating)}>
-            {Number(feedback.rating).toFixed(1)}
+          <Badge bg={getRatingColor(feedback.average_rating)}>
+            {Number(feedback.average_rating).toFixed(1)}
           </Badge>
         </td>
+        <td className="text-muted">{feedback.total_feedbacks} reviews</td>
         <td>
-          <Badge bg={getStatusBadge(feedback.status)}>
-            {feedback.status.charAt(0).toUpperCase() + feedback.status.slice(1)}
-          </Badge>
-        </td>
-        <td>
-          <Link to={`item/${feedback.feedback_id}`}>
+          <Link
+            to={`/feedback-management/technician-feedback/${feedback.staff_id}`}
+          >
             <i
               role="button"
               className="bi-arrow-up-right-square text-primary action_icon"
@@ -137,15 +117,15 @@ function ItemFeedbackListing() {
       <Container className="bg-secondary-subtle rounded shadow py-3 mt-3">
         <Container className="mb-3">
           <div className="d-flex align-items-center justify-content-between">
-            <h4 className="mb-0">Item Feedbacks</h4>
+            <h4 className="mb-0">Technician Feedbacks</h4>
             <Button
               variant="none"
               size="sm"
-              onClick={() => navigate("technician-listing")}
+              onClick={() => navigate("/feedback-management")}
               className="btn_main_light_outline"
             >
               <i className="bi bi-caret-right-square-fill me-1"></i>
-              Go to Technician Feedback
+              Go to Item Feedback
             </Button>
           </div>
         </Container>
@@ -154,12 +134,10 @@ function ItemFeedbackListing() {
           <Table hover striped size="sm" className="shadow">
             <thead className="position-sticky top-0" style={{ zIndex: 20 }}>
               <tr className="fw-bold">
-                <th>Feedback ID</th>
-                <th>Date</th>
-                <th>Message</th>
-                <th>Item</th>
-                <th>Rating</th>
-                <th>Status</th>
+                <th>Technician ID</th>
+                <th>Name</th>
+                <th>Average Rating</th>
+                <th>Total Reviews</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -171,4 +149,4 @@ function ItemFeedbackListing() {
   );
 }
 
-export default ItemFeedbackListing;
+export default TechnicianFeedListing;

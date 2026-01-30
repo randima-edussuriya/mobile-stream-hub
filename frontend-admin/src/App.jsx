@@ -48,6 +48,8 @@ import LoyaltyUsage from "./pages/LoyaltyManagement/LoyaltyUsage";
 import OrderTracking from "./pages/OrderManagement/OrderTracking";
 import ItemFeedbackListing from "./pages/FeedbackManagement/ItemFeedbackListing";
 import ItemFeedbackProfile from "./pages/FeedbackManagement/ItemFeedbackProfile";
+import TechnicianFeedListing from "./pages/FeedbackManagement/TechnicianFeedListing";
+import TechnicianFeedBack from "./pages/FeedbackManagement/TechnicianFeedBack";
 
 function App() {
   const [toggle, setToggle] = useState(false);
@@ -480,6 +482,14 @@ function App() {
             {
               path: "item/:feedbackId", // base path: /feedback-management/item/:feedbackId
               element: <ItemFeedbackProfile />,
+            },
+            {
+              path: "technician-listing", // base path: /feedback-management/technician-listing
+              element: <TechnicianFeedListing />,
+            },
+            {
+              path: "technician-feedback/:technicianId", // base path: /feedback-management/technician-feedback/:technicianId
+              element: <TechnicianFeedBack />,
             },
           ],
         },
