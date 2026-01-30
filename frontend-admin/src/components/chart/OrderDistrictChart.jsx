@@ -13,7 +13,11 @@ const COLORS = [
   "#82ca9d",
 ];
 
-function OrderDistrictChart() {
+function OrderDistrictChart({
+  formDate = "",
+  toDate = "",
+  applyDateRange = false,
+}) {
   const [orderDistrictData, setOrderDistrictData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
@@ -22,8 +26,14 @@ function OrderDistrictChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const params =
+          applyDateRange && formDate && toDate
+            ? { fromDate: formDate, toDate: toDate }
+            : undefined;
+
         const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/order-district`,
+          { params },
         );
         setOrderDistrictData(data.data);
       } catch (error) {
@@ -33,14 +43,14 @@ function OrderDistrictChart() {
       }
     };
     fetchData();
-  }, [backendUrl]);
+  }, [applyDateRange, backendUrl]);
 
   if (loading) return <Loader type="chart" />;
 
   return (
     <div className="bg-white p-3 rounded shadow-sm">
       <span className="h5">Order Districts </span>
-      <span className="text-muted h5">(Last 30 Days)</span>
+      {!applyDateRange && <span className="text-muted h5">(Last 30 Days)</span>}
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie

@@ -20,7 +20,11 @@ const COLORS = [
   "#82ca9d",
 ];
 
-function OrderStatusChart() {
+function OrderStatusChart({
+  formDate = "",
+  toDate = "",
+  applyDateRange = false,
+}) {
   const [orderStatusData, setOrderStatusData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
@@ -29,8 +33,14 @@ function OrderStatusChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const params =
+          applyDateRange && formDate && toDate
+            ? { fromDate: formDate, toDate: toDate }
+            : undefined;
+
         const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/order-status`,
+          { params },
         );
         setOrderStatusData(data.data);
       } catch (error) {
@@ -40,14 +50,14 @@ function OrderStatusChart() {
       }
     };
     fetchData();
-  }, [backendUrl]);
+  }, [applyDateRange, backendUrl]);
 
   if (loading) return <Loader type="chart" />;
 
   return (
     <div className="bg-white p-3 rounded shadow-sm">
       <span className="h5">Order Status </span>
-      <span className="text-muted h5">(Last 30 Days)</span>
+      {!applyDateRange && <span className="text-muted h5">(Last 30 Days)</span>}
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie

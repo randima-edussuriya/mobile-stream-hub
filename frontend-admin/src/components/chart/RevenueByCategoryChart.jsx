@@ -13,7 +13,11 @@ import {
 import { AppContext } from "../../context/AppContext";
 import Loader from "../Loader";
 
-function RevenueByCategoryChart() {
+function RevenueByCategoryChart({
+  formDate = "",
+  toDate = "",
+  applyDateRange = false,
+}) {
   const [catRevenueData, setCatRevenueData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { backendUrl } = useContext(AppContext);
@@ -22,8 +26,14 @@ function RevenueByCategoryChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const params =
+          applyDateRange && formDate && toDate
+            ? { fromDate: formDate, toDate: toDate }
+            : undefined;
+
         const { data } = await axios.get(
           `${backendUrl}/api/admin/dashboard/revenue-by-category`,
+          { params },
         );
         setCatRevenueData(data.data);
       } catch (error) {
@@ -33,14 +43,14 @@ function RevenueByCategoryChart() {
       }
     };
     fetchData();
-  }, []);
+  }, [applyDateRange, backendUrl]);
 
   if (loading) return <Loader type="chart" />;
 
   return (
     <div className="bg-white p-4 rounded shadow-sm">
       <span className="h5">Revenue by Category </span>
-      <span className="text-muted h5">(Last 30 Days)</span>
+      {!applyDateRange && <span className="text-muted h5">(Last 30 Days)</span>}
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={catRevenueData}>
           <CartesianGrid strokeDasharray="3 3" />

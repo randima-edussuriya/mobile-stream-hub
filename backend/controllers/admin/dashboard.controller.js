@@ -42,14 +42,25 @@ export const getDashboardStats = async (req, res) => {
 
 export const getOrderStatusDistribution = async (req, res) => {
   try {
-    const sql = `
+    const { fromDate, toDate } = req.query;
+
+    let sql = `
             SELECT ot.status as name, COUNT(ot.order_id) as value
             FROM order_table ot
-            WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            WHERE 1=1`;
+
+    if (fromDate && toDate) {
+      sql += ` AND ot.order_date BETWEEN ? AND ?`;
+    } else {
+      sql += ` AND ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)`;
+    }
+
+    sql += `
             GROUP BY ot.status
             ORDER BY value DESC`;
 
-    const [data] = await dbPool.query(sql);
+    const params = fromDate && toDate ? [fromDate, toDate] : [];
+    const [data] = await dbPool.query(sql, params);
 
     return res.status(200).json({
       success: true,
@@ -66,15 +77,25 @@ export const getOrderStatusDistribution = async (req, res) => {
 
 export const getPaymentMethodDistribution = async (req, res) => {
   try {
-    const sql = `
+    const { fromDate, toDate } = req.query;
+
+    let sql = `
                 SELECT ot.payment_method AS name, COUNT(ot.order_id) AS value
                 FROM order_table ot
-                WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-                GROUP BY ot.payment_method
-                ORDER BY value DESC;
-    `;
+                WHERE 1=1`;
 
-    const [data] = await dbPool.query(sql);
+    if (fromDate && toDate) {
+      sql += ` AND ot.order_date BETWEEN ? AND ?`;
+    } else {
+      sql += ` AND ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)`;
+    }
+
+    sql += `
+                GROUP BY ot.payment_method
+                ORDER BY value DESC`;
+
+    const params = fromDate && toDate ? [fromDate, toDate] : [];
+    const [data] = await dbPool.query(sql, params);
 
     return res.status(200).json({
       success: true,
@@ -91,17 +112,26 @@ export const getPaymentMethodDistribution = async (req, res) => {
 
 export const getOrderDistrictDistribution = async (req, res) => {
   try {
-    const sql = `
+    const { fromDate, toDate } = req.query;
+
+    let sql = `
             SELECT d.district AS name, COUNT(ot.order_id) as value
             FROM delivering d
             INNER JOIN order_table ot ON d.order_id=ot.order_id
-            WHERE ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-            	AND ot.status NOT IN ("cancelled")
-            GROUP BY d.district
-            ORDER BY value DESC;
-    `;
+            WHERE ot.status NOT IN ("cancelled")`;
 
-    const [data] = await dbPool.query(sql);
+    if (fromDate && toDate) {
+      sql += ` AND ot.order_date BETWEEN ? AND ?`;
+    } else {
+      sql += ` AND ot.order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)`;
+    }
+
+    sql += `
+            GROUP BY d.district
+            ORDER BY value DESC`;
+
+    const params = fromDate && toDate ? [fromDate, toDate] : [];
+    const [data] = await dbPool.query(sql, params);
 
     return res.status(200).json({
       success: true,
@@ -118,17 +148,26 @@ export const getOrderDistrictDistribution = async (req, res) => {
 
 export const getRevenueByOrder = async (req, res) => {
   try {
-    const sql = `
+    const { fromDate, toDate } = req.query;
+
+    let sql = `
         SELECT DATE_FORMAT(ot.order_date, '%Y-%m') AS name, SUM(ot.total) AS value
         FROM order_table ot
         INNER JOIN payment p ON ot.order_id=p.order_id
-        WHERE p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
-        	AND p.status = "completed"
-        GROUP BY name
-        ORDER BY name ASC;
-    `;
+        WHERE p.status = "completed"`;
 
-    const [data] = await dbPool.query(sql);
+    if (fromDate && toDate) {
+      sql += ` AND p.payment_date BETWEEN ? AND ?`;
+    } else {
+      sql += ` AND p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)`;
+    }
+
+    sql += `
+        GROUP BY name
+        ORDER BY name ASC`;
+
+    const params = fromDate && toDate ? [fromDate, toDate] : [];
+    const [data] = await dbPool.query(sql, params);
 
     return res.status(200).json({
       success: true,
@@ -145,7 +184,9 @@ export const getRevenueByOrder = async (req, res) => {
 
 export const getRevenueByCategory = async (req, res) => {
   try {
-    const sql = `
+    const { fromDate, toDate } = req.query;
+
+    let sql = `
         SELECT 
         	c.category_name AS name,
             SUM(
@@ -156,13 +197,20 @@ export const getRevenueByCategory = async (req, res) => {
         INNER JOIN order_item oi ON i.item_id=oi.item_id
         INNER JOIN order_table ot ON oi.order_id=ot.order_id
         INNER JOIN payment p ON ot.order_id=p.order_id
-        WHERE p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-        	AND p.status="completed"
-        GROUP BY c.category_id
-        ORDER BY VALUE DESC;
-    `;
+        WHERE p.status="completed"`;
 
-    const [data] = await dbPool.query(sql);
+    if (fromDate && toDate) {
+      sql += ` AND p.payment_date BETWEEN ? AND ?`;
+    } else {
+      sql += ` AND p.payment_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)`;
+    }
+
+    sql += `
+        GROUP BY c.category_id
+        ORDER BY value DESC`;
+
+    const params = fromDate && toDate ? [fromDate, toDate] : [];
+    const [data] = await dbPool.query(sql, params);
 
     return res.status(200).json({
       success: true,
