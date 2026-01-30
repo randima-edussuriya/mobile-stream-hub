@@ -68,23 +68,24 @@ function ReportsManagement() {
             />
           </Col>
           <Col xs={12} lg="auto">
-            <Button
-              variant="none"
-              size="sm"
-              onClick={handleApplyRange}
-              disabled={!fromDate || !toDate || applyDateRange}
-              className="btn_main_dark me-2"
-            >
-              {applyDateRange ? "Applied" : "Apply"}
-            </Button>
-            <Button
-              variant="outline-light"
-              size="sm"
-              disabled={!fromDate && !toDate && !applyDateRange}
-              onClick={handleClearRange}
-            >
-              Clear
-            </Button>
+            {applyDateRange ? (
+              <Button
+                variant="outline-light"
+                size="sm"
+                onClick={handleClearRange}
+              >
+                Clear
+              </Button>
+            ) : (
+              <Button
+                variant="none"
+                size="sm"
+                onClick={handleApplyRange}
+                className="btn_main_dark"
+              >
+                Apply
+              </Button>
+            )}
           </Col>
         </Row>
       </Container>
